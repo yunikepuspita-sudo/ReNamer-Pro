@@ -1,6 +1,7 @@
 import { useMemo, useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { BOOKS, CATEGORIES } from '../data/books'
+import { CATEGORIES } from '../data/books'
+import { useCatalog } from '../context/CatalogContext'
 import type { ContentType } from '../types'
 import BookCard from '../components/BookCard'
 
@@ -20,6 +21,7 @@ export default function Store() {
   const [category, setCategory] = useState<string>('semua')
   const [onlyFree, setOnlyFree] = useState(false)
   const [sort, setSort] = useState<SortKey>('populer')
+  const { books: BOOKS } = useCatalog()
 
   // Sinkron dengan parameter pencarian dari navbar.
   useEffect(() => {
@@ -52,7 +54,7 @@ export default function Store() {
       }
     })
     return list
-  }, [query, type, category, onlyFree, sort])
+  }, [BOOKS, query, type, category, onlyFree, sort])
 
   return (
     <div className="store">

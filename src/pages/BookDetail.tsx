@@ -1,5 +1,6 @@
 import { Link, useParams, useNavigate } from 'react-router-dom'
-import { BOOKS, getBook, formatRupiah } from '../data/books'
+import { formatRupiah } from '../data/books'
+import { useCatalog } from '../context/CatalogContext'
 import { getTheme } from '../data/themes'
 import { useApp } from '../context/AppContext'
 import BookCover from '../components/BookCover'
@@ -8,6 +9,7 @@ import Shelf from '../components/Shelf'
 export default function BookDetail() {
   const { id } = useParams()
   const navigate = useNavigate()
+  const { books: BOOKS, getBook } = useCatalog()
   const book = id ? getBook(id) : undefined
   const { inLibrary, addToLibrary, removeFromLibrary, premium } = useApp()
 

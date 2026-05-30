@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom'
-import { BOOKS } from '../data/books'
 import { THEMES, themeCount } from '../data/themes'
+import { useCatalog } from '../context/CatalogContext'
 import Shelf from '../components/Shelf'
 
 export default function Home() {
+  const { books: BOOKS } = useCatalog()
   const populer = [...BOOKS].sort((a, b) => b.rating - a.rating).slice(0, 8)
   const gratis = BOOKS.filter((b) => b.price === 0)
   const majalahKoran = BOOKS.filter((b) => b.type !== 'buku')

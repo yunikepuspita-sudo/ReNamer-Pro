@@ -9,6 +9,7 @@ import BookDetail from './pages/BookDetail'
 import Reader from './pages/Reader'
 import Library from './pages/Library'
 import Premium from './pages/Premium'
+import Admin from './pages/Admin'
 import NotFound from './pages/NotFound'
 
 export default function App() {
@@ -30,6 +31,7 @@ export default function App() {
                 <Route path="/buku/:id" element={<BookDetail />} />
                 <Route path="/pustaka" element={<Library />} />
                 <Route path="/premium" element={<Premium />} />
+                <Route path="/admin" element={<Admin />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </main>

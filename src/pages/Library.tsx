@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { BOOKS } from '../data/books'
+import { useCatalog } from '../context/CatalogContext'
 import { useApp } from '../context/AppContext'
 import BookCover from '../components/BookCover'
 import { addUpload, deleteUpload, listUploads, uploadCover, type UploadRecord } from '../lib/uploads'
@@ -13,6 +13,7 @@ function formatSize(bytes: number): string {
 
 export default function Library() {
   const { library, progress } = useApp()
+  const { books: BOOKS } = useCatalog()
   const items = BOOKS.filter((b) => library.includes(b.id))
 
   const [uploads, setUploads] = useState<UploadRecord[]>([])
