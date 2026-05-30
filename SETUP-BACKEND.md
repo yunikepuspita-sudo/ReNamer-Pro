@@ -56,21 +56,68 @@ VITE_SUPABASE_ANON_KEY=eyJhbGciOi....
 - Pelanggan **Premium** otomatis bisa membaca penuh buku bertanda Premium.
 - Pembayaran sungguhan = **Fase 2** di bawah.
 
-## FASE 2 — Pembayaran Nyata (Midtrans / Xendit)
+## FASE 2 — Pembayaran QRIS (Midtrans) ✅ KODE SIAP
 
-> Belum diaktifkan. Ini ringkasan rencana — perlu langkah pendaftaran dari Anda.
+Alur: tombol **Beli (QRIS)** → Edge Function membuat transaksi QRIS di Midtrans →
+app menampilkan **kode QR** + polling status → pengguna scan (GoPay/DANA/OVO/
+ShopeePay/m-banking) → Midtrans kirim **webhook** → order ditandai `paid` →
+buku terbuka otomatis.
 
-Pembayaran nyata **tidak bisa** sepenuhnya di sisi browser karena *secret key*
-gateway harus dirahasiakan. Arsitektur yang dipakai:
+### 1. Daftar Midtrans
+1. Daftar di https://midtrans.com (atau https://dashboard.sandbox.midtrans.com
+   untuk **uji coba gratis** tanpa verifikasi).
+2. **Settings → Access Keys**: catat **Server Key** dan **Client Key**.
+3. **Settings → Payment** : aktifkan **QRIS**.
+4. Produksi (uang nyata) butuh verifikasi usaha/identitas: KTP, rekening bank,
+   kadang NPWP/badan usaha. Sandbox tidak butuh ini.
 
-1. **Akun gateway**: daftar Midtrans atau Xendit (perlu verifikasi usaha/identitas,
-   rekening bank; untuk Indonesia biasanya KTP, kadang NPWP/badan usaha).
-2. **Supabase Edge Function** (server kecil) untuk:
-   - Membuat transaksi / Snap token (memakai *server key* rahasia).
-   - Menerima **webhook** notifikasi pembayaran → menandai `orders.status = 'paid'`.
-3. **Frontend**: tombol "Beli" memanggil Edge Function, membuka halaman bayar
-   gateway, lalu membuka akses buku setelah status `paid`.
+### 2. Set Secrets di Supabase (untuk Edge Functions)
+Di Supabase Dashboard → **Edge Functions → Secrets** (atau via CLI), tambahkan:
 
-Tabel `orders` pada skema sudah disiapkan untuk ini. Saat siap, beri tahu saya
-gateway pilihan Anda (Midtrans/Xendit) dan saya buatkan Edge Function +
-integrasi tombolnya.
+```
+MIDTRANS_SERVER_KEY      = <Server Key dari Midtrans>
+MIDTRANS_IS_PRODUCTION   = false          # true bila sudah live
+SUPABASE_URL             = https://<ref>.supabase.co
+SUPABASE_SERVICE_ROLE_KEY= <service_role key>   # Settings → API (RAHASIA)
+```
+
+> `service_role key` hanya dipakai di server (Edge Function), **tidak pernah**
+> di frontend.
+
+### 3. Jalankan ulang skema (kolom baru `id_str`)
+Jalankan kembali `supabase/schema.sql` di SQL Editor (idempoten/aman diulang) —
+menambahkan kolom `id_str` pada tabel `orders`.
+
+### 4. Deploy Edge Functions
+Pasang **Supabase CLI** (https://supabase.com/docs/guides/cli), lalu:
+
+```bash
+supabase login
+supabase link --project-ref <ref>
+supabase functions deploy create-payment  --no-verify-jwt
+supabase functions deploy payment-status  --no-verify-jwt
+supabase functions deploy payment-webhook --no-verify-jwt
+```
+
+### 5. Daftarkan URL webhook di Midtrans
+Midtrans Dashboard → **Settings → Configuration → Payment Notification URL**:
+
+```
+https://<ref>.supabase.co/functions/v1/payment-webhook
+```
+
+### 6. Selesai — uji
+Buka buku berbayar → **Beli (QRIS)** → scan dengan simulator Midtrans (sandbox)
+atau e-wallet (produksi). Setelah lunas, modal otomatis menandai berhasil dan
+buku masuk Pustaka.
+
+**Berkas terkait:**
+- `supabase/functions/create-payment/`  — buat transaksi QRIS
+- `supabase/functions/payment-status/`  — cek status (dipakai polling)
+- `supabase/functions/payment-webhook/` — terima notifikasi Midtrans (verifikasi signature)
+- `src/lib/payments.ts`, `src/components/QrisCheckout.tsx` — sisi frontend
+
+**Catatan:** pengguna app belum punya akun login, jadi akses buku setelah bayar
+terbuka di perangkat tersebut (order tetap tercatat di tabel `orders` untuk
+pembukuan). Kepemilikan lintas-perangkat memerlukan fitur login pengguna —
+bisa ditambahkan menyusul.
