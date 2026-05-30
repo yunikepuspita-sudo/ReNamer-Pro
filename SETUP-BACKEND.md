@@ -46,6 +46,16 @@ VITE_SUPABASE_ANON_KEY=eyJhbGciOi....
 
 ---
 
+## Buku Berbayar (cuplikan + beli)
+
+- Di panel `/admin`, isi kolom **Harga** (mis. `25000`) dan/atau centang **Premium**.
+- Buku PDF berbayar/premium yang **belum dimiliki** hanya bisa dibaca **2 halaman
+  pertama** (cuplikan), lalu muncul ajakan membeli.
+- Tombol **Beli** saat ini bersifat **simulasi**: menekan "Beli" langsung memberi
+  akses (tanpa uang nyata). Setelah "dibeli", buku tampil penuh & masuk Pustaka.
+- Pelanggan **Premium** otomatis bisa membaca penuh buku bertanda Premium.
+- Pembayaran sungguhan = **Fase 2** di bawah.
+
 ## FASE 2 — Pembayaran Nyata (Midtrans / Xendit)
 
 > Belum diaktifkan. Ini ringkasan rencana — perlu langkah pendaftaran dari Anda.

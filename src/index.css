@@ -354,6 +354,11 @@ a { color: inherit; text-decoration: none; }
 .pdf-stage .react-pdf__Page { box-shadow: var(--shadow); border-radius: 4px; overflow: hidden; }
 .pdf-stage canvas { max-width: 100%; height: auto !important; }
 .pdf-loading { color: inherit; opacity: .7; padding: 40px; }
+.pdf-preview-badge {
+  margin-left: 10px; background: var(--accent); color: #1a1a1a; font-size: 10px;
+  font-weight: 800; letter-spacing: .5px; padding: 3px 8px; border-radius: 20px; vertical-align: middle;
+}
+.pdf-paywall { max-width: 480px; margin: 30px auto; }
 .reader__page p { margin: 0 0 1.2em; text-align: justify; }
 
 .reader__paywall {
