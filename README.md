@@ -1,6 +1,7 @@
 # 📚 E-Pustaka Pemilu
 
 🔗 **Demo langsung:** https://yunikepuspita-sudo.github.io/ReNamer-Pro/
+🌐 **Domain khusus:** https://pustaka.yunikepuspita.com (via GitHub Pages custom domain)
 _(otomatis ter-deploy lewat GitHub Actions setiap ada perubahan di branch utama)_
 
 Aplikasi **perpustakaan digital & toko buku (bookstore)** bertema **demokrasi dan pemilihan umum**,
