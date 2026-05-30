@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 export default function Footer() {
   return (
     <footer className="footer">
@@ -18,6 +20,7 @@ export default function Footer() {
           <h4>Bantuan</h4>
           <p>customercare@e-pustaka-pemilu.id</p>
           <p>Kebijakan Privasi · Syarat Penggunaan</p>
+          <p><Link to="/admin">Masuk Admin</Link></p>
         </div>
       </div>
       <div className="footer__bar">© 2024 E-Pustaka Pemilu — proyek demonstrasi non-komersial.</div>

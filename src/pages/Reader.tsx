@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { getBook } from '../data/books'
+import { useCatalog } from '../context/CatalogContext'
 import { getUpload, type UploadRecord } from '../lib/uploads'
 import TextReader from './TextReader'
 import PdfReader from '../components/PdfReader'
@@ -9,6 +9,7 @@ import PdfReader from '../components/PdfReader'
 export default function Reader() {
   const { id } = useParams()
   const navigate = useNavigate()
+  const { getBook } = useCatalog()
   const staticBook = id ? getBook(id) : undefined
 
   // undefined = belum dicek, null = tidak ada
@@ -26,9 +27,12 @@ export default function Reader() {
     }
   }, [id, staticBook])
 
-  // Buku katalog berformat PDF (Opsi A).
+  // Buku katalog berformat PDF (repo lokal maupun unggahan admin via Supabase).
   if (staticBook?.pdfUrl) {
-    const url = import.meta.env.BASE_URL + staticBook.pdfUrl
+    // URL absolut (Supabase Storage) dipakai apa adanya; path relatif diberi base.
+    const url = /^https?:\/\//.test(staticBook.pdfUrl)
+      ? staticBook.pdfUrl
+      : import.meta.env.BASE_URL + staticBook.pdfUrl
     return <PdfReader source={url} title={staticBook.title} onBack={() => navigate(`/buku/${staticBook.id}`)} />
   }
 
