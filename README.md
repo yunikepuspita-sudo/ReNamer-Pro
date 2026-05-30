@@ -1,5 +1,8 @@
 # 📚 E-Pustaka Pemilu
 
+🔗 **Demo langsung:** https://yunikepuspita-sudo.github.io/ReNamer-Pro/
+_(otomatis ter-deploy lewat GitHub Actions setiap ada perubahan di branch utama)_
+
 Aplikasi **perpustakaan digital & toko buku (bookstore)** bertema **demokrasi dan pemilihan umum**,
 terinspirasi oleh aplikasi **Gramedia Digital**. Pengguna dapat menjelajahi toko, mencari dan
 memfilter koleksi, membeli/menambahkan judul ke pustaka pribadi, lalu membacanya di dalam
