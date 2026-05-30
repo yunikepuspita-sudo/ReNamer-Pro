@@ -24,6 +24,8 @@ export interface Book {
   synopsis: string
   pages: number
   chapters: Chapter[]
+  /** Bila diisi, buku dibaca sebagai PDF (file di public/ebooks/). */
+  pdfUrl?: string
 }
 
 export type ReaderTheme = 'terang' | 'gelap' | 'sepia' | 'hijau'

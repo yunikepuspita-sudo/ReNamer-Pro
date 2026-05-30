@@ -230,6 +230,26 @@ a { color: inherit; text-decoration: none; }
 
 /* ---------- Library ---------- */
 .library h1 { margin-top: 0; }
+.library__head { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.library__section { margin-top: 26px; }
+.library__section h2 { font-size: 20px; margin: 0 0 14px; }
+.library__item-actions { display: flex; gap: 8px; margin-top: 10px; }
+.btn--sm { padding: 6px 12px; font-size: 13px; }
+
+/* Upload form */
+.upload-form {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 20px; margin: 18px 0;
+}
+.upload-form__hint { margin: 0 0 16px; color: var(--muted); font-size: 14px; }
+.upload-form__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.upload-form label { display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600; color: var(--muted); }
+.upload-form input, .upload-form select {
+  border: 1.5px solid var(--border); border-radius: 8px; padding: 10px 12px; font-size: 14px; font-weight: 400; color: var(--text);
+}
+.upload-form input:focus, .upload-form select:focus { outline: none; border-color: var(--brand); }
+.upload-form__err { color: #dc2626; font-size: 14px; margin: 12px 0 0; }
+.upload-form__actions { display: flex; gap: 12px; margin-top: 16px; }
 .library__item {
   background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden;
   transition: transform .12s, box-shadow .12s;
@@ -310,6 +330,16 @@ a { color: inherit; text-decoration: none; }
 
 .reader__page { max-width: 680px; margin: 0 auto; padding: 32px 24px; }
 .reader__chapter-title { font-size: 1.6em; margin: 0 0 24px; }
+
+/* PDF viewer */
+.pdf-stage {
+  display: flex; justify-content: center; padding: 24px 16px 100px;
+  min-height: 60vh; overflow-x: auto;
+}
+.pdf-stage .react-pdf__Document { display: flex; flex-direction: column; align-items: center; }
+.pdf-stage .react-pdf__Page { box-shadow: var(--shadow); border-radius: 4px; overflow: hidden; }
+.pdf-stage canvas { max-width: 100%; height: auto !important; }
+.pdf-loading { color: inherit; opacity: .7; padding: 40px; }
 .reader__page p { margin: 0 0 1.2em; text-align: justify; }
 
 .reader__paywall {
