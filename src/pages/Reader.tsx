@@ -1,15 +1,20 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useCatalog } from '../context/CatalogContext'
+import { useApp } from '../context/AppContext'
 import { getUpload, type UploadRecord } from '../lib/uploads'
 import TextReader from './TextReader'
 import PdfReader from '../components/PdfReader'
+
+/** Jumlah halaman cuplikan untuk PDF berbayar/premium yang belum dimiliki. */
+const PREVIEW_PAGES = 2
 
 /** Memilih jenis reader yang tepat berdasarkan sumber buku. */
 export default function Reader() {
   const { id } = useParams()
   const navigate = useNavigate()
   const { getBook } = useCatalog()
+  const { inLibrary, premium } = useApp()
   const staticBook = id ? getBook(id) : undefined
 
   // undefined = belum dicek, null = tidak ada
@@ -33,7 +38,21 @@ export default function Reader() {
     const url = /^https?:\/\//.test(staticBook.pdfUrl)
       ? staticBook.pdfUrl
       : import.meta.env.BASE_URL + staticBook.pdfUrl
-    return <PdfReader source={url} title={staticBook.title} onBack={() => navigate(`/buku/${staticBook.id}`)} />
+
+    // Terkunci jika berbayar/premium dan belum dimiliki (bukan pelanggan premium).
+    const owned = inLibrary(staticBook.id)
+    const needsPurchase = staticBook.price > 0 || staticBook.premium
+    const locked = needsPurchase && !owned && !(staticBook.premium && premium)
+
+    return (
+      <PdfReader
+        source={url}
+        title={staticBook.title}
+        onBack={() => navigate(`/buku/${staticBook.id}`)}
+        previewPages={locked ? PREVIEW_PAGES : undefined}
+        onUnlock={locked ? () => navigate(`/buku/${staticBook.id}`) : undefined}
+      />
+    )
   }
 
   // Buku katalog berformat teks.

@@ -14,11 +14,17 @@ export default function PdfReader({
   source,
   title,
   onBack,
+  previewPages,
+  onUnlock,
 }: {
   /** URL string atau Blob/File untuk file PDF. */
   source: string | Blob
   title: string
   onBack: () => void
+  /** Bila diisi, pembaca hanya boleh membuka sampai N halaman (cuplikan). */
+  previewPages?: number
+  /** Aksi saat pengguna menekan tombol buka/beli di paywall. */
+  onUnlock?: () => void
 }) {
   const [numPages, setNumPages] = useState(0)
   const [page, setPage] = useState(1)
@@ -40,15 +46,23 @@ export default function PdfReader({
     return () => window.removeEventListener('resize', measure)
   }, [])
 
+  // Halaman maksimal yang boleh dibuka: dibatasi cuplikan bila terkunci.
+  const maxPage = previewPages && numPages ? Math.min(previewPages, numPages) : numPages
+  const locked = Boolean(previewPages)
+  const atPreviewEnd = locked && page >= maxPage
+
   const atFirst = page <= 1
-  const atLast = page >= numPages
+  const atLast = page >= maxPage
   const percent = numPages ? Math.round((page / numPages) * 100) : 0
 
   return (
     <div className={`reader reader--${theme}`}>
       <div className="reader__topbar">
         <button className="reader__icon" onClick={onBack} title="Kembali">←</button>
-        <span className="reader__booktitle">{title}</span>
+        <span className="reader__booktitle">
+          {title}
+          {locked && <span className="pdf-preview-badge">CUPLIKAN</span>}
+        </span>
         <div className="reader__topbar-right">
           <div className="theme-swatches">
             {THEMES.map((t) => (
@@ -91,6 +105,21 @@ export default function PdfReader({
               loading={<p className="pdf-loading">Memuat halaman…</p>}
             />
           </Document>
+        )}
+
+        {atPreviewEnd && (
+          <div className="reader__paywall pdf-paywall">
+            <h3>🔒 Ini baru cuplikan</h3>
+            <p>
+              Anda membaca {maxPage} halaman pertama. Beli buku ini untuk membaca seluruh
+              {numPages ? ` ${numPages}` : ''} halaman.
+            </p>
+            {onUnlock && (
+              <button className="btn btn--primary" onClick={onUnlock}>
+                Beli untuk Membaca Penuh
+              </button>
+            )}
+          </div>
         )}
       </div>
 
