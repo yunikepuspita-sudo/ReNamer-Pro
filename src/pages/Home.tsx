@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { BOOKS } from '../data/books'
+import { THEMES, themeCount } from '../data/themes'
 import Shelf from '../components/Shelf'
 
 export default function Home() {
@@ -30,6 +31,27 @@ export default function Home() {
           <div className="hero__book" style={{ background: 'linear-gradient(145deg,#1e3a8a,#3b82f6)' }} />
           <div className="hero__book" style={{ background: 'linear-gradient(145deg,#047857,#10b981)' }} />
           <div className="hero__book" style={{ background: 'linear-gradient(145deg,#b91c1c,#f59e0b)' }} />
+        </div>
+      </section>
+
+      <section className="home-themes">
+        <div className="home-themes__head">
+          <h2>🗳️ Telusuri Tema Pemilu</h2>
+          <Link to="/tema" className="home-themes__all">Lihat semua →</Link>
+        </div>
+        <div className="home-themes__row">
+          {THEMES.map((t) => (
+            <Link
+              key={t.id}
+              to={`/tema/${t.id}`}
+              className="theme-pill"
+              style={{ background: `linear-gradient(145deg, ${t.color[0]}, ${t.color[1]})` }}
+            >
+              <span className="theme-pill__icon">{t.icon}</span>
+              <span className="theme-pill__name">{t.name}</span>
+              <span className="theme-pill__count">{themeCount(t.id)} judul</span>
+            </Link>
+          ))}
         </div>
       </section>
 

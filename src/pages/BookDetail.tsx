@@ -1,5 +1,6 @@
 import { Link, useParams, useNavigate } from 'react-router-dom'
 import { BOOKS, getBook, formatRupiah } from '../data/books'
+import { getTheme } from '../data/themes'
 import { useApp } from '../context/AppContext'
 import BookCover from '../components/BookCover'
 import Shelf from '../components/Shelf'
@@ -90,6 +91,23 @@ export default function BookDetail() {
         <h2>Sinopsis</h2>
         <p>{book.synopsis}</p>
       </section>
+
+      {book.themes.length > 0 && (
+        <section className="detail__section">
+          <h2>Tema Pemilu</h2>
+          <div className="theme-chips">
+            {book.themes.map((tid) => {
+              const t = getTheme(tid)
+              if (!t) return null
+              return (
+                <Link key={tid} to={`/tema/${tid}`} className="theme-chip">
+                  {t.icon} {t.name}
+                </Link>
+              )
+            })}
+          </div>
+        </section>
+      )}
 
       <section className="detail__section">
         <h2>Daftar Isi</h2>

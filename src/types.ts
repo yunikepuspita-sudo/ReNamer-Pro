@@ -13,6 +13,8 @@ export interface Book {
   publisher: string
   type: ContentType
   category: string
+  /** ID tema Pemilu yang relevan (lihat data/themes.ts). */
+  themes: string[]
   year: number
   price: number // dalam Rupiah; 0 = gratis
   rating: number // 0-5

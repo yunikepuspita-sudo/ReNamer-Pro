@@ -3,6 +3,8 @@ import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import Home from './pages/Home'
 import Store from './pages/Store'
+import Themes from './pages/Themes'
+import ThemeDetail from './pages/ThemeDetail'
 import BookDetail from './pages/BookDetail'
 import Reader from './pages/Reader'
 import Library from './pages/Library'
@@ -23,6 +25,8 @@ export default function App() {
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/toko" element={<Store />} />
+                <Route path="/tema" element={<Themes />} />
+                <Route path="/tema/:id" element={<ThemeDetail />} />
                 <Route path="/buku/:id" element={<BookDetail />} />
                 <Route path="/pustaka" element={<Library />} />
                 <Route path="/premium" element={<Premium />} />

@@ -144,6 +144,56 @@ a { color: inherit; text-decoration: none; }
   font-size: 9px; font-weight: 800; padding: 3px 7px; border-radius: 20px; letter-spacing: .5px;
 }
 
+/* ---------- Tema Pemilu (kategori) ---------- */
+.home-themes { margin-bottom: 34px; }
+.home-themes__head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 14px; }
+.home-themes__head h2 { font-size: 20px; margin: 0; }
+.home-themes__all { color: var(--brand); font-weight: 600; font-size: 14px; }
+.home-themes__row { display: flex; gap: 14px; overflow-x: auto; padding-bottom: 8px; }
+.theme-pill {
+  flex: 0 0 200px; border-radius: var(--radius); padding: 16px; color: #fff;
+  display: flex; flex-direction: column; gap: 4px; box-shadow: var(--shadow);
+  transition: transform .12s ease;
+}
+.theme-pill:hover { transform: translateY(-3px); }
+.theme-pill__icon { font-size: 26px; }
+.theme-pill__name { font-weight: 700; line-height: 1.25; }
+.theme-pill__count { font-size: 12px; opacity: .85; }
+
+.themes__head { margin-bottom: 24px; }
+.themes__head h1 { margin: 8px 0 6px; }
+.themes__grid {
+  display: grid; gap: 18px;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+}
+.theme-card {
+  border-radius: 18px; padding: 22px; color: #fff; min-height: 160px;
+  display: flex; flex-direction: column; box-shadow: var(--shadow);
+  transition: transform .12s ease;
+}
+.theme-card:hover { transform: translateY(-4px); }
+.theme-card__icon { font-size: 34px; }
+.theme-card__name { margin: 10px 0 4px; font-size: 18px; line-height: 1.25; }
+.theme-card__tagline { font-size: 13px; opacity: .9; margin: 0; flex: 1; }
+.theme-card__count {
+  margin-top: 12px; align-self: flex-start; background: rgba(0,0,0,.22);
+  padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;
+}
+
+.theme-detail__banner {
+  display: flex; align-items: center; gap: 18px; color: #fff;
+  border-radius: 18px; padding: 28px; margin-bottom: 18px; box-shadow: var(--shadow);
+}
+.theme-detail__icon { font-size: 46px; }
+.theme-detail__banner h1 { margin: 0 0 4px; font-size: 26px; }
+.theme-detail__banner p { margin: 0; opacity: .92; }
+.theme-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.theme-chip {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 20px;
+  padding: 7px 14px; font-size: 13px; font-weight: 600; color: var(--muted);
+}
+.theme-chip:hover { border-color: var(--brand); color: var(--brand); }
+
 /* ---------- Store ---------- */
 .store__head { display: flex; align-items: center; gap: 20px; margin-bottom: 22px; flex-wrap: wrap; }
 .store__head h1 { margin: 0; }

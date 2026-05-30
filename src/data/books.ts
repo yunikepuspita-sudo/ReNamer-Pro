@@ -14,6 +14,7 @@ const demokrasiIntro = [
 export const BOOKS: Book[] = [
   {
     id: 'demokrasi-untuk-pemula',
+    themes: ['demokrasi', 'pemilu', 'pemilih-muda'],
     title: 'Demokrasi untuk Pemula',
     author: 'R. Wijaya',
     publisher: 'Pustaka Kebangsaan',
@@ -44,6 +45,7 @@ export const BOOKS: Book[] = [
   },
   {
     id: 'panduan-pemilih-cerdas',
+    themes: ['literasi-digital', 'pemilu', 'pemilih-muda'],
     title: 'Panduan Pemilih Cerdas',
     author: 'Sari Anggraini',
     publisher: 'Rumah Demokrasi',
@@ -72,6 +74,7 @@ export const BOOKS: Book[] = [
   },
   {
     id: 'sejarah-pemilu-indonesia',
+    themes: ['sejarah', 'pemilu', 'demokrasi'],
     title: 'Sejarah Pemilu Indonesia 1955–2024',
     author: 'Prof. Hadiyanto',
     publisher: 'Penerbit Arsip Nusantara',
@@ -100,6 +103,7 @@ export const BOOKS: Book[] = [
   },
   {
     id: 'konstitusi-dan-kita',
+    themes: ['hukum-konstitusi', 'demokrasi'],
     title: 'Konstitusi dan Kita',
     author: 'Dewi Larasati',
     publisher: 'Pustaka Kebangsaan',
@@ -123,6 +127,7 @@ export const BOOKS: Book[] = [
   },
   {
     id: 'kampanye-bersih',
+    themes: ['kampanye', 'pemilu'],
     title: 'Kampanye Bersih, Politik Sehat',
     author: 'Andi Pratama',
     publisher: 'Rumah Demokrasi',
@@ -146,6 +151,7 @@ export const BOOKS: Book[] = [
   },
   {
     id: 'literasi-digital-pemilu',
+    themes: ['literasi-digital', 'kampanye'],
     title: 'Literasi Digital di Tahun Politik',
     author: 'Maya Kusuma',
     publisher: 'Penerbit Cendekia',
@@ -169,6 +175,7 @@ export const BOOKS: Book[] = [
   },
   {
     id: 'majalah-suara-rakyat',
+    themes: ['pemilu', 'demokrasi'],
     title: 'Majalah Suara Rakyat — Edisi Pemilu',
     author: 'Redaksi Suara Rakyat',
     publisher: 'Suara Rakyat Media',
@@ -192,6 +199,7 @@ export const BOOKS: Book[] = [
   },
   {
     id: 'majalah-demokrasi-kini',
+    themes: ['demokrasi', 'pemilu'],
     title: 'Demokrasi Kini — Vol. 12',
     author: 'Redaksi Demokrasi Kini',
     publisher: 'Lembaga Kajian Politik',
@@ -215,6 +223,7 @@ export const BOOKS: Book[] = [
   },
   {
     id: 'koran-harian-bangsa',
+    themes: ['pemilu', 'pengawasan'],
     title: 'Harian Bangsa — Hasil Hitung Cepat',
     author: 'Redaksi Harian Bangsa',
     publisher: 'Harian Bangsa',
@@ -238,6 +247,7 @@ export const BOOKS: Book[] = [
   },
   {
     id: 'koran-warta-pemilu',
+    themes: ['pemilu', 'kampanye'],
     title: 'Warta Pemilu — Edisi Kampanye',
     author: 'Redaksi Warta Pemilu',
     publisher: 'Warta Nusantara',
@@ -261,6 +271,7 @@ export const BOOKS: Book[] = [
   },
   {
     id: 'partisipasi-anak-muda',
+    themes: ['pemilih-muda', 'demokrasi'],
     title: 'Anak Muda dan Masa Depan Demokrasi',
     author: 'Bagas Nugroho',
     publisher: 'Penerbit Cendekia',
@@ -284,6 +295,7 @@ export const BOOKS: Book[] = [
   },
   {
     id: 'etika-penyelenggara',
+    themes: ['pengawasan', 'hukum-konstitusi'],
     title: 'Etika Penyelenggara Pemilu',
     author: 'Dr. Ratna Sari',
     publisher: 'Penerbit Arsip Nusantara',

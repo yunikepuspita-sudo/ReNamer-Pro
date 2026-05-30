@@ -12,6 +12,10 @@ memfilter koleksi, membeli/menambahkan judul ke pustaka pribadi, lalu membacanya
 - **Beranda** dengan rak: Paling Populer, Terbaru, Gratis Dibaca, serta Majalah & Koran.
 - **Toko (Bookstore)** dengan pencarian teks + filter jenis (buku/majalah/koran), kategori,
   filter "gratis", dan pengurutan (populer/terbaru/termurah/judul).
+- **Tema Pemilu** — telusuri koleksi lewat 8 kategori bertema demokrasi & pemilu
+  (Demokrasi & Kewarganegaraan, Pemilu & Pilkada, Hukum & Konstitusi, Kampanye & Politik
+  Gagasan, Literasi Digital & Anti-Hoaks, Pemilih Muda, Integritas & Pengawasan, Sejarah
+  Pemilu) lengkap dengan halaman grid kategori, halaman per-tema, dan tautan tema di tiap buku.
 - **Detail judul**: sinopsis, daftar isi, rating, harga, dan rekomendasi kategori serupa.
 - **Reader EPUB** layar penuh:
   - 4 tema baca — **Terang, Gelap, Sepia, Hijau** (seperti mode baca Gramedia).
@@ -45,7 +49,9 @@ src/
   App.tsx                # definisi rute
   types.ts               # tipe data (Book, Chapter, ReaderTheme, …)
   data/books.ts          # data koleksi (buku, majalah, koran) bertema pemilu
+  data/themes.ts         # kategori Tema Pemilu + helper penelusuran
   context/AppContext.tsx # state global: pustaka, premium, progres (localStorage)
   components/            # Navbar, Footer, BookCard, BookCover, Shelf
-  pages/                 # Home, Store, BookDetail, Reader, Library, Premium, NotFound
+  pages/                 # Home, Store, Themes, ThemeDetail, BookDetail, Reader,
+                         #   Library, Premium, NotFound
 ```
