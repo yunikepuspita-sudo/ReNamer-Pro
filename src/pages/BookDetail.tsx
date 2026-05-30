@@ -12,6 +12,7 @@ export default function BookDetail() {
   const { books: BOOKS, getBook } = useCatalog()
   const book = id ? getBook(id) : undefined
   const { inLibrary, addToLibrary, removeFromLibrary, premium } = useApp()
+  const [checkout, setCheckout] = useState(false)
 
   if (!book) {
     return (
@@ -26,9 +27,14 @@ export default function BookDetail() {
   const locked = book.premium && !premium && !owned
   const related = BOOKS.filter((b) => b.category === book.category && b.id !== book.id).slice(0, 6)
 
+  // Buku gratis → langsung tambah. Buku berbayar → QRIS bila aktif, jika tidak simulasi.
   function handleAcquire() {
     if (!book) return
-    addToLibrary(book.id)
+    if (book.price > 0 && isPaymentEnabled) {
+      setCheckout(true)
+    } else {
+      addToLibrary(book.id)
+    }
   }
 
   return (
@@ -78,7 +84,11 @@ export default function BookDetail() {
             ) : (
               <>
                 <button className="btn btn--primary" onClick={handleAcquire}>
-                  {book.price === 0 ? 'Tambahkan ke Pustaka' : `Beli · ${formatRupiah(book.price)}`}
+                  {book.price === 0
+                    ? 'Tambahkan ke Pustaka'
+                    : isPaymentEnabled
+                      ? `Beli (QRIS) · ${formatRupiah(book.price)}`
+                      : `Beli · ${formatRupiah(book.price)}`}
                 </button>
                 <button className="btn btn--ghost" onClick={() => navigate(`/baca/${book.id}`)}>
                   Baca Cuplikan
@@ -121,6 +131,18 @@ export default function BookDetail() {
       </section>
 
       {related.length > 0 && <Shelf title="Kategori Serupa" books={related} />}
+
+      {checkout && (
+        <QrisCheckout
+          bookId={book.id}
+          title={book.title}
+          onClose={() => setCheckout(false)}
+          onPaid={() => {
+            addToLibrary(book.id)
+            setCheckout(false)
+          }}
+        />
+      )}
     </div>
   )
 }
