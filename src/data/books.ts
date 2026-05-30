@@ -13,6 +13,29 @@ const demokrasiIntro = [
 
 export const BOOKS: Book[] = [
   {
+    id: 'panduan-mencoblos-pdf',
+    themes: ['pemilu', 'pemilih-muda'],
+    title: 'Panduan Mencoblos yang Benar (PDF)',
+    author: 'Tim E-Pustaka Pemilu',
+    publisher: 'E-Pustaka Pemilu',
+    type: 'buku',
+    category: 'Pendidikan',
+    year: 2024,
+    price: 0,
+    rating: 4.9,
+    premium: false,
+    cover: ['#0e7490', '#22d3ee'],
+    synopsis:
+      'Buku saku berformat PDF yang merangkum langkah praktis mencoblos yang sah: persiapan sebelum ke TPS, prosedur di bilik suara, dan hak pemilih. Contoh dokumen PDF asli yang dapat dibaca langsung di dalam aplikasi.',
+    pages: 3,
+    pdfUrl: 'ebooks/panduan-mencoblos.pdf',
+    chapters: [
+      { title: 'Panduan Mencoblos yang Benar', paragraphs: ['Dokumen ini dibaca sebagai PDF.'] },
+      { title: 'Bab 1 — Sebelum ke TPS', paragraphs: ['Dokumen ini dibaca sebagai PDF.'] },
+      { title: 'Bab 2 — Di Bilik Suara', paragraphs: ['Dokumen ini dibaca sebagai PDF.'] },
+    ],
+  },
+  {
     id: 'demokrasi-untuk-pemula',
     themes: ['demokrasi', 'pemilu', 'pemilih-muda'],
     title: 'Demokrasi untuk Pemula',
