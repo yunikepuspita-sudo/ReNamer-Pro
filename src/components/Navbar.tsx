@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { useApp } from '../context/AppContext'
+import InstallButton from './InstallButton'
 
 export default function Navbar() {
   const { premium } = useApp()
@@ -41,6 +42,7 @@ export default function Navbar() {
           <NavLink to="/premium" className="navlink-premium">
             {premium ? '★ Premium' : 'Premium'}
           </NavLink>
+          <InstallButton />
         </nav>
       </div>
     </header>
