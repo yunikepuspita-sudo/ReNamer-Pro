@@ -11,6 +11,7 @@ export default function Home() {
   const peraturan = BOOKS.filter((b) => b.type === 'peraturan')
   const buku = BOOKS.filter((b) => b.type === 'buku')
   const majalahKoran = BOOKS.filter((b) => b.type === 'majalah' || b.type === 'koran')
+  const modul = BOOKS.filter((b) => b.type === 'modul')
   const terbaru = [...BOOKS].sort((a, b) => b.year - a.year).slice(0, 8)
 
   return (
