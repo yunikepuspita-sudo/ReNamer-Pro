@@ -11,9 +11,11 @@ import Library from './pages/Library'
 import Premium from './pages/Premium'
 import Admin from './pages/Admin'
 import NotFound from './pages/NotFound'
+import IosInstallHint from './components/IosInstallHint'
 
 export default function App() {
   return (
+    <>
     <Routes>
       {/* Reader tampil layar penuh tanpa navbar/footer. */}
       <Route path="/baca/:id" element={<Reader />} />
@@ -40,5 +42,7 @@ export default function App() {
         }
       />
     </Routes>
+    <IosInstallHint />
+    </>
   )
 }

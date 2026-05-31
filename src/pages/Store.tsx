@@ -10,6 +10,7 @@ type SortKey = 'populer' | 'terbaru' | 'termurah' | 'judul'
 const TYPE_LABELS: Record<ContentType | 'semua', string> = {
   semua: 'Semua',
   buku: 'Buku',
+  jurnal: 'Jurnal',
   majalah: 'Majalah',
   koran: 'Koran',
   jurnal: 'Jurnal',
