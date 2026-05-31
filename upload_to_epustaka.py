@@ -178,6 +178,9 @@ def build_book(rec, pdf_url, ctype, category, themes, publisher):
 
 def find_pdf(base_dir, rec):
     """Cari file PDF lokal untuk satu record (folder per-terbitan)."""
+    # 0) record dari folder biasa membawa path eksplisit
+    if rec.get("_local") and os.path.exists(rec["_local"]):
+        return rec["_local"]
     fname = slugify(rec["title"]) + ".pdf"
     # 1) sesuai struktur scraper: <base>/<slug_issue>/<slug_title>.pdf
     if rec.get("issue"):
@@ -189,6 +192,34 @@ def find_pdf(base_dir, rec):
         if fname in files:
             return os.path.join(root, fname)
     return None
+
+
+def title_from_filename(path):
+    """Judul rapi dari nama file PDF (untuk folder tanpa metadata.json)."""
+    name = os.path.splitext(os.path.basename(path))[0]
+    name = re.sub(r"[._]+", " ", name)
+    name = re.sub(r"\s+", " ", name).strip()
+    return name or "Tanpa Judul"
+
+
+def records_from_folder(base_dir):
+    """Bangun record dari semua PDF di folder (tanpa metadata.json)."""
+    records = []
+    for root, _, files in os.walk(base_dir):
+        for fn in sorted(files):
+            if fn.lower().endswith(".pdf"):
+                full = os.path.join(root, fn)
+                records.append({
+                    "title": title_from_filename(full),
+                    "authors": [],
+                    "date": "",
+                    "doi": "",
+                    "pdf_url": "",
+                    "article_url": "",
+                    "issue": "",
+                    "_local": full,
+                })
+    return records
 
 
 def main():
@@ -215,13 +246,18 @@ def main():
     password = args.password or env.get("EPUSTAKA_ADMIN_PASSWORD") or os.environ.get("EPUSTAKA_ADMIN_PASSWORD")
 
     meta_path = os.path.join(args.dir, "metadata.json")
-    if not os.path.exists(meta_path):
-        sys.exit(f"Tidak menemukan {meta_path}. Jalankan scrape_kpu_journal.py dulu.")
-    with open(meta_path, encoding="utf-8") as f:
-        records = json.load(f)
+    if os.path.exists(meta_path):
+        with open(meta_path, encoding="utf-8") as f:
+            records = json.load(f)
+        print(f"Ditemukan {len(records)} artikel di {meta_path}.")
+    else:
+        # Folder PDF biasa (tanpa metadata) -> judul dari nama file.
+        records = records_from_folder(args.dir)
+        if not records:
+            sys.exit(f"Tidak ada metadata.json maupun file PDF di {args.dir}.")
+        print(f"Tidak ada metadata.json; ditemukan {len(records)} file PDF di {args.dir} "
+              f"(judul diambil dari nama file).")
     themes = [t.strip() for t in args.themes.split(",") if t.strip()]
-
-    print(f"Ditemukan {len(records)} artikel di {meta_path}.")
 
     if args.dry_run:
         ok = sum(1 for r in records if find_pdf(args.dir, r))
