@@ -1,9 +1,12 @@
+import { useState } from 'react'
 import { Link, useParams, useNavigate } from 'react-router-dom'
 import { formatRupiah } from '../data/books'
 import { useCatalog } from '../context/CatalogContext'
 import { getTheme } from '../data/themes'
 import { useApp } from '../context/AppContext'
+import { isPaymentEnabled } from '../lib/payments'
 import BookCover from '../components/BookCover'
+import QrisCheckout from '../components/QrisCheckout'
 import Shelf from '../components/Shelf'
 
 export default function BookDetail() {
