@@ -30,10 +30,28 @@ Deno.serve(async (req) => {
       Deno.env.get('SUPABASE_URL')!,
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
     )
-    await supabase
+    // Perbarui order & ambil detailnya (untuk aktivasi premium).
+    const { data: orders } = await supabase
       .from('orders')
       .update({ status, provider_ref: order_id })
       .eq('id_str', order_id)
+      .select('user_id, kind, plan')
+
+    // Bila order Premium LUNAS → aktifkan premium di akun pengguna.
+    const order = orders?.[0]
+    if (status === 'paid' && order?.kind === 'premium' && order.user_id) {
+      const until = new Date()
+      until.setDate(until.getDate() + (order.plan === 'tahunan' ? 365 : 30))
+      await supabase.from('user_state').upsert(
+        {
+          user_id: order.user_id,
+          premium: true,
+          premium_until: until.toISOString(),
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: 'user_id' },
+      )
+    }
 
     return new Response('OK', { status: 200 })
   } catch (e) {

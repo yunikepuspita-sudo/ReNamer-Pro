@@ -10,6 +10,7 @@ import Reader from './pages/Reader'
 import Library from './pages/Library'
 import Premium from './pages/Premium'
 import Admin from './pages/Admin'
+import Auth from './pages/Auth'
 import NotFound from './pages/NotFound'
 import IosInstallHint from './components/IosInstallHint'
 
@@ -34,6 +35,7 @@ export default function App() {
                 <Route path="/pustaka" element={<Library />} />
                 <Route path="/premium" element={<Premium />} />
                 <Route path="/admin" element={<Admin />} />
+                <Route path="/masuk" element={<Auth />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </main>

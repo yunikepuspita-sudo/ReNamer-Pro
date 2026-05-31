@@ -1,20 +1,28 @@
 import { useEffect, useRef, useState } from 'react'
-import { createQrisCharge, getOrderStatus, type QrisCharge } from '../lib/payments'
+import {
+  createQrisCharge,
+  createPremiumCharge,
+  getOrderStatus,
+  type QrisCharge,
+  type PremiumPlan,
+} from '../lib/payments'
 import { formatRupiah } from '../data/books'
 
 type Phase = 'loading' | 'show-qr' | 'paid' | 'error'
 
 /**
- * Modal pembayaran QRIS. Membuat transaksi, menampilkan QR, lalu polling
- * status hingga lunas. Memanggil onPaid() saat pembayaran berhasil.
+ * Modal pembayaran QRIS. Membuat transaksi (buku via bookId, atau Premium via
+ * plan), menampilkan QR, lalu polling status hingga lunas.
  */
 export default function QrisCheckout({
   bookId,
+  plan,
   title,
   onClose,
   onPaid,
 }: {
-  bookId: string
+  bookId?: string
+  plan?: PremiumPlan
   title: string
   onClose: () => void
   onPaid: () => void
@@ -26,7 +34,8 @@ export default function QrisCheckout({
 
   useEffect(() => {
     let active = true
-    createQrisCharge(bookId)
+    const create = plan ? createPremiumCharge(plan) : createQrisCharge(bookId!)
+    create
       .then((c) => {
         if (!active) return
         setCharge(c)
@@ -40,7 +49,7 @@ export default function QrisCheckout({
     return () => {
       active = false
     }
-  }, [bookId])
+  }, [bookId, plan])
 
   // Polling status tiap 3 detik selama QR ditampilkan.
   useEffect(() => {
