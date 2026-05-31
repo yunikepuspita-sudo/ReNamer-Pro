@@ -104,6 +104,7 @@ export default function Library() {
                 <option value="buku">Buku</option>
                 <option value="jurnal">Jurnal</option>
                 <option value="peraturan">Peraturan</option>
+                <option value="modul">Modul</option>
                 <option value="majalah">Majalah</option>
                 <option value="koran">Koran</option>
               </select>
