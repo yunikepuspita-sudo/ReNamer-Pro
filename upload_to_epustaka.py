@@ -211,8 +211,8 @@ def main():
     env = load_env_file(args.env)
     url = args.url or env.get("VITE_SUPABASE_URL") or os.environ.get("SUPABASE_URL") or os.environ.get("VITE_SUPABASE_URL")
     anon = args.anon_key or env.get("VITE_SUPABASE_ANON_KEY") or os.environ.get("SUPABASE_ANON_KEY") or os.environ.get("VITE_SUPABASE_ANON_KEY")
-    email = args.email or os.environ.get("EPUSTAKA_ADMIN_EMAIL")
-    password = args.password or os.environ.get("EPUSTAKA_ADMIN_PASSWORD")
+    email = args.email or env.get("EPUSTAKA_ADMIN_EMAIL") or os.environ.get("EPUSTAKA_ADMIN_EMAIL")
+    password = args.password or env.get("EPUSTAKA_ADMIN_PASSWORD") or os.environ.get("EPUSTAKA_ADMIN_PASSWORD")
 
     meta_path = os.path.join(args.dir, "metadata.json")
     if not os.path.exists(meta_path):
