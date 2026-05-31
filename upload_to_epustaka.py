@@ -199,8 +199,8 @@ def main():
     ap.add_argument("--anon-key", help="Supabase anon key (atau dari env)")
     ap.add_argument("--email", help="email admin (atau env EPUSTAKA_ADMIN_EMAIL)")
     ap.add_argument("--password", help="password admin (atau env / ditanya saat runtime)")
-    ap.add_argument("--type", default="buku", choices=["buku", "majalah", "koran"],
-                    help="jenis koleksi (default buku)")
+    ap.add_argument("--type", default="jurnal", choices=["buku", "jurnal", "majalah", "koran"],
+                    help="jenis koleksi (default jurnal)")
     ap.add_argument("--category", default="Jurnal Pemilu", help="kategori koleksi")
     ap.add_argument("--themes", default="pemilu",
                     help="ID tema dipisah koma (lihat src/data/themes.ts), mis. pemilu,hukum-konstitusi")

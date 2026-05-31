@@ -176,6 +176,7 @@ function AdminPanel({ onSignOut, email }: { onSignOut: () => void; email: string
               Jenis
               <select value={form.type} onChange={(e) => set('type', e.target.value as ContentType)}>
                 <option value="buku">Buku</option>
+                <option value="jurnal">Jurnal</option>
                 <option value="majalah">Majalah</option>
                 <option value="koran">Koran</option>
               </select>
