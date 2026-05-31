@@ -15,3 +15,6 @@ dev-dist
 .env.local
 __pycache__/
 *.pyc
+
+# Script Python pribadi (scraper/upload) - jangan di repo aplikasi
+*.py
