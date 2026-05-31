@@ -108,13 +108,26 @@ class OJSScraper:
 
     # ---- Langkah 2: kumpulkan artikel dalam satu issue ----
     def collect_articles(self, issue_url):
+        """Kumpulkan URL halaman artikel (canonical), dedup berdasarkan ID.
+
+        Di OJS, halaman artikel = /article/view/ID, sedangkan tautan unduh
+        galley = /article/view/ID/GALLEY (mis. "View of JUDUL"). Kita
+        normalkan ke /article/view/ID dan dedup per-ID agar tidak ganda.
+        """
         s = self.soup(issue_url)
         arts, seen = [], set()
         for a in s.select('a[href*="/article/view/"]'):
-            href = urljoin(issue_url, a["href"].split("#")[0])
-            if "/article/view/" in href and href not in seen:
-                seen.add(href)
-                arts.append(href)
+            href = urljoin(issue_url, a["href"].split("#")[0].split("?")[0])
+            m = re.search(r"/article/view/(\d+)", href)
+            if not m:
+                continue
+            art_id = m.group(1)
+            if art_id in seen:
+                continue
+            seen.add(art_id)
+            # normalkan ke URL halaman artikel (buang bagian galley)
+            canonical = href[: m.end()]
+            arts.append(canonical)
         return arts
 
     # ---- Langkah 3: metadata + link PDF dari satu artikel ----
