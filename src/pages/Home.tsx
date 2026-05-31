@@ -8,6 +8,8 @@ export default function Home() {
   const populer = [...BOOKS].sort((a, b) => b.rating - a.rating).slice(0, 8)
   const gratis = BOOKS.filter((b) => b.price === 0)
   const jurnal = BOOKS.filter((b) => b.type === 'jurnal')
+  const peraturan = BOOKS.filter((b) => b.type === 'peraturan')
+  const buku = BOOKS.filter((b) => b.type === 'buku')
   const majalahKoran = BOOKS.filter((b) => b.type === 'majalah' || b.type === 'koran')
   const terbaru = [...BOOKS].sort((a, b) => b.year - a.year).slice(0, 8)
 
@@ -60,7 +62,9 @@ export default function Home() {
       <Shelf title="📈 Paling Populer" books={populer} />
       <Shelf title="🆕 Terbaru" books={terbaru} />
       <Shelf title="🎁 Gratis Dibaca" books={gratis} />
+      <Shelf title="📕 Buku & Bahan Pustaka" books={buku} />
       <Shelf title="📚 Jurnal" books={jurnal} />
+      <Shelf title="⚖️ Peraturan" books={peraturan} />
       <Shelf title="📰 Majalah & Koran" books={majalahKoran} />
     </div>
   )

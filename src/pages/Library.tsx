@@ -100,6 +100,7 @@ export default function Library() {
               <select value={type} onChange={(e) => setType(e.target.value as ContentType)}>
                 <option value="buku">Buku</option>
                 <option value="jurnal">Jurnal</option>
+                <option value="peraturan">Peraturan</option>
                 <option value="majalah">Majalah</option>
                 <option value="koran">Koran</option>
               </select>
