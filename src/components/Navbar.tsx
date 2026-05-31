@@ -1,10 +1,13 @@
 import { useState } from 'react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { useApp } from '../context/AppContext'
+import { useAuth } from '../context/AuthContext'
+import { displayName, signOut } from '../lib/auth'
 import InstallButton from './InstallButton'
 
 export default function Navbar() {
   const { premium } = useApp()
+  const { user, enabled } = useAuth()
   const navigate = useNavigate()
   const [q, setQ] = useState('')
 
@@ -42,6 +45,26 @@ export default function Navbar() {
           <NavLink to="/premium" className="navlink-premium">
             {premium ? '★ Premium' : 'Premium'}
           </NavLink>
+          {enabled && (
+            user ? (
+              <span className="navbar__user">
+                <span className="navbar__avatar" title={displayName(user)}>
+                  {displayName(user).charAt(0).toUpperCase()}
+                </span>
+                <button
+                  className="navbar__logout"
+                  onClick={async () => {
+                    await signOut()
+                    navigate('/')
+                  }}
+                >
+                  Keluar
+                </button>
+              </span>
+            ) : (
+              <NavLink to="/masuk" className="btn btn--primary btn--sm navbar__login">Masuk</NavLink>
+            )
+          )}
           <InstallButton />
         </nav>
       </div>

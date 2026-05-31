@@ -46,6 +46,30 @@ VITE_SUPABASE_ANON_KEY=eyJhbGciOi....
 
 ---
 
+## Akun Pengguna (Sign up / Login)
+
+Login **email + kata sandi** langsung berfungsi begitu Supabase aktif
+(halaman `/#/masuk`). Pengguna bisa daftar & masuk untuk menyimpan koleksi.
+
+> Opsional: di Supabase → **Authentication → Providers → Email**, Anda bisa
+> menyalakan/mematikan "Confirm email". Jika dinyalakan, pengguna harus
+> klik tautan di email sebelum bisa masuk.
+
+### Mengaktifkan "Lanjutkan dengan Google" (opsional)
+Tombol Google sudah ada di UI, tetapi perlu didaftarkan dulu:
+
+1. **Google Cloud Console** (https://console.cloud.google.com) → buat project →
+   **APIs & Services → Credentials → Create OAuth client ID** → tipe **Web**.
+2. Tambahkan **Authorized redirect URI**:
+   `https://ujrfymsvcxiwuqlvoodv.supabase.co/auth/v1/callback`
+3. Salin **Client ID** & **Client Secret**.
+4. Di **Supabase → Authentication → Providers → Google** → tempel Client ID &
+   Secret → **Enable** → Save.
+5. Di **Authentication → URL Configuration**, set **Site URL** ke
+   `https://pustaka.yunikepuspita.com` dan tambahkan ke **Redirect URLs**.
+
+Setelah itu tombol "Lanjutkan dengan Google" akan berfungsi.
+
 ## Buku Berbayar (cuplikan + beli)
 
 - Di panel `/admin`, isi kolom **Harga** (mis. `25000`) dan/atau centang **Premium**.
