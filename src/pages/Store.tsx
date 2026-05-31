@@ -13,7 +13,6 @@ const TYPE_LABELS: Record<ContentType | 'semua', string> = {
   jurnal: 'Jurnal',
   majalah: 'Majalah',
   koran: 'Koran',
-  jurnal: 'Jurnal',
 }
 
 export default function Store() {
