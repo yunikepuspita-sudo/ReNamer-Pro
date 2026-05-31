@@ -65,6 +65,7 @@ export default function Home() {
       <Shelf title="📕 Buku & Bahan Pustaka" books={buku} />
       <Shelf title="📚 Jurnal" books={jurnal} />
       <Shelf title="⚖️ Peraturan" books={peraturan} />
+      <Shelf title="📦 Modul & Sosialisasi" books={modul} />
       <Shelf title="📰 Majalah & Koran" books={majalahKoran} />
     </div>
   )

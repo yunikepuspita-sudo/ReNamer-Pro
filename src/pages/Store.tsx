@@ -12,6 +12,7 @@ const TYPE_LABELS: Record<ContentType | 'semua', string> = {
   buku: 'Buku',
   jurnal: 'Jurnal',
   peraturan: 'Peraturan',
+  modul: 'Modul',
   majalah: 'Majalah',
   koran: 'Koran',
 }
@@ -78,7 +79,7 @@ export default function Store() {
         <aside className="filters">
           <div className="filters__group">
             <h4>Jenis</h4>
-            {(['semua', 'buku', 'jurnal', 'peraturan', 'majalah', 'koran'] as const).map((t) => (
+            {(['semua', 'buku', 'jurnal', 'peraturan', 'modul', 'majalah', 'koran'] as const).map((t) => (
               <label key={t} className="filters__radio">
                 <input
                   type="radio"
