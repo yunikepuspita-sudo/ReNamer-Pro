@@ -72,17 +72,16 @@ buku terbuka otomatis.
    kadang NPWP/badan usaha. Sandbox tidak butuh ini.
 
 ### 2. Set Secrets di Supabase (untuk Edge Functions)
-Di Supabase Dashboard → **Edge Functions → Secrets** (atau via CLI), tambahkan:
+Hanya **dua** secret yang perlu diset (via CLI atau Dashboard → Edge Functions → Secrets):
 
 ```
-MIDTRANS_SERVER_KEY      = <Server Key dari Midtrans>
-MIDTRANS_IS_PRODUCTION   = false          # true bila sudah live
-SUPABASE_URL             = https://<ref>.supabase.co
-SUPABASE_SERVICE_ROLE_KEY= <service_role key>   # Settings → API (RAHASIA)
+supabase secrets set MIDTRANS_SERVER_KEY=<Server Key Midtrans>
+supabase secrets set MIDTRANS_IS_PRODUCTION=false   # true bila sudah live
 ```
 
-> `service_role key` hanya dipakai di server (Edge Function), **tidak pernah**
-> di frontend.
+> CATATAN: `SUPABASE_URL` dan `SUPABASE_SERVICE_ROLE_KEY` **TIDAK perlu diset** —
+> Supabase otomatis menyediakannya ke setiap Edge Function. (Nama berawalan
+> `SUPABASE_` memang ditolak oleh CLI karena sudah dipesan sistem.)
 
 ### 3. Jalankan ulang skema (kolom baru `id_str`)
 Jalankan kembali `supabase/schema.sql` di SQL Editor (idempoten/aman diulang) —
