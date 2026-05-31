@@ -70,6 +70,28 @@ Tombol Google sudah ada di UI, tetapi perlu didaftarkan dulu:
 
 Setelah itu tombol "Lanjutkan dengan Google" akan berfungsi.
 
+## Premium dengan Pembayaran Nyata (QRIS)
+
+Langganan Premium kini memakai QRIS (Midtrans) dan **terikat ke akun**:
+1. Pengguna **harus login** untuk berlangganan.
+2. Klik paket → **Berlangganan dengan QRIS** → scan QR → bayar.
+3. Webhook Midtrans menandai order `paid` lalu **mengaktifkan `premium=true`**
+   di `user_state` pengguna (dengan `premium_until`).
+
+Prasyarat (lihat bagian QRIS di bawah): Midtrans aktif + 3 Edge Functions
+ter-deploy + webhook terdaftar. Setelah mengubah Edge Functions, **deploy ulang**:
+
+```bash
+supabase functions deploy create-payment  --no-verify-jwt
+supabase functions deploy payment-webhook --no-verify-jwt
+```
+
+Dan jalankan ulang `supabase/schema.sql` (idempoten) untuk kolom baru
+(`orders.kind`, `orders.plan`, `user_state.premium_until`).
+
+> Harga Premium ditetapkan di server (Edge Function): Bulanan Rp 49.000,
+> Tahunan Rp 399.000 — ubah di `create-payment/index.ts` bila perlu.
+
 ## Buku Berbayar (cuplikan + beli)
 
 - Di panel `/admin`, isi kolom **Harga** (mis. `25000`) dan/atau centang **Premium**.

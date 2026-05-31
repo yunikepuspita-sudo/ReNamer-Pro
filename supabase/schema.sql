@@ -43,12 +43,19 @@ create table if not exists public.orders (
   id           uuid primary key default gen_random_uuid(),
   user_id      uuid references auth.users(id),
   book_id      uuid references public.books(id),
+  kind         text default 'book',                   -- book | premium
+  plan         text,                                  -- bulanan | tahunan (utk premium)
   amount       int not null,
   status       text not null default 'pending',       -- pending | paid | failed
   provider     text,                                  -- midtrans | xendit
   provider_ref text,
   created_at   timestamptz default now()
 );
+
+-- Idempoten: tambah kolom bila tabel orders sudah ada sebelumnya.
+alter table public.orders add column if not exists id_str text unique;
+alter table public.orders add column if not exists kind text default 'book';
+alter table public.orders add column if not exists plan text;
 
 alter table public.orders enable row level security;
 
@@ -67,12 +74,15 @@ create policy "orders_owner_insert"
 -- 2b) State pengguna (pustaka, premium, progres) — sinkron lintas perangkat
 -- ============================================================
 create table if not exists public.user_state (
-  user_id    uuid primary key references auth.users(id) on delete cascade,
-  library    text[] default '{}',
-  premium    boolean default false,
-  progress   jsonb default '{}'::jsonb,
-  updated_at timestamptz default now()
+  user_id       uuid primary key references auth.users(id) on delete cascade,
+  library       text[] default '{}',
+  premium       boolean default false,
+  premium_until timestamptz,
+  progress      jsonb default '{}'::jsonb,
+  updated_at    timestamptz default now()
 );
+
+alter table public.user_state add column if not exists premium_until timestamptz;
 
 alter table public.user_state enable row level security;
 

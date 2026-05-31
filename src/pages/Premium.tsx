@@ -1,8 +1,11 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useApp } from '../context/AppContext'
+import { useAuth } from '../context/AuthContext'
+import { isPaymentEnabled, type PremiumPlan } from '../lib/payments'
+import QrisCheckout from '../components/QrisCheckout'
 
-const PLANS = [
+const PLANS: { id: PremiumPlan; name: string; price: string; per: string; highlight: boolean; note?: string }[] = [
   { id: 'bulanan', name: 'Bulanan', price: 'Rp 49.000', per: '/bulan', highlight: false },
   { id: 'tahunan', name: 'Tahunan', price: 'Rp 399.000', per: '/tahun', highlight: true, note: 'Hemat 32%' },
 ]
@@ -17,8 +20,28 @@ const BENEFITS = [
 
 export default function Premium() {
   const { premium, setPremium } = useApp()
+  const { user, enabled } = useAuth()
   const navigate = useNavigate()
-  const [selected, setSelected] = useState('tahunan')
+  const [selected, setSelected] = useState<PremiumPlan>('tahunan')
+  const [checkout, setCheckout] = useState(false)
+
+  // Pembayaran nyata aktif bila Supabase + payment dikonfigurasi.
+  const realPayment = isPaymentEnabled
+
+  function handleSubscribe() {
+    // Pembayaran nyata butuh login.
+    if (realPayment && enabled) {
+      if (!user) {
+        navigate('/masuk')
+        return
+      }
+      setCheckout(true)
+    } else {
+      // Mode demo (tanpa backend pembayaran).
+      setPremium(true)
+      navigate('/toko')
+    }
+  }
 
   return (
     <div className="premium">
@@ -34,7 +57,6 @@ export default function Premium() {
           <p>Selamat menikmati seluruh koleksi tanpa batas.</p>
           <div className="premium__active-actions">
             <button className="btn btn--primary" onClick={() => navigate('/toko')}>Mulai Membaca</button>
-            <button className="btn btn--ghost" onClick={() => setPremium(false)}>Batalkan Langganan</button>
           </div>
         </div>
       ) : (
@@ -62,17 +84,35 @@ export default function Premium() {
             ))}
           </ul>
 
-          <button
-            className="btn btn--primary btn--block"
-            onClick={() => {
-              setPremium(true)
-              navigate('/toko')
-            }}
-          >
-            Berlangganan {PLANS.find((p) => p.id === selected)?.name} sekarang
+          {realPayment && !user && (
+            <p className="muted center">
+              Anda perlu <Link to="/masuk">masuk</Link> untuk berlangganan Premium.
+            </p>
+          )}
+
+          <button className="btn btn--primary btn--block" onClick={handleSubscribe}>
+            {realPayment
+              ? `Berlangganan ${PLANS.find((p) => p.id === selected)?.name} dengan QRIS`
+              : `Berlangganan ${PLANS.find((p) => p.id === selected)?.name} sekarang`}
           </button>
-          <p className="muted center">Demo: langganan diaktifkan secara lokal, tanpa pembayaran nyata.</p>
+          {!realPayment && (
+            <p className="muted center">Demo: langganan diaktifkan secara lokal, tanpa pembayaran nyata.</p>
+          )}
         </>
+      )}
+
+      {checkout && (
+        <QrisCheckout
+          plan={selected}
+          title={`Premium ${PLANS.find((p) => p.id === selected)?.name}`}
+          onClose={() => setCheckout(false)}
+          onPaid={() => {
+            // Webhook mengaktifkan premium di akun; aktifkan juga lokal agar instan.
+            setPremium(true)
+            setCheckout(false)
+            navigate('/toko')
+          }}
+        />
       )}
     </div>
   )
