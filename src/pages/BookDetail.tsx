@@ -30,10 +30,14 @@ export default function BookDetail() {
   const locked = book.premium && !premium && !owned
   const related = BOOKS.filter((b) => b.category === book.category && b.id !== book.id).slice(0, 6)
 
-  // Buku gratis → langsung tambah. Buku berbayar → QRIS bila aktif, jika tidak simulasi.
+  // Buku dari database Supabase memakai id UUID; hanya buku ini yang bisa QRIS
+  // (Edge Function mengambil harga dari DB). Buku contoh bawaan → simulasi.
+  const isDbBook = /^[0-9a-f]{8}-[0-9a-f]{4}-/i.test(book.id)
+
+  // Buku gratis → langsung tambah. Buku berbayar dari DB → QRIS; selain itu simulasi.
   function handleAcquire() {
     if (!book) return
-    if (book.price > 0 && isPaymentEnabled) {
+    if (book.price > 0 && isPaymentEnabled && isDbBook) {
       setCheckout(true)
     } else {
       addToLibrary(book.id)
@@ -89,7 +93,7 @@ export default function BookDetail() {
                 <button className="btn btn--primary" onClick={handleAcquire}>
                   {book.price === 0
                     ? 'Tambahkan ke Pustaka'
-                    : isPaymentEnabled
+                    : isPaymentEnabled && isDbBook
                       ? `Beli (QRIS) · ${formatRupiah(book.price)}`
                       : `Beli · ${formatRupiah(book.price)}`}
                 </button>
