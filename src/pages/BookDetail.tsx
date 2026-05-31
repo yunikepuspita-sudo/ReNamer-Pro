@@ -5,7 +5,7 @@ import { useCatalog } from '../context/CatalogContext'
 import { getTheme } from '../data/themes'
 import { useApp } from '../context/AppContext'
 import { isPaymentEnabled } from '../lib/payments'
-import BookCover from '../components/BookCover'
+import PdfCover from '../components/PdfCover'
 import QrisCheckout from '../components/QrisCheckout'
 import Shelf from '../components/Shelf'
 
@@ -48,7 +48,7 @@ export default function BookDetail() {
     <div className="detail">
       <div className="detail__main">
         <div className="detail__cover">
-          <BookCover book={book} size="lg" />
+          <PdfCover book={book} size="lg" />
         </div>
 
         <div className="detail__info">
