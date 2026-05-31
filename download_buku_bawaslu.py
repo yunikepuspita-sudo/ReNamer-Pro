@@ -22,7 +22,12 @@ import time
 from urllib.parse import urljoin, urlparse, unquote
 
 import requests
+import urllib3
 from bs4 import BeautifulSoup
+
+# Situs Bawaslu memakai sertifikat SSL dengan rantai tidak lengkap, sehingga
+# verifikasi gagal di sebagian komputer. Kita matikan verifikasi (file publik).
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 START_URL = "https://e-lib.bawaslu.go.id/kategori/Buku/Af9baaf8-7cfb-4344-9886-Jd25281O58a1"
 OUTPUT_DIR = "buku_bawaslu"
@@ -162,6 +167,7 @@ def main():
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     session = requests.Session()
     session.headers.update(HEADERS)
+    session.verify = False  # lewati verifikasi SSL (rantai sertifikat Bawaslu tidak lengkap)
     host = urlparse(START_URL).netloc
 
     print("=== Tahap 1: menelusuri daftar buku ===")
