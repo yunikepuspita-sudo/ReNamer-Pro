@@ -64,6 +64,26 @@ create policy "orders_owner_insert"
   with check (auth.uid() = user_id);
 
 -- ============================================================
+-- 2b) State pengguna (pustaka, premium, progres) — sinkron lintas perangkat
+-- ============================================================
+create table if not exists public.user_state (
+  user_id    uuid primary key references auth.users(id) on delete cascade,
+  library    text[] default '{}',
+  premium    boolean default false,
+  progress   jsonb default '{}'::jsonb,
+  updated_at timestamptz default now()
+);
+
+alter table public.user_state enable row level security;
+
+-- Tiap pengguna hanya boleh membaca & menulis barisnya sendiri.
+drop policy if exists "user_state_owner_all" on public.user_state;
+create policy "user_state_owner_all"
+  on public.user_state for all
+  using (auth.uid() = user_id)
+  with check (auth.uid() = user_id);
+
+-- ============================================================
 -- 3) Storage bucket untuk PDF (publik agar bisa dibaca pengguna)
 --    Jalankan ATAU buat manual di Storage → New bucket → "ebooks" (Public).
 -- ============================================================

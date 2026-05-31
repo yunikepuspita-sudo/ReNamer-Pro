@@ -13,7 +13,7 @@ function formatSize(bytes: number): string {
 }
 
 export default function Library() {
-  const { library, progress } = useApp()
+  const { library, progress, synced } = useApp()
   const { books: BOOKS } = useCatalog()
   const items = BOOKS.filter((b) => library.includes(b.id))
 
@@ -70,7 +70,10 @@ export default function Library() {
   return (
     <div className="library">
       <div className="library__head">
-        <h1>Pustaka Saya</h1>
+        <h1>
+          Pustaka Saya
+          {synced && <span className="synced-badge" title="Tersimpan di akun Anda">☁ Tersinkron</span>}
+        </h1>
         <button className="btn btn--primary" onClick={() => setOpen((v) => !v)}>
           ＋ Unggah Ebook
         </button>
