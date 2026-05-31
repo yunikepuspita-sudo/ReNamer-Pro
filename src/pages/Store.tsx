@@ -1,6 +1,5 @@
 import { useMemo, useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { CATEGORIES } from '../data/books'
 import { useCatalog } from '../context/CatalogContext'
 import type { ContentType } from '../types'
 import BookCard from '../components/BookCard'
@@ -25,6 +24,13 @@ export default function Store() {
   const [onlyFree, setOnlyFree] = useState(false)
   const [sort, setSort] = useState<SortKey>('populer')
   const { books: BOOKS } = useCatalog()
+
+  // Daftar kategori dibangun dari katalog yang sebenarnya (termasuk kategori
+  // baru dari hasil klasifikasi), bukan daftar tetap.
+  const categories = useMemo(
+    () => Array.from(new Set(BOOKS.map((b) => b.category).filter(Boolean))).sort((a, b) => a.localeCompare(b, 'id')),
+    [BOOKS],
+  )
 
   // Sinkron dengan parameter pencarian dari navbar.
   useEffect(() => {
@@ -96,7 +102,7 @@ export default function Store() {
             <h4>Kategori</h4>
             <select value={category} onChange={(e) => setCategory(e.target.value)}>
               <option value="semua">Semua kategori</option>
-              {CATEGORIES.map((c) => (
+              {categories.map((c) => (
                 <option key={c} value={c}>
                   {c}
                 </option>
