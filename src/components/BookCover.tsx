@@ -5,7 +5,7 @@ export default function BookCover({ book, size = 'md' }: { book: Book; size?: 's
   const heights = { sm: 150, md: 210, lg: 320 }
   const fonts = { sm: 13, md: 15, lg: 22 }
   const h = heights[size]
-  const typeLabel = { buku: 'BUKU', majalah: 'MAJALAH', koran: 'KORAN', jurnal: 'JURNAL' }[book.type]
+  const typeLabel = { buku: 'BUKU', majalah: 'MAJALAH', koran: 'KORAN', jurnal: 'JURNAL', peraturan: 'PERATURAN' }[book.type]
 
   return (
     <div

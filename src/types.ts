@@ -1,4 +1,4 @@
-export type ContentType = 'buku' | 'majalah' | 'koran' | 'jurnal'
+export type ContentType = 'buku' | 'majalah' | 'koran' | 'jurnal' | 'peraturan'
 
 export interface Chapter {
   title: string
