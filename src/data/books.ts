@@ -1,10 +1,11 @@
 import type { Book } from '../types'
+import { AI_PROMPT_BOOK } from './aiPromptBook'
 
 /**
- * Katalog buku contoh bawaan dikosongkan — seluruh koleksi kini berasal dari
- * database (Supabase) yang dikelola lewat panel /admin. Tambahkan buku di sana.
+ * Koleksi utama berasal dari database (Supabase) lewat panel /admin. Di sini
+ * hanya ada ebook gratis bawaan yang selalu tersedia.
  */
-export const BOOKS: Book[] = []
+export const BOOKS: Book[] = [AI_PROMPT_BOOK]
 
 /** Daftar kategori tetap untuk dropdown admin & filter toko. */
 export const CATEGORIES = [

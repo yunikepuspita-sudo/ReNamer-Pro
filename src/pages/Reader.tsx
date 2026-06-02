@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
 import { useCatalog } from '../context/CatalogContext'
 import { useApp } from '../context/AppContext'
+import { useAuth } from '../context/AuthContext'
 import { getUpload, type UploadRecord } from '../lib/uploads'
 import TextReader from './TextReader'
 import PdfReader from '../components/PdfReader'
@@ -15,7 +16,13 @@ export default function Reader() {
   const navigate = useNavigate()
   const { getBook } = useCatalog()
   const { inLibrary, premium } = useApp()
+  const { user, enabled, loading } = useAuth()
   const staticBook = id ? getBook(id) : undefined
+
+  // Membaca wajib login (bila backend aktif). Arahkan ke /masuk dengan tujuan kembali.
+  if (enabled && !loading && !user) {
+    return <Navigate to={`/masuk?next=${encodeURIComponent('/baca/' + (id ?? ''))}`} replace />
+  }
 
   // undefined = belum dicek, null = tidak ada
   const [upload, setUpload] = useState<UploadRecord | null | undefined>(undefined)
