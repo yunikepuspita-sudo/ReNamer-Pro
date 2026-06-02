@@ -1,0 +1,43 @@
+name: Capgo Live Update
+
+# Setiap ada perubahan kode di branch utama, build ulang isi web lalu upload
+# bundle terbaru ke server Capgo. APK Android yang sudah terpasang akan
+# mengunduh bundle ini secara OTA (tanpa install ulang) saat dibuka kembali.
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy-bundle:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build web bundle
+        run: npm run build
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+
+      - name: Upload bundle ke Capgo
+        # CAPGO_TOKEN: buat di https://app.capgo.app (Account → API Keys, tipe "upload"),
+        # lalu simpan di Settings → Secrets and variables → Actions.
+        run: >-
+          npx @capgo/cli@latest bundle upload
+          com.yunikepuspita.epustaka
+          --apikey "${{ secrets.CAPGO_TOKEN }}"
+          --channel production
+          --path dist
