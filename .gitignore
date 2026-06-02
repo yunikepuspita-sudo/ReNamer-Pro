@@ -19,5 +19,10 @@ __pycache__/
 # File sementara Supabase CLI (auto-generate, jangan di repo)
 supabase/.temp/
 
+# Keystore penanda-tangan Android - JANGAN PERNAH masuk repo
+*.keystore
+*.jks
+keystore-base64.txt
+
 # Script Python pribadi (scraper/upload) - jangan di repo aplikasi
 *.py
