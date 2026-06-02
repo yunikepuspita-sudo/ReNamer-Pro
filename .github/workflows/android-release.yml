@@ -9,6 +9,8 @@ on:
   push:
     tags:
       - 'v*'
+    branches:
+      - claude/practical-shannon-IAuF1
 
 permissions:
   contents: read
