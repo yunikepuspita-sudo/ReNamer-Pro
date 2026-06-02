@@ -16,5 +16,8 @@ dev-dist
 __pycache__/
 *.pyc
 
+# File sementara Supabase CLI (auto-generate, jangan di repo)
+supabase/.temp/
+
 # Script Python pribadi (scraper/upload) - jangan di repo aplikasi
 *.py
