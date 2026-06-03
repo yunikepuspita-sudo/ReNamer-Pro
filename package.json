@@ -1,7 +1,7 @@
 {
   "name": "e-pustaka-pemilu",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "E-Pustaka Pemilu - perpustakaan digital & bookstore bertema Pemilu, terinspirasi Gramedia Digital",
   "type": "module",
   "scripts": {

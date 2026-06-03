@@ -9,6 +9,11 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
+      // Jangan suntik registrasi SW otomatis ke index.html — kita daftarkan
+      // manual HANYA di web (lihat src/main.tsx). Di aplikasi native (Capacitor),
+      // service worker dimatikan karena membuat webview tidak responsif/konflik
+      // dengan update OTA Capgo.
+      injectRegister: false,
       includeAssets: ['vite.svg', 'icons/*.png', 'ebooks/*.pdf'],
       manifest: {
         name: 'E-Pustaka Pemilu',

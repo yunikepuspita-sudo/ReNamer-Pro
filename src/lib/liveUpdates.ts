@@ -17,6 +17,22 @@ import { App } from '@capacitor/app'
 export function initLiveUpdates(): void {
   if (!Capacitor.isNativePlatform()) return
 
+  // Bersihkan service worker + cache PWA yang mungkin sudah terdaftar dari versi
+  // sebelumnya — di webview native SW membuat halaman beku/tidak bisa di-tap.
+  try {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker
+        .getRegistrations()
+        .then((regs) => regs.forEach((r) => r.unregister()))
+        .catch(() => {})
+    }
+    if (typeof caches !== 'undefined') {
+      caches.keys().then((keys) => keys.forEach((k) => caches.delete(k))).catch(() => {})
+    }
+  } catch {
+    /* abaikan */
+  }
+
   // Tandai bundle aktif sebagai "berhasil" agar Capgo tidak mengembalikannya.
   CapacitorUpdater.notifyAppReady().catch((err) => {
     console.warn('[liveUpdates] notifyAppReady gagal:', err)
