@@ -53,7 +53,7 @@ jobs:
         run: |
           echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > "$RUNNER_TEMP/release.keystore"
 
-      - name: Build signed APK & AAB
+      - name: Build APK (debug + signed release) & AAB
         working-directory: android
         env:
           ANDROID_KEYSTORE_PATH: ${{ runner.temp }}/release.keystore
@@ -62,7 +62,23 @@ jobs:
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
           chmod +x ./gradlew
-          ./gradlew assembleRelease bundleRelease
+          ./gradlew assembleDebug assembleRelease bundleRelease
+
+      - name: Verify release APK signature
+        run: |
+          APKSIGNER=$(find "$ANDROID_HOME/build-tools" -name apksigner | sort -r | head -n1)
+          echo "Using: $APKSIGNER"
+          ls -la android/app/build/outputs/apk/release/ || true
+          for f in android/app/build/outputs/apk/release/*.apk; do
+            echo "=== $f ==="
+            "$APKSIGNER" verify --print-certs "$f" && echo "SIGNED OK" || echo "NOT SIGNED / verify failed"
+          done
+
+      - name: Upload Debug APK (mudah dipasang untuk tes)
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-debug-apk
+          path: android/app/build/outputs/apk/debug/*.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
