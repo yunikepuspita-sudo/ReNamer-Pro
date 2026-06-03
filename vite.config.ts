@@ -38,6 +38,12 @@ export default defineConfig({
         maximumFileSizeToCacheInBytes: 6 * 1024 * 1024,
         globPatterns: ['**/*.{js,css,html,svg,png,woff2,pdf}'],
         navigateFallback: 'index.html',
+        // Jangan jadikan SPA E-Pustaka sebagai fallback untuk PWA terpisah
+        // "Smart Attendance Event" yang berdiri sendiri di /event-attendance/.
+        navigateFallbackDenylist: [/event-attendance/],
+        // Berkas PWA absensi punya service worker sendiri; jangan ikut di-precache
+        // oleh workbox E-Pustaka agar tidak saling tumpang tindih.
+        globIgnores: ['**/event-attendance/**'],
       },
     }),
   ],
