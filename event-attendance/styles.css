@@ -78,6 +78,7 @@ input, select, textarea {
 input:focus, select:focus, textarea:focus {
   border-color: var(--teal); box-shadow: 0 0 0 3px rgba(15, 118, 110, .14);
 }
+textarea { resize: vertical; min-height: 84px; line-height: 1.45; }
 .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 @media (max-width: 480px) { .row { grid-template-columns: 1fr; } }
 .checkbox { display: flex; align-items: center; gap: 9px; }

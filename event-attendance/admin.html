@@ -55,6 +55,42 @@
           </div>
           <div class="table-wrap" id="partTable"></div>
         </div>
+
+        <!-- ============== Dokumentasi, Laporan & Berbagi ============== -->
+        <div class="section-title">Laporan, Dokumentasi &amp; Berbagi</div>
+        <div class="card">
+          <div class="field">
+            <label>Laporan Singkat Kegiatan</label>
+            <textarea id="laporan" rows="4" placeholder="Tuliskan ringkasan pelaksanaan kegiatan: pembukaan, materi/pembahasan utama, hasil/kesimpulan, tindak lanjut…"></textarea>
+          </div>
+          <div class="row">
+            <div class="field"><label>Link Materi Kegiatan</label><input id="materiUrl" type="url" placeholder="https://… (Drive/Slide)" /></div>
+            <div class="field"><label>Link Notulensi</label><input id="notulensiUrl" type="url" placeholder="https://… (Doc/Drive)" /></div>
+          </div>
+          <div class="btn-row">
+            <button class="btn sm" id="saveLaporan">💾 Simpan Laporan &amp; Link</button>
+            <button class="btn green sm" id="shareWa">📲 Bagikan ke Peserta (WA)</button>
+            <button class="btn ghost sm" id="copyShare">📋 Salin Pesan</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2 style="margin:0 0 4px">📷 Dokumentasi Foto</h2>
+          <p class="hint">Unggah foto kegiatan (otomatis dikompres). Foto disertakan pada dokumen pertanggungjawaban.</p>
+          <div class="field" style="margin-bottom:10px">
+            <input id="photoInput" type="file" accept="image/*" multiple capture="environment" />
+          </div>
+          <div id="photoGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px"></div>
+        </div>
+
+        <div class="card">
+          <h2 style="margin:0 0 4px">📑 Dokumen Pertanggungjawaban (LPJ)</h2>
+          <p class="hint">Unduh dokumen LPJ otomatis berisi data kegiatan, rekap kehadiran, laporan singkat, link materi/notulensi, dan dokumentasi foto. Format Word (.doc) — siap diedit &amp; ditandatangani.</p>
+          <div class="btn-row">
+            <button class="btn sm" id="dlLpj">⬇️ Unduh LPJ (.doc)</button>
+            <button class="btn ghost sm" id="printLpj">🖨️ Cetak / PDF</button>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -293,7 +329,83 @@
       } catch (e) { parts = []; SAE.toast('Gagal memuat peserta: ' + e.message, 'error'); }
       renderEventInfo();
       renderPartTable();
+      // muat laporan/link & dokumentasi foto kegiatan
+      $('laporan').value = current.laporan || '';
+      $('materiUrl').value = current.materiUrl || '';
+      $('notulensiUrl').value = current.notulensiUrl || '';
+      await renderPhotos();
     }
+
+    /* ------------------- laporan, berbagi, dokumentasi ---------------- */
+    $('saveLaporan').addEventListener('click', async () => {
+      if (!current) return;
+      const patch = {
+        laporan: $('laporan').value.trim(),
+        materiUrl: $('materiUrl').value.trim(),
+        notulensiUrl: $('notulensiUrl').value.trim()
+      };
+      try {
+        const ev = await SAE.updateEvent(current.id, patch);
+        Object.assign(current, ev || patch);
+        const i = events.findIndex((x) => x.id === current.id);
+        if (i >= 0) Object.assign(events[i], patch);
+        SAE.toast('Laporan & link tersimpan ✓', 'success');
+      } catch (e) { SAE.toast(e.message, 'error'); }
+    });
+
+    $('shareWa').addEventListener('click', () => {
+      if (!current) return;
+      if (!current.materiUrl && !current.notulensiUrl && !current.laporan) {
+        return SAE.toast('Isi & simpan laporan/link materi atau notulensi dulu.', 'error');
+      }
+      window.open(SAE.shareWaLink(current), '_blank', 'noopener');
+    });
+    $('copyShare').addEventListener('click', async () => {
+      if (!current) return;
+      try { await navigator.clipboard.writeText(SAE.shareText(current)); SAE.toast('Pesan disalin ✓', 'success'); }
+      catch (e) { SAE.toast('Gagal menyalin.', 'error'); }
+    });
+
+    $('photoInput').addEventListener('change', async (e) => {
+      const files = [...(e.target.files || [])];
+      if (!files.length || !current) return;
+      SAE.toast('Memproses ' + files.length + ' foto…', 'info');
+      try {
+        await SAE.addPhotos(current.id, files);
+        e.target.value = '';
+        await renderPhotos();
+        SAE.toast('Foto ditambahkan ✓', 'success');
+      } catch (err) { SAE.toast('Gagal menambah foto: ' + err.message, 'error'); }
+    });
+
+    async function renderPhotos() {
+      const grid = $('photoGrid');
+      const photos = current ? await SAE.getPhotos(current.id) : [];
+      if (!photos.length) {
+        grid.innerHTML = '<div class="muted" style="grid-column:1/-1;font-size:.85rem">Belum ada foto.</div>';
+        return;
+      }
+      grid.innerHTML = photos.map((ph, i) => `
+        <div style="position:relative">
+          <img src="${ph.dataUrl}" style="width:100%;height:90px;object-fit:cover;border-radius:8px;border:1px solid var(--line)" />
+          <button class="btn danger sm" data-del="${i}" style="position:absolute;top:4px;right:4px;padding:2px 7px;border-radius:6px">✕</button>
+        </div>`).join('');
+      grid.querySelectorAll('[data-del]').forEach((b) =>
+        b.addEventListener('click', async () => {
+          await SAE.removePhoto(current.id, +b.dataset.del);
+          await renderPhotos();
+        }));
+    }
+
+    $('dlLpj').addEventListener('click', async () => {
+      if (!current) return;
+      try { await SAE.downloadLpj(current, parts); SAE.toast('Dokumen LPJ diunduh ✓', 'success'); }
+      catch (e) { SAE.toast('Gagal membuat LPJ: ' + e.message, 'error'); }
+    });
+    $('printLpj').addEventListener('click', async () => {
+      if (!current) return;
+      try { await SAE.printLpj(current, parts); } catch (e) { SAE.toast(e.message, 'error'); }
+    });
 
     function renderEventInfo() {
       const e = current; if (!e) return;
@@ -319,7 +431,7 @@
       });
       $('delEvent').addEventListener('click', async () => {
         if (!confirm('Hapus kegiatan "' + e.nama + '" beserta seluruh data pesertanya?')) return;
-        try { await SAE.deleteEvent(e.id); await SAE.deletePdfBlob(e.id); SAE.toast('Kegiatan dihapus.', 'success'); await init(); }
+        try { await SAE.deleteEvent(e.id); await SAE.deletePdfBlob(e.id); await SAE.deletePhotos(e.id); SAE.toast('Kegiatan dihapus.', 'success'); await init(); }
         catch (err) { SAE.toast(err.message, 'error'); }
       });
     }

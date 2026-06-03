@@ -9,7 +9,8 @@
 var SheetService = (function () {
 
   var EVENT_COLS = ['id', 'nomorSurat', 'nama', 'jenis', 'tanggal', 'waktu',
-    'lokasi', 'lat', 'lng', 'radius', 'gpsRequired', 'pdfUrl', 'createdAt'];
+    'lokasi', 'lat', 'lng', 'radius', 'gpsRequired', 'pdfUrl', 'pdfName',
+    'laporan', 'materiUrl', 'notulensiUrl', 'createdAt'];
 
   var PART_COLS = ['id', 'eventId', 'seq', 'nama', 'nipNik', 'instansi', 'jabatan',
     'wa', 'email', 'bersedia', 'status', 'checkIn', 'checkOut', 'createdAt'];

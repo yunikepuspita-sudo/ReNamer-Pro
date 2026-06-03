@@ -172,7 +172,16 @@
             ${part.email ? `<a class="btn ghost sm" id="mail">✉️ Kirim via Email</a>` : ''}
           </div>
           <p class="hint mt">Tip: tambahkan halaman ini ke layar utama / screenshot QR agar mudah ditunjukkan saat check-in.</p>
-        </div>`;
+        </div>
+        ${ev && (ev.materiUrl || ev.notulensiUrl || ev.laporan) ? `
+        <div class="card">
+          <h2 style="margin:0 0 8px">📚 Materi &amp; Notulensi</h2>
+          ${ev.laporan ? `<p class="muted" style="font-size:.9rem;white-space:pre-line">${SAE.esc(ev.laporan)}</p>` : ''}
+          <div class="btn-row">
+            ${ev.materiUrl ? `<a class="btn sm" href="${SAE.esc(ev.materiUrl)}" target="_blank" rel="noopener">📎 Materi Kegiatan</a>` : ''}
+            ${ev.notulensiUrl ? `<a class="btn ghost sm" href="${SAE.esc(ev.notulensiUrl)}" target="_blank" rel="noopener">📝 Notulensi</a>` : ''}
+          </div>
+        </div>` : ''}`;
 
       const qrEl = document.getElementById('qr');
       await SAEQR.render(qrEl, SAE.qrPayload(part), 230);

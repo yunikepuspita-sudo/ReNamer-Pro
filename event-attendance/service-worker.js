@@ -2,7 +2,7 @@
  * Network-first untuk app-shell/HTML (selalu ambil versi terbaru saat online,
  * cache hanya dipakai sebagai fallback offline). Stale-while-revalidate untuk
  * library CDN. Bump CACHE_VERSION pada tiap rilis agar klien memuat aset baru. */
-const CACHE_VERSION = 'sae-v3';
+const CACHE_VERSION = 'sae-v4';
 const APP_SHELL = [
   './',
   './index.html',
