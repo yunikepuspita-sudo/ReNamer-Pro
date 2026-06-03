@@ -83,18 +83,12 @@ window.SAE = (function () {
   }
 
   /* --------------------------- panggilan backend ------------------------- */
-  // Apps Script: GET untuk baca (query ?action=...), POST text/plain untuk tulis
-  // (text/plain menghindari CORS preflight pada Apps Script Web App).
+  // Semua panggilan via POST text/plain (request "sederhana" — tanpa CORS
+  // preflight). GET ke Apps Script dari browser kerap gagal ("Failed to
+  // fetch") karena redirect ke googleusercontent; POST jauh lebih andal.
+  // doPost meneruskan payload sebagai params, sehingga aksi baca tetap bekerja.
   async function apiGet(action, params) {
-    const url = new URL(getApiUrl());
-    url.searchParams.set('action', action);
-    Object.entries(params || {}).forEach(([k, v]) => {
-      if (v !== undefined && v !== null) url.searchParams.set(k, v);
-    });
-    const res = await fetch(url.toString(), { method: 'GET' });
-    const json = await res.json();
-    if (!json.ok) throw new Error(json.error || 'Gagal memuat data');
-    return json.data;
+    return apiPost(action, params);
   }
   async function apiPost(action, payload) {
     const res = await fetch(getApiUrl(), {
