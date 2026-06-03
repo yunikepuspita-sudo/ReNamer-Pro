@@ -754,11 +754,24 @@ ${fotoHtml}
   }
 
   function registerSW() {
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./service-worker.js').catch(() => {});
-      });
-    }
+    if (!('serviceWorker' in navigator)) return;
+    // Saat service worker baru mengambil alih, muat ulang sekali agar konten
+    // terbaru langsung tampil (menghindari "tampilan lama" karena cache SW).
+    let refreshing = false;
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (refreshing) return;
+      refreshing = true;
+      window.location.reload();
+    });
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./service-worker.js').then((reg) => {
+        reg.update();
+        // periksa pembaruan tiap kali tab kembali fokus
+        document.addEventListener('visibilitychange', () => {
+          if (document.visibilityState === 'visible') reg.update();
+        });
+      }).catch(() => {});
+    });
   }
 
   function param(name) {
