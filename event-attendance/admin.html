@@ -63,6 +63,11 @@
       <div class="section-title">Buat Kegiatan Baru (Undangan)</div>
       <div class="card">
         <form id="eventForm">
+          <div class="field">
+            <label>Unggah PDF Undangan <span class="req">*</span></label>
+            <input name="pdfFile" id="pdfFile" type="file" accept="application/pdf" required />
+            <div id="pdfStatus" class="banner info" style="margin-top:8px">📄 Unggah PDF undangan — Nomor Surat, Nama Kegiatan, Tanggal, Waktu, dan Lokasi akan terisi otomatis dari isinya. Periksa &amp; sesuaikan bila perlu.</div>
+          </div>
           <div class="row">
             <div class="field"><label>Nomor Surat</label><input name="nomorSurat" placeholder="123/KPU-JBR/VI/2026" /></div>
             <div class="field"><label>Jenis</label>
@@ -78,7 +83,7 @@
             <div class="field"><label>Waktu</label><input name="waktu" type="time" /></div>
           </div>
           <div class="field"><label>Lokasi</label><input name="lokasi" placeholder="Hotel Horison Bandung" /></div>
-          <div class="field"><label>Link PDF Undangan (opsional)</label><input name="pdfUrl" type="url" placeholder="https://…" /></div>
+          <div class="field"><label>Link PDF Undangan (opsional — untuk akses lintas-perangkat)</label><input name="pdfUrl" type="url" placeholder="https://… (mis. Google Drive)" /></div>
 
           <div class="checkbox" style="margin:6px 0 12px">
             <input type="checkbox" name="gpsRequired" id="gpsReq" />
@@ -181,6 +186,43 @@
     }
 
     /* --------------------------- create event ------------------------- */
+    let pdfFileSelected = null;
+
+    // Auto-isi field dari PDF undangan yang diunggah.
+    $('pdfFile').addEventListener('change', async (e) => {
+      const file = e.target.files && e.target.files[0];
+      pdfFileSelected = file || null;
+      if (!file) return;
+      if (file.type !== 'application/pdf' && !/\.pdf$/i.test(file.name)) {
+        $('pdfStatus').className = 'banner warn'; $('pdfStatus').textContent = '⚠️ Berkas harus berformat PDF.';
+        pdfFileSelected = null; e.target.value = ''; return;
+      }
+      $('pdfStatus').className = 'banner info';
+      $('pdfStatus').textContent = '⏳ Membaca isi PDF “' + file.name + '”…';
+      try {
+        const text = await SAE.extractPdfText(file);
+        const f = SAE.parseLetterFields(text);
+        const form = $('eventForm');
+        const filled = [];
+        [['nomorSurat', 'Nomor'], ['nama', 'Nama'], ['tanggal', 'Tanggal'], ['waktu', 'Waktu'], ['lokasi', 'Lokasi']]
+          .forEach(([key, label]) => {
+            if (f[key]) { form.elements[key].value = f[key]; filled.push(label); }
+          });
+        if (filled.length) {
+          $('pdfStatus').className = 'banner info';
+          $('pdfStatus').innerHTML = '✅ Terisi otomatis dari PDF: <b>' + filled.join(', ') +
+            '</b>. Silakan periksa &amp; sesuaikan bila ada yang kurang tepat.';
+        } else {
+          $('pdfStatus').className = 'banner warn';
+          $('pdfStatus').textContent = '⚠️ PDF terbaca, tapi format surat tidak dikenali otomatis. Isi field secara manual.';
+        }
+      } catch (err) {
+        $('pdfStatus').className = 'banner warn';
+        $('pdfStatus').textContent = '⚠️ Tidak dapat membaca teks PDF (' + (err.message || 'galat') +
+          '). PDF tetap tersimpan; isi field manual.';
+      }
+    });
+
     $('gpsReq').addEventListener('change', (e) =>
       $('gpsFields').classList.toggle('hide', !e.target.checked));
     $('useLoc').addEventListener('click', async () => {
@@ -193,14 +235,21 @@
     $('eventForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const data = Object.fromEntries(new FormData(e.target).entries());
+      delete data.pdfFile; // berkas ditangani terpisah (IndexedDB)
       data.gpsRequired = $('gpsReq').checked;
+      if (!pdfFileSelected) return SAE.toast('PDF undangan wajib diunggah.', 'error');
       if (!data.nama.trim()) return SAE.toast('Nama kegiatan wajib diisi.', 'error');
+      data.pdfName = pdfFileSelected.name;
       const btn = e.target.querySelector('button[type=submit]');
       btn.disabled = true; btn.textContent = 'Menyimpan…';
       try {
         const ev = await SAE.createEvent(data);
+        await SAE.savePdfBlob(ev.id, pdfFileSelected); // simpan berkas di perangkat
         SAE.toast('Kegiatan dibuat ✓', 'success');
-        e.target.reset(); $('gpsFields').classList.add('hide');
+        e.target.reset(); pdfFileSelected = null;
+        $('gpsFields').classList.add('hide');
+        $('pdfStatus').className = 'banner info';
+        $('pdfStatus').textContent = '📄 Unggah PDF undangan — field akan terisi otomatis dari isinya.';
         SAE.setActiveEventId(ev.id);
         await init();
         show('dashboard');
@@ -254,16 +303,23 @@
         <div class="kv"><span class="k">No. Surat</span><span class="v">${SAE.esc(e.nomorSurat || '-')}</span></div>
         <div class="kv"><span class="k">Tanggal</span><span class="v">${SAE.esc(e.tanggal || '-')} ${SAE.esc(e.waktu || '')}</span></div>
         <div class="kv"><span class="k">Lokasi</span><span class="v">${SAE.esc(e.lokasi || '-')}</span></div>
+        <div class="kv"><span class="k">Surat (PDF)</span><span class="v">${SAE.esc(e.pdfName || (e.pdfUrl ? 'tautan eksternal' : '-'))}</span></div>
         <div class="kv"><span class="k">Validasi GPS</span><span class="v">${e.gpsRequired ? 'Aktif · ' + (e.radius || 100) + ' m' : 'Nonaktif'}</span></div>
         <div class="btn-row mt">
           <button class="btn sm" id="qrRsvp">🔳 QR Undangan / RSVP</button>
           <a class="btn ghost sm" href="${rsvpUrl}" target="_blank" rel="noopener">🔗 Buka link RSVP</a>
+          <button class="btn ghost sm" id="viewPdf">📄 Lihat Surat</button>
           <button class="btn danger sm" id="delEvent">🗑️ Hapus</button>
         </div>`;
       $('qrRsvp').addEventListener('click', () => showRsvpQr(e, rsvpUrl));
+      $('viewPdf').addEventListener('click', async () => {
+        const url = await SAE.pdfViewUrl(e);
+        if (url) window.open(url, '_blank', 'noopener');
+        else SAE.toast('Berkas surat tidak tersedia di perangkat ini.', 'error');
+      });
       $('delEvent').addEventListener('click', async () => {
         if (!confirm('Hapus kegiatan "' + e.nama + '" beserta seluruh data pesertanya?')) return;
-        try { await SAE.deleteEvent(e.id); SAE.toast('Kegiatan dihapus.', 'success'); await init(); }
+        try { await SAE.deleteEvent(e.id); await SAE.deletePdfBlob(e.id); SAE.toast('Kegiatan dihapus.', 'success'); await init(); }
         catch (err) { SAE.toast(err.message, 'error'); }
       });
     }
