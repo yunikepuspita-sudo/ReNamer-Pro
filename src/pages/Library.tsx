@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom'
 import { useCatalog } from '../context/CatalogContext'
 import { useApp } from '../context/AppContext'
 import BookCover from '../components/BookCover'
-import PdfCover from '../components/PdfCover'
 import { addUpload, deleteUpload, listUploads, uploadCover, type UploadRecord } from '../lib/uploads'
 import type { Book, ContentType } from '../types'
 
@@ -163,7 +162,7 @@ export default function Library() {
               const percent = Math.round(((ch + 1) / b.chapters.length) * 100)
               return (
                 <Link key={b.id} to={`/baca/${b.id}`} className="library__item">
-                  <PdfCover book={b} />
+                  <BookCover book={b} />
                   <div className="library__item-body">
                     <h3>{b.title}</h3>
                     <div className="reader__progress-bar">

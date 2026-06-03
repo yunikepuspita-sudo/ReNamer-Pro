@@ -1,12 +1,12 @@
 import { Link } from 'react-router-dom'
 import type { Book } from '../types'
 import { formatRupiah } from '../data/books'
-import PdfCover from './PdfCover'
+import BookCover from './BookCover'
 
 export default function BookCard({ book }: { book: Book }) {
   return (
     <Link to={`/buku/${book.id}`} className="book-card">
-      <PdfCover book={book} />
+      <BookCover book={book} />
       <div className="book-card__body">
         <h3 className="book-card__title">{book.title}</h3>
         <p className="book-card__author">{book.author}</p>

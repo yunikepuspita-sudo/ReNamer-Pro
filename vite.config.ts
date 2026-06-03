@@ -39,8 +39,9 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,svg,png,woff2,pdf}'],
         navigateFallback: 'index.html',
         // Jangan jadikan SPA E-Pustaka sebagai fallback untuk PWA terpisah
-        // "Smart Attendance Event" yang berdiri sendiri di /event-attendance/.
-        navigateFallbackDenylist: [/event-attendance/],
+        // "Smart Attendance Event", dan jangan intersep file PDF lintas-origin
+        // (Supabase Storage) — biarkan langsung ke jaringan agar tidak "Failed to fetch".
+        navigateFallbackDenylist: [/event-attendance/, /\.pdf($|\?)/, /supabase\.co/],
         // Berkas PWA absensi punya service worker sendiri; jangan ikut di-precache
         // oleh workbox E-Pustaka agar tidak saling tumpang tindih.
         globIgnores: ['**/event-attendance/**'],
