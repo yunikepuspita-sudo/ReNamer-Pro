@@ -8,6 +8,10 @@ import { CatalogProvider } from './context/CatalogContext'
 import { AuthProvider } from './context/AuthContext'
 import './index.css'
 import { initLiveUpdates } from './lib/liveUpdates'
+import { installErrorOverlay } from './lib/errorOverlay'
+
+// Tampilkan error di layar (sementara, untuk debugging di HP).
+installErrorOverlay()
 
 // Beritahu Capgo bahwa bundle web berhasil dimuat (mencegah rollback otomatis).
 // Aman dipanggil di web biasa/PWA — akan otomatis dilewati bila bukan native.
