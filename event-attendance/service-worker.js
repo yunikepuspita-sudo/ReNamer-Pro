@@ -1,7 +1,8 @@
 /* Smart Attendance Event — Service Worker
- * Cache-first for the app shell, network-first for everything else.
- * Bump CACHE_VERSION on every release so clients pick up new assets. */
-const CACHE_VERSION = 'sae-v1';
+ * Network-first untuk app-shell/HTML (selalu ambil versi terbaru saat online,
+ * cache hanya dipakai sebagai fallback offline). Stale-while-revalidate untuk
+ * library CDN. Bump CACHE_VERSION pada tiap rilis agar klien memuat aset baru. */
+const CACHE_VERSION = 'sae-v3';
 const APP_SHELL = [
   './',
   './index.html',
@@ -30,33 +31,37 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   const req = event.request;
-  if (req.method !== 'GET') return; // never cache POSTs to the backend
+  if (req.method !== 'GET') return; // jangan cache POST ke backend
 
   const url = new URL(req.url);
+  const sameOrigin = url.origin === location.origin;
 
-  // App-shell navigations & same-origin static files: cache-first.
-  const isShell = url.origin === location.origin &&
-    (req.mode === 'navigate' || APP_SHELL.some((p) => url.pathname.endsWith(p.replace('./', '/'))));
-
-  if (isShell) {
+  // Halaman & aset aplikasi (same-origin): NETWORK-FIRST.
+  // Online → selalu versi terbaru; offline → fallback ke cache.
+  if (sameOrigin) {
     event.respondWith(
-      caches.match(req).then((cached) =>
-        cached ||
-        fetch(req).then((res) => {
-          const copy = res.clone();
-          caches.open(CACHE_VERSION).then((c) => c.put(req, copy));
+      fetch(req)
+        .then((res) => {
+          if (res && res.status === 200) {
+            const copy = res.clone();
+            caches.open(CACHE_VERSION).then((c) => c.put(req, copy));
+          }
           return res;
-        }).catch(() => caches.match('./index.html'))
-      )
+        })
+        .catch(() =>
+          caches.match(req).then((cached) =>
+            cached || (req.mode === 'navigate' ? caches.match('./index.html') : Response.error())
+          )
+        )
     );
     return;
   }
 
-  // CDN libs (qrcode, html5-qrcode, xlsx): stale-while-revalidate.
+  // Library CDN (qrcode, html5-qrcode, xlsx, pdf.js): stale-while-revalidate.
   event.respondWith(
     caches.match(req).then((cached) => {
       const network = fetch(req).then((res) => {
-        if (res && res.status === 200 && (url.protocol === 'https:' || url.protocol === 'http:')) {
+        if (res && res.status === 200) {
           const copy = res.clone();
           caches.open(CACHE_VERSION).then((c) => c.put(req, copy));
         }
