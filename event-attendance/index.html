@@ -82,7 +82,7 @@
           <div class="kv"><span class="k">No. Surat</span><span class="v">${SAE.esc(ev.nomorSurat || '-')}</span></div>
           <div class="kv"><span class="k">Tanggal</span><span class="v">${SAE.esc(ev.tanggal || '-')} ${SAE.esc(ev.waktu || '')}</span></div>
           <div class="kv"><span class="k">Lokasi</span><span class="v">${SAE.esc(ev.lokasi || '-')}</span></div>
-          ${ev.pdfUrl ? `<div class="mt"><a class="btn ghost sm" href="${SAE.esc(ev.pdfUrl)}" target="_blank" rel="noopener">📄 Lihat Surat Undangan</a></div>` : ''}
+          <div class="mt"><button class="btn ghost sm" id="viewPdf">📄 Lihat Surat Undangan</button></div>
         </div>
         <div class="card">
           <h2>Konfirmasi Kehadiran</h2>
@@ -105,6 +105,15 @@
             <button class="btn block lg" type="submit">Kirim Konfirmasi</button>
           </form>
         </div>`;
+
+      // Tombol lihat surat: pakai link eksternal atau berkas lokal (IndexedDB).
+      (async () => {
+        const btn = document.getElementById('viewPdf');
+        if (!btn) return;
+        const url = await SAE.pdfViewUrl(ev);
+        if (!url) { btn.parentElement.remove(); return; }
+        btn.addEventListener('click', () => window.open(url, '_blank', 'noopener'));
+      })();
 
       document.getElementById('rsvpForm').addEventListener('submit', async (e) => {
         e.preventDefault();

@@ -133,6 +133,7 @@ window.SAE = (function () {
       radius: Number(data.radius) || 100,
       gpsRequired: !!data.gpsRequired,
       pdfUrl: data.pdfUrl || '',
+      pdfName: data.pdfName || '',
       createdAt: Date.now()
     };
     if (isOnline()) return await apiPost('createEvent', event);
@@ -376,10 +377,184 @@ window.SAE = (function () {
   }
   function loadScript(src) {
     return new Promise((resolve, reject) => {
+      const existing = [...document.scripts].find((s) => s.src === src);
+      if (existing) {
+        if (existing.dataset.loaded) return resolve();
+        existing.addEventListener('load', () => resolve());
+        existing.addEventListener('error', () => reject(new Error('Gagal memuat ' + src)));
+        return;
+      }
       const s = document.createElement('script');
-      s.src = src; s.onload = resolve; s.onerror = () => reject(new Error('Gagal memuat ' + src));
+      s.src = src;
+      s.onload = () => { s.dataset.loaded = '1'; resolve(); };
+      s.onerror = () => reject(new Error('Gagal memuat ' + src));
       document.head.appendChild(s);
     });
+  }
+
+  /* ============================ PDF UNDANGAN ============================= */
+  // Ekstraksi teks PDF di sisi browser (pdf.js) lalu auto-isi field kegiatan.
+  const PDFJS_VER = '3.11.174';
+  async function ensurePdfJs() {
+    if (window.pdfjsLib) return window.pdfjsLib;
+    await loadScript('https://cdn.jsdelivr.net/npm/pdfjs-dist@' + PDFJS_VER + '/build/pdf.min.js');
+    window.pdfjsLib.GlobalWorkerOptions.workerSrc =
+      'https://cdn.jsdelivr.net/npm/pdfjs-dist@' + PDFJS_VER + '/build/pdf.worker.min.js';
+    return window.pdfjsLib;
+  }
+
+  // Baca seluruh teks PDF, dengan rekonstruksi baris berdasarkan posisi Y.
+  async function extractPdfText(file) {
+    const pdfjs = await ensurePdfJs();
+    const buf = await file.arrayBuffer();
+    const pdf = await pdfjs.getDocument({ data: buf }).promise;
+    let out = '';
+    const maxPages = Math.min(pdf.numPages, 5); // cukup beberapa halaman pertama
+    for (let p = 1; p <= maxPages; p++) {
+      const page = await pdf.getPage(p);
+      const content = await page.getTextContent();
+      let lastY = null, line = '', lines = [];
+      content.items.forEach((it) => {
+        const y = it.transform[5];
+        if (lastY !== null && Math.abs(y - lastY) > 3) { lines.push(line.trim()); line = ''; }
+        line += it.str + ' ';
+        lastY = y;
+      });
+      lines.push(line.trim());
+      out += lines.join('\n') + '\n';
+    }
+    return out;
+  }
+
+  const ID_MONTHS = {
+    januari: 1, februari: 2, maret: 3, april: 4, mei: 5, juni: 6,
+    juli: 7, agustus: 8, september: 9, oktober: 10, november: 11, desember: 12
+  };
+
+  function parseDateID(text) {
+    if (!text) return '';
+    const re = /(\d{1,2})\s+(januari|februari|maret|april|mei|juni|juli|agustus|september|oktober|november|desember)\s+(\d{4})/i;
+    const m = text.match(re);
+    if (m) {
+      const d = +m[1], mo = ID_MONTHS[m[2].toLowerCase()], y = +m[3];
+      return y + '-' + String(mo).padStart(2, '0') + '-' + String(d).padStart(2, '0');
+    }
+    const m2 = text.match(/\b(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{4})\b/);
+    if (m2) return m2[3] + '-' + String(+m2[2]).padStart(2, '0') + '-' + String(+m2[1]).padStart(2, '0');
+    return '';
+  }
+
+  // Ambil nilai setelah label (mis. "Nomor : 005/...") sampai akhir baris.
+  function labelValue(text, labelRe) {
+    // \b di depan agar "Tempat" tidak cocok dengan substring "berTEMPAT", dll.
+    const re = new RegExp('\\b(?:' + labelRe + ')\\s*[:\\-]?\\s*([^\\n\\r]+)', 'i');
+    const m = text.match(re);
+    if (!m) return '';
+    // potong bila bertemu label lain pada baris yang sama
+    let v = m[1].split(/\s{2,}|(?:\s(?:Lampiran|Sifat|Perihal|Hal)\s*:)/i)[0];
+    return v.trim();
+  }
+
+  // Heuristik surat dinas Indonesia → { nomorSurat, nama, tanggal, waktu, lokasi }.
+  function parseLetterFields(text) {
+    const out = { nomorSurat: '', nama: '', tanggal: '', waktu: '', lokasi: '' };
+    if (!text) return out;
+
+    // Nomor surat (mengandung "/")
+    let nomor = labelValue(text, 'Nomor|No\\.?');
+    if (nomor && nomor.indexOf('/') === -1) {
+      const mm = text.match(/\b(\d+\s*\/\s*[A-Za-z0-9.\-\/]+\/[IVXLCDM]+\/\d{4})\b/);
+      if (mm) nomor = mm[1].replace(/\s+/g, '');
+    }
+    out.nomorSurat = (nomor || '').slice(0, 80);
+
+    // Nama kegiatan — utamakan Perihal/Hal, lalu kata kunci acara
+    let nama = labelValue(text, 'Perihal|Hal');
+    if (nama) nama = nama.replace(/^undangan\s*/i, '').trim();
+    if (!nama) {
+      const m = text.match(/(?:dalam rangka|acara|kegiatan)\s*[:\-]?\s*([A-Z][^\n.]{4,90})/i);
+      if (m) nama = m[1].trim();
+    }
+    out.nama = (nama || '').replace(/[,;:]\s*$/, '').slice(0, 120);
+
+    // Tanggal — cari di sekitar kata "tanggal/hari", fallback seluruh teks
+    let dateCtx = '';
+    const ctx = text.match(/(?:hari\s*\/?\s*tanggal|tanggal|pada hari)[^\n]*\n?[^\n]*/i);
+    if (ctx) dateCtx = ctx[0];
+    out.tanggal = parseDateID(dateCtx) || parseDateID(text);
+
+    // Waktu / Pukul → HH:MM
+    const w = text.match(/(?:Waktu|Pukul|Jam)\s*[:\-]?\s*(\d{1,2})[.:](\d{2})/i);
+    if (w) out.waktu = String(+w[1]).padStart(2, '0') + ':' + w[2];
+
+    // Lokasi / Tempat
+    let lok = labelValue(text, 'Tempat|Lokasi');
+    if (!lok) {
+      const m = text.match(/bertempat di\s+([^\n.]{3,90})/i);
+      if (m) lok = m[1].trim();
+    }
+    out.lokasi = (lok || '').replace(/[,;:]\s*$/, '').slice(0, 120);
+
+    return out;
+  }
+
+  function fileToDataUrl(file) {
+    return new Promise((resolve, reject) => {
+      const r = new FileReader();
+      r.onload = () => resolve(r.result);
+      r.onerror = () => reject(new Error('Gagal membaca berkas'));
+      r.readAsDataURL(file);
+    });
+  }
+
+  /* ---- penyimpanan berkas PDF di perangkat (IndexedDB) ---- */
+  function openPdfDb() {
+    return new Promise((resolve, reject) => {
+      const req = indexedDB.open('sae-pdf', 1);
+      req.onupgradeneeded = () => {
+        if (!req.result.objectStoreNames.contains('pdf')) req.result.createObjectStore('pdf');
+      };
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
+    });
+  }
+  async function savePdfBlob(eventId, blob) {
+    try {
+      const db = await openPdfDb();
+      await new Promise((res, rej) => {
+        const tx = db.transaction('pdf', 'readwrite');
+        tx.objectStore('pdf').put(blob, eventId);
+        tx.oncomplete = () => res(); tx.onerror = () => rej(tx.error);
+      });
+      return true;
+    } catch (e) { return false; }
+  }
+  async function getPdfBlob(eventId) {
+    try {
+      const db = await openPdfDb();
+      return await new Promise((res, rej) => {
+        const tx = db.transaction('pdf', 'readonly');
+        const rq = tx.objectStore('pdf').get(eventId);
+        rq.onsuccess = () => res(rq.result || null); rq.onerror = () => rej(rq.error);
+      });
+    } catch (e) { return null; }
+  }
+  async function deletePdfBlob(eventId) {
+    try {
+      const db = await openPdfDb();
+      await new Promise((res) => {
+        const tx = db.transaction('pdf', 'readwrite');
+        tx.objectStore('pdf').delete(eventId);
+        tx.oncomplete = () => res(); tx.onerror = () => res();
+      });
+    } catch (e) { /* ignore */ }
+  }
+  // Kembalikan URL siap-buka untuk surat: link eksternal bila ada, jika tidak blob lokal.
+  async function pdfViewUrl(event) {
+    if (!event) return '';
+    if (event.pdfUrl) return event.pdfUrl;
+    const blob = await getPdfBlob(event.id);
+    return blob ? URL.createObjectURL(blob) : '';
   }
 
   /* --------------------------- aktif & panitia --------------------------- */
@@ -436,6 +611,9 @@ window.SAE = (function () {
     qrPayload, parseScan, ticketUrl, waLink, mailLink,
     // export
     rekapRows, exportCsv, exportXlsx,
+    // pdf undangan
+    extractPdfText, parseLetterFields, fileToDataUrl,
+    savePdfBlob, getPdfBlob, deletePdfBlob, pdfViewUrl,
     // active / panitia
     getActiveEventId, setActiveEventId, getPanitia, setPanitia,
     // helpers
