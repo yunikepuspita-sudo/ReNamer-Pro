@@ -134,6 +134,9 @@ window.SAE = (function () {
       gpsRequired: !!data.gpsRequired,
       pdfUrl: data.pdfUrl || '',
       pdfName: data.pdfName || '',
+      laporan: data.laporan || '',
+      materiUrl: data.materiUrl || '',
+      notulensiUrl: data.notulensiUrl || '',
       createdAt: Date.now()
     };
     if (isOnline()) return await apiPost('createEvent', event);
@@ -507,47 +510,49 @@ window.SAE = (function () {
     });
   }
 
-  /* ---- penyimpanan berkas PDF di perangkat (IndexedDB) ---- */
-  function openPdfDb() {
+  /* ---- penyimpanan berkas di perangkat (IndexedDB): PDF & foto ---- */
+  function openDb() {
     return new Promise((resolve, reject) => {
-      const req = indexedDB.open('sae-pdf', 1);
+      const req = indexedDB.open('sae-pdf', 2);
       req.onupgradeneeded = () => {
-        if (!req.result.objectStoreNames.contains('pdf')) req.result.createObjectStore('pdf');
+        const db = req.result;
+        if (!db.objectStoreNames.contains('pdf')) db.createObjectStore('pdf');
+        if (!db.objectStoreNames.contains('photos')) db.createObjectStore('photos');
       };
       req.onsuccess = () => resolve(req.result);
       req.onerror = () => reject(req.error);
     });
   }
+  function idbPut(store, key, val) {
+    return openDb().then((db) => new Promise((res, rej) => {
+      const tx = db.transaction(store, 'readwrite');
+      tx.objectStore(store).put(val, key);
+      tx.oncomplete = () => res(true); tx.onerror = () => rej(tx.error);
+    }));
+  }
+  function idbGet(store, key) {
+    return openDb().then((db) => new Promise((res, rej) => {
+      const tx = db.transaction(store, 'readonly');
+      const rq = tx.objectStore(store).get(key);
+      rq.onsuccess = () => res(rq.result); rq.onerror = () => rej(rq.error);
+    }));
+  }
+  function idbDel(store, key) {
+    return openDb().then((db) => new Promise((res) => {
+      const tx = db.transaction(store, 'readwrite');
+      tx.objectStore(store).delete(key);
+      tx.oncomplete = () => res(); tx.onerror = () => res();
+    }));
+  }
+
   async function savePdfBlob(eventId, blob) {
-    try {
-      const db = await openPdfDb();
-      await new Promise((res, rej) => {
-        const tx = db.transaction('pdf', 'readwrite');
-        tx.objectStore('pdf').put(blob, eventId);
-        tx.oncomplete = () => res(); tx.onerror = () => rej(tx.error);
-      });
-      return true;
-    } catch (e) { return false; }
+    try { await idbPut('pdf', eventId, blob); return true; } catch (e) { return false; }
   }
   async function getPdfBlob(eventId) {
-    try {
-      const db = await openPdfDb();
-      return await new Promise((res, rej) => {
-        const tx = db.transaction('pdf', 'readonly');
-        const rq = tx.objectStore('pdf').get(eventId);
-        rq.onsuccess = () => res(rq.result || null); rq.onerror = () => rej(rq.error);
-      });
-    } catch (e) { return null; }
+    try { return (await idbGet('pdf', eventId)) || null; } catch (e) { return null; }
   }
   async function deletePdfBlob(eventId) {
-    try {
-      const db = await openPdfDb();
-      await new Promise((res) => {
-        const tx = db.transaction('pdf', 'readwrite');
-        tx.objectStore('pdf').delete(eventId);
-        tx.oncomplete = () => res(); tx.onerror = () => res();
-      });
-    } catch (e) { /* ignore */ }
+    try { await idbDel('pdf', eventId); } catch (e) { /* ignore */ }
   }
   // Kembalikan URL siap-buka untuk surat: link eksternal bila ada, jika tidak blob lokal.
   async function pdfViewUrl(event) {
@@ -555,6 +560,175 @@ window.SAE = (function () {
     if (event.pdfUrl) return event.pdfUrl;
     const blob = await getPdfBlob(event.id);
     return blob ? URL.createObjectURL(blob) : '';
+  }
+
+  /* ---- Dokumentasi foto (array blob per kegiatan, di IndexedDB) ---- */
+  async function getPhotos(eventId) {
+    try { return (await idbGet('photos', eventId)) || []; } catch (e) { return []; }
+  }
+  // Tambah foto (otomatis dikompres agar hemat ruang); kembalikan jumlah total.
+  async function addPhotos(eventId, files) {
+    const existing = await getPhotos(eventId);
+    for (const f of files) {
+      try { existing.push(await compressImage(f)); } catch (e) { /* lewati berkas gagal */ }
+    }
+    await idbPut('photos', eventId, existing);
+    return existing.length;
+  }
+  async function removePhoto(eventId, index) {
+    const arr = await getPhotos(eventId);
+    arr.splice(index, 1);
+    await idbPut('photos', eventId, arr);
+    return arr.length;
+  }
+  async function deletePhotos(eventId) {
+    try { await idbDel('photos', eventId); } catch (e) { /* ignore */ }
+  }
+
+  // Kompres/resize foto via canvas → { name, dataUrl } JPEG (maks sisi 1280px).
+  function compressImage(file, maxSide, quality) {
+    maxSide = maxSide || 1280; quality = quality || 0.72;
+    return new Promise((resolve, reject) => {
+      const url = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = () => {
+        let { width: w, height: h } = img;
+        if (w > h && w > maxSide) { h = Math.round(h * maxSide / w); w = maxSide; }
+        else if (h >= w && h > maxSide) { w = Math.round(w * maxSide / h); h = maxSide; }
+        const cv = document.createElement('canvas');
+        cv.width = w; cv.height = h;
+        cv.getContext('2d').drawImage(img, 0, 0, w, h);
+        URL.revokeObjectURL(url);
+        resolve({ name: file.name || 'foto.jpg', dataUrl: cv.toDataURL('image/jpeg', quality) });
+      };
+      img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Gambar tidak valid')); };
+      img.src = url;
+    });
+  }
+
+  /* ---- Bagikan ke peserta (materi & notulensi) ---- */
+  function shareText(event) {
+    const lines = [
+      `*${event.nama || 'Kegiatan'}*`,
+      event.tanggal ? `Tanggal: ${event.tanggal}${event.waktu ? ' ' + event.waktu : ''}` : '',
+      event.lokasi ? `Lokasi: ${event.lokasi}` : '',
+      '',
+      event.materiUrl ? `📎 Materi: ${event.materiUrl}` : '',
+      event.notulensiUrl ? `📝 Notulensi: ${event.notulensiUrl}` : '',
+      event.laporan ? `\nRingkasan:\n${event.laporan}` : '',
+      '',
+      'Terima kasih atas partisipasinya.'
+    ].filter((l) => l !== '');
+    return lines.join('\n');
+  }
+  function shareWaLink(event) {
+    return 'https://wa.me/?text=' + encodeURIComponent(shareText(event));
+  }
+
+  /* ---- Dokumen Pertanggungjawaban (LPJ) — format Word (.doc) / cetak ---- */
+  async function lpjHtml(event, parts) {
+    const photos = await getPhotos(event.id);
+    const panitia = getPanitia() || 'Panitia Penyelenggara';
+    const hadir = parts.filter((p) => p.checkIn);
+    const konfirmasi = parts.filter((p) => p.bersedia === 'Ya').length;
+    const tidak = parts.filter((p) => p.bersedia === 'Tidak').length;
+    const esc2 = (s) => esc(s);
+    const today = new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' });
+
+    const rowsHadir = hadir.length
+      ? hadir.map((p, i) => `<tr>
+          <td style="text-align:center">${i + 1}</td>
+          <td>${esc2(p.nama)}</td>
+          <td>${esc2(p.instansi || '-')}</td>
+          <td>${esc2(p.jabatan || '-')}</td>
+          <td style="text-align:center">${fmtTime(p.checkIn) || '-'}</td>
+          <td style="text-align:center">${fmtTime(p.checkOut) || '-'}</td>
+        </tr>`).join('')
+      : '<tr><td colspan="6" style="text-align:center">Belum ada data kehadiran.</td></tr>';
+
+    const fotoHtml = photos.length
+      ? photos.map((ph, i) =>
+          `<div style="display:inline-block;width:48%;margin:1% 0.5%;vertical-align:top;text-align:center">
+             <img src="${ph.dataUrl}" style="width:100%;border:1px solid #999" />
+             <div style="font-size:10pt">Gambar ${i + 1}</div>
+           </div>`).join('')
+      : '<p><i>Tidak ada dokumentasi foto yang diunggah.</i></p>';
+
+    const html =
+`<!DOCTYPE html><html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head>
+<meta charset="utf-8" />
+<title>LPJ ${esc2(event.nama)}</title>
+<style>
+  body { font-family: "Times New Roman", serif; font-size: 12pt; color:#000; }
+  h1 { font-size: 14pt; text-align:center; margin:0; }
+  h2 { font-size: 12pt; margin: 16px 0 6px; border-bottom:1px solid #000; }
+  table { width:100%; border-collapse: collapse; font-size: 11pt; }
+  th, td { border: 1px solid #555; padding: 4px 6px; }
+  th { background:#eee; }
+  .kv td { border: none; padding: 2px 4px; }
+  .ttd { margin-top: 36px; width:100%; }
+  .ttd td { border:none; text-align:center; vertical-align:top; }
+</style></head><body>
+<h1>LAPORAN PERTANGGUNGJAWABAN (LPJ)</h1>
+<h1>${esc2(event.nama)}</h1>
+<p style="text-align:center;margin-top:2px">${esc2(panitia)}</p>
+
+<h2>A. DATA KEGIATAN</h2>
+<table class="kv">
+  <tr><td style="width:170px">Nomor Surat</td><td>: ${esc2(event.nomorSurat || '-')}</td></tr>
+  <tr><td>Nama Kegiatan</td><td>: ${esc2(event.nama || '-')}</td></tr>
+  <tr><td>Jenis</td><td>: ${esc2(event.jenis || '-')}</td></tr>
+  <tr><td>Hari/Tanggal</td><td>: ${esc2(event.tanggal || '-')} ${esc2(event.waktu || '')}</td></tr>
+  <tr><td>Tempat</td><td>: ${esc2(event.lokasi || '-')}</td></tr>
+</table>
+
+<h2>B. LAPORAN SINGKAT PELAKSANAAN</h2>
+<p style="text-align:justify">${event.laporan ? esc2(event.laporan).replace(/\n/g, '<br/>') : '<i>(Belum diisi)</i>'}</p>
+
+<h2>C. REKAPITULASI KEHADIRAN</h2>
+<table class="kv">
+  <tr><td style="width:220px">Jumlah Diundang/Konfirmasi</td><td>: ${konfirmasi} orang</td></tr>
+  <tr><td>Hadir (check-in)</td><td>: ${hadir.length} orang</td></tr>
+  <tr><td>Menyatakan tidak hadir</td><td>: ${tidak} orang</td></tr>
+</table>
+<br/>
+<table>
+  <thead><tr><th style="width:30px">No</th><th>Nama</th><th>Instansi</th><th>Jabatan</th><th>Check In</th><th>Check Out</th></tr></thead>
+  <tbody>${rowsHadir}</tbody>
+</table>
+
+<h2>D. MATERI &amp; NOTULENSI</h2>
+<table class="kv">
+  <tr><td style="width:170px">Tautan Materi</td><td>: ${event.materiUrl ? esc2(event.materiUrl) : '-'}</td></tr>
+  <tr><td>Tautan Notulensi</td><td>: ${event.notulensiUrl ? esc2(event.notulensiUrl) : '-'}</td></tr>
+</table>
+
+<h2>E. DOKUMENTASI KEGIATAN</h2>
+${fotoHtml}
+
+<h2>F. PENUTUP</h2>
+<p style="text-align:justify">Demikian laporan pertanggungjawaban kegiatan ini dibuat dengan sebenarnya untuk dapat dipergunakan sebagaimana mestinya.</p>
+
+<table class="ttd">
+  <tr><td>&nbsp;</td><td>${esc2(event.lokasi ? event.lokasi.split(',')[0] : '..................')}, ${today}<br/>Ketua Panitia,<br/><br/><br/><br/><b>(............................)</b></td></tr>
+</table>
+</body></html>`;
+
+    return html;
+  }
+
+  async function downloadLpj(event, parts) {
+    const html = await lpjHtml(event, parts);
+    download('LPJ-' + slug(event).replace(/^rekap-/, '') + '.doc',
+      '﻿' + html, 'application/msword;charset=utf-8');
+  }
+
+  async function printLpj(event, parts) {
+    const html = await lpjHtml(event, parts);
+    const w = window.open('', '_blank');
+    if (!w) { toast('Popup diblokir. Izinkan popup untuk mencetak.', 'error'); return; }
+    w.document.write(html); w.document.close();
+    w.focus(); setTimeout(() => { try { w.print(); } catch (e) {} }, 500);
   }
 
   /* --------------------------- aktif & panitia --------------------------- */
@@ -614,6 +788,9 @@ window.SAE = (function () {
     // pdf undangan
     extractPdfText, parseLetterFields, fileToDataUrl,
     savePdfBlob, getPdfBlob, deletePdfBlob, pdfViewUrl,
+    // dokumentasi, laporan, berbagi & LPJ
+    getPhotos, addPhotos, removePhoto, deletePhotos,
+    shareText, shareWaLink, downloadLpj, printLpj,
     // active / panitia
     getActiveEventId, setActiveEventId, getPanitia, setPanitia,
     // helpers
