@@ -1,0 +1,48 @@
+{
+  "name": "Smart Attendance Event",
+  "short_name": "Absensi Event",
+  "description": "PWA absensi acara berbasis QR: undangan, RSVP, QR peserta, check-in/out panitia, dan rekap kehadiran — cukup dari HP.",
+  "id": "/event-attendance/",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0f172a",
+  "theme_color": "#0f766e",
+  "lang": "id",
+  "categories": ["productivity", "utilities", "business"],
+  "icons": [
+    {
+      "src": "./icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Scan Check-in",
+      "short_name": "Scan",
+      "url": "./checkin.html",
+      "icons": [{ "src": "./icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Dashboard Panitia",
+      "short_name": "Admin",
+      "url": "./admin.html",
+      "icons": [{ "src": "./icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}
