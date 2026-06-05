@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Proposal Penawaran — SISFO SPPD (e-SPPD) KPU Provinsi Jawa Barat</title>
+<style>
+  :root{
+    --navy:#0b2447; --navy2:#143a6b; --navy3:#1d4e89; --gold:#f1c40f; --gold-d:#b9930a;
+    --red:#c1121f; --green:#1e8449; --line:#e2e8f0; --muted:#5b6b7f; --ink:#1f2a37; --bg:#eef2f7;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{font-family:"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;color:var(--ink);background:var(--bg);font-size:11pt;line-height:1.5;}
+  .page{
+    width:210mm;min-height:297mm;background:#fff;margin:10mm auto;padding:18mm 18mm 16mm;
+    box-shadow:0 2px 18px rgba(0,0,0,.12);position:relative;overflow:hidden;
+  }
+  h1,h2,h3,h4{color:var(--navy);line-height:1.2;margin:0 0 .4em;}
+  h2.sec{font-size:17pt;border-bottom:3px solid var(--gold);padding-bottom:6px;margin:0 0 14px;display:flex;align-items:center;gap:10px;}
+  h2.sec .n{background:var(--navy);color:#fff;width:30px;height:30px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-size:14pt;flex:none;}
+  h3{font-size:13pt;margin-top:14px;}
+  p{margin:0 0 9px;text-align:justify;}
+  .muted{color:var(--muted);}
+  .small{font-size:9.5pt;}
+  .tag{font-family:ui-monospace,Menlo,monospace;background:#eef2f7;border:1px solid var(--line);padding:1px 6px;border-radius:5px;font-size:9pt;}
+  table{width:100%;border-collapse:collapse;font-size:10pt;margin:8px 0;}
+  th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top;}
+  th{background:var(--navy);color:#fff;font-size:9pt;text-transform:uppercase;letter-spacing:.3px;}
+  thead.gold th{background:#fff8e1;color:var(--navy);border-bottom:2px solid var(--gold);}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;}
+  tr.total td{background:#0b2447;color:#fff;font-weight:800;border-color:#0b2447;}
+  tr.sub td{background:#f1f5f9;font-weight:700;}
+  .chip{display:inline-block;background:#e9f0fb;color:var(--navy3);border-radius:999px;padding:2px 10px;font-size:9pt;font-weight:700;margin:2px 3px 2px 0;}
+  .chip.g{background:#fff3cd;color:#7a5d00;} .chip.gr{background:#e8f6ee;color:var(--green);}
+  .grid{display:grid;gap:12px;}
+  .g2{grid-template-columns:1fr 1fr;} .g3{grid-template-columns:1fr 1fr 1fr;} .g4{grid-template-columns:repeat(4,1fr);}
+  .card{border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:#fff;}
+  .card.k{background:linear-gradient(160deg,#fff, #f6f9fe);}
+  .lead{border-left:4px solid var(--gold);padding-left:12px;}
+  ul.clean{margin:6px 0;padding-left:18px;} ul.clean li{margin:3px 0;}
+  ul.check{list-style:none;margin:6px 0;padding:0;} ul.check li{padding-left:24px;position:relative;margin:5px 0;}
+  ul.check li:before{content:"✓";position:absolute;left:0;color:var(--green);font-weight:900;}
+  .pagenum{position:absolute;bottom:8mm;right:18mm;font-size:8.5pt;color:var(--muted);}
+  .foot{position:absolute;bottom:8mm;left:18mm;font-size:8.5pt;color:var(--muted);}
+  .stat{border:1px solid var(--line);border-radius:10px;padding:11px 13px;position:relative;background:#fff;}
+  .stat .v{font-size:19pt;font-weight:800;color:var(--navy);} .stat .l{font-size:8.5pt;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.4px;}
+  .stat.gold{border-top:3px solid var(--gold);} .stat.green{border-top:3px solid var(--green);} .stat.red{border-top:3px solid var(--red);} .stat.navy{border-top:3px solid var(--navy3);}
+  .bar{height:9px;background:#eef2f7;border-radius:99px;overflow:hidden;} .bar>span{display:block;height:100%;background:linear-gradient(90deg,var(--navy3),var(--gold));}
+  .donut{width:150px;height:150px;border-radius:50%;position:relative;flex:none;}
+  .donut::after{content:"";position:absolute;inset:24px;background:#fff;border-radius:50%;}
+  .donut .c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:2;}
+  .legend{font-size:9.5pt;} .legend div{display:flex;align-items:center;gap:8px;margin:5px 0;}
+  .legend i{width:12px;height:12px;border-radius:3px;flex:none;}
+  .timeline{border-left:3px solid var(--navy3);margin-left:8px;padding-left:18px;}
+  .timeline .t{position:relative;margin:0 0 14px;}
+  .timeline .t::before{content:"";position:absolute;left:-25px;top:3px;width:13px;height:13px;border-radius:50%;background:var(--gold);border:3px solid #fff;box-shadow:0 0 0 1px var(--navy3);}
+  .gantt{font-size:8.5pt;}
+  .gantt td{padding:4px 5px;text-align:center;}
+  .gantt .cellon{background:var(--navy3);color:#fff;border-radius:4px;font-weight:700;}
+  .gantt .task{text-align:left;font-weight:600;}
+  .kv{display:grid;grid-template-columns:160px 1fr;gap:5px 12px;font-size:10pt;}
+  .kv dt{color:var(--muted);font-weight:600;} .kv dd{margin:0;font-weight:600;}
+  .wf{display:flex;gap:6px;align-items:stretch;flex-wrap:wrap;}
+  .wf .step{flex:1;min-width:88px;background:#f6f9fe;border:1px solid var(--line);border-top:3px solid var(--navy3);border-radius:8px;padding:8px;text-align:center;font-size:8.5pt;font-weight:700;color:var(--navy);}
+  .wf .arr{display:flex;align-items:center;color:var(--gold);font-weight:900;}
+  .note{background:#fff8e1;border:1px solid #f0d98a;border-radius:8px;padding:10px 12px;font-size:9.5pt;}
+  .browser{border:1px solid var(--line);border-radius:10px;overflow:hidden;box-shadow:0 4px 14px rgba(0,0,0,.08);}
+  .browser .bar2{background:#e9eef5;padding:7px 10px;display:flex;gap:6px;align-items:center;}
+  .browser .bar2 .d{width:10px;height:10px;border-radius:50%;background:#c3ccd8;} .browser .url{margin-left:8px;background:#fff;border-radius:6px;padding:3px 9px;font-size:8pt;color:var(--muted);flex:1;}
+  .cover{background:linear-gradient(160deg,var(--navy) 0%,#0a1f3d 55%,#102a52 100%);color:#fff;}
+  .cover h1{color:#fff;font-size:30pt;line-height:1.1;}
+  @media print{
+    body{background:#fff;}
+    .page{margin:0;box-shadow:none;width:auto;min-height:auto;padding:14mm 14mm 16mm;page-break-after:always;}
+    .page:last-child{page-break-after:auto;}
+    @page{size:A4;margin:0;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ COVER ============ -->
+<section class="page cover">
+  <div style="display:flex;align-items:center;gap:14px;">
+    <div style="width:60px;height:60px;border-radius:12px;background:radial-gradient(circle at 50% 42%,#fff 0 33%,var(--gold) 34% 42%,var(--navy3) 43% 100%);"></div>
+    <div><div style="font-weight:800;font-size:14pt;">KOMISI PEMILIHAN UMUM</div><div style="color:#cdd9ee;">PROVINSI JAWA BARAT</div></div>
+  </div>
+
+  <div style="margin-top:70px;">
+    <div style="color:var(--gold);font-weight:800;letter-spacing:2px;font-size:11pt;">★ PROPOSAL PENAWARAN — JASA KONSULTANSI SISTEM INFORMASI</div>
+    <h1 style="margin-top:14px;">Pengembangan Sistem<br>Perjalanan Dinas Elektronik<br><span style="color:var(--gold);">SISFO SPPD (e-SPPD)</span></h1>
+    <p style="color:#cdd9ee;max-width:60ch;font-size:12pt;">Aplikasi <b style="color:#fff">paperless, mobile-first, dan akuntabel</b> untuk pengajuan &amp; pertanggungjawaban perjalanan dinas — selaras prinsip akuntabilitas keuangan negara.</p>
+  </div>
+
+  <div style="margin-top:36px;display:flex;gap:10px;flex-wrap:wrap;">
+    <span class="chip g">Kegiatan 12c — e-SPPD</span>
+    <span class="chip g">Akun 522131 · Jasa Konsultansi</span>
+    <span class="chip g">Pagu: Rp 50.000.000</span>
+    <span class="chip g">TA 2026</span>
+  </div>
+
+  <div style="position:absolute;bottom:18mm;left:18mm;right:18mm;display:flex;justify-content:space-between;align-items:flex-end;color:#cdd9ee;font-size:10pt;">
+    <div>
+      <div class="small" style="color:#9fb3d1;">Diajukan kepada</div>
+      <div style="font-weight:800;color:#fff;font-size:12pt;">Sekretariat KPU Provinsi Jawa Barat</div>
+      <div class="small">Program: Penguatan &amp; Integrasi Sistem Informasi</div>
+    </div>
+    <div style="text-align:right;">
+      <div class="small" style="color:#9fb3d1;">Penyedia Jasa</div>
+      <div style="font-weight:800;color:#fff;">[Nama Penyedia / Konsultan]</div>
+      <div class="small">Bandung, Juni 2026</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 1. RINGKASAN & LATAR BELAKANG ============ -->
+<section class="page">
+  <h2 class="sec"><span class="n">1</span> Ringkasan Eksekutif &amp; Latar Belakang</h2>
+
+  <div class="lead">
+    <p>Proposal ini merupakan penawaran <b>Jasa Konsultansi Pengembangan Sistem Perjalanan Dinas Elektronik (e-SPPD)</b> pada Sekretariat KPU Provinsi Jawa Barat. Penawaran disusun untuk memenuhi kebutuhan <b>digitalisasi tata kelola perjalanan dinas</b> yang transparan, cepat, dan akuntabel, serta <b>selaras dengan Rincian Anggaran Biaya (RAB)</b> Kegiatan 12 sub-kegiatan 12c senilai <b>Rp 50.000.000</b>.</p>
+  </div>
+
+  <h3>Permasalahan Saat Ini</h3>
+  <ul class="clean">
+    <li>Pengajuan &amp; pertanggungjawaban (SPJ) perjalanan dinas masih <b>manual/berbasis kertas</b> — lambat, rawan hilang, sulit dilacak.</li>
+    <li>Persetujuan berjenjang (atasan → keuangan → PPK → KPA) memerlukan tatap muka &amp; tanda tangan basah.</li>
+    <li>Monitoring <b>serapan anggaran perjalanan dinas</b> belum real-time; rekap manual menyita waktu.</li>
+    <li>Risiko <b>duplikasi klaim</b> dan kesulitan menyiapkan dokumen audit BPK/Inspektorat.</li>
+  </ul>
+
+  <h3>Solusi yang Ditawarkan</h3>
+  <p>Aplikasi <b>SISFO SPPD</b> — sistem berbasis web/PWA (mobile-first) yang mendigitalkan seluruh siklus perjalanan dinas: <b>pengajuan → verifikasi berjenjang → penerbitan dokumen elektronik + QR → pelaksanaan → SPJ digital → verifikasi → pembayaran → arsip</b>, lengkap dengan <b>dashboard monitoring anggaran real-time</b> dan <b>audit trail</b>.</p>
+
+  <div class="note" style="margin-top:6px;">
+    <b>★ Nilai tambah utama:</b> <b>Purwarupa (prototype) fungsional telah TERSEDIA &amp; ONLINE</b> sebagai bukti kapabilitas — dapat diuji langsung sebelum kontrak. Hal ini menekan risiko kegagalan proyek dan mempercepat go-live.
+    <div class="small" style="margin-top:4px;">Demo: <span class="tag">https://yunikepuspita-sudo.github.io/sisfo-sppd-kpu-jabar/</span></div>
+  </div>
+
+  <h3>Dasar Penganggaran</h3>
+  <div class="kv" style="margin-top:6px;">
+    <dt>Belanja</dt><dd>Belanja Hibah Non Pemilihan — TA 2026</dd>
+    <dt>Kegiatan</dt><dd>Kegiatan 12: Pengembangan &amp; Integrasi Sistem Informasi Administrasi Perkantoran</dd>
+    <dt>Sub-Kegiatan</dt><dd>12c — Pengembangan Sistem Perjalanan Dinas (e-SPPD)</dd>
+    <dt>Akun Belanja</dt><dd><span class="tag">522131</span> Belanja Jasa Konsultansi</dd>
+    <dt>Pagu Sub-Kegiatan</dt><dd><b>Rp 50.000.000,-</b> (bagian dari pagu Kegiatan 12 sebesar Rp 500.000.000)</dd>
+  </div>
+
+  <div class="foot">SISFO SPPD (e-SPPD) — KPU Provinsi Jawa Barat</div>
+  <div class="pagenum">Hal. 2</div>
+</section>
+
+<!-- ============ 2. RUANG LINGKUP & PEMETAAN RAB ============ -->
+<section class="page">
+  <h2 class="sec"><span class="n">2</span> Ruang Lingkup Pekerjaan &amp; Pemetaan RAB</h2>
+  <p>Ruang lingkup pekerjaan disusun <b>identik dengan komponen RAB e-SPPD (12c)</b>, sehingga setiap rupiah anggaran memiliki keluaran (deliverable) yang terukur.</p>
+
+  <table>
+    <thead>
+      <tr><th style="width:34px;">No</th><th>Komponen RAB (Sesuai 12c)</th><th>Keluaran / Deliverable</th><th class="num">Nilai (Rp)</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td><b>Analisis Kebutuhan &amp; Desain Sistem</b></td>
+        <td>Dokumen SRS, proses bisnis (BPMN), desain basis data, desain UI/UX, arsitektur sistem.</td>
+        <td class="num">7.000.000</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td><b>Pengembangan Modul Pengajuan &amp; Persetujuan</b></td>
+        <td>Form pengajuan + kalkulasi SBM, alur approval berjenjang (atasan→keuangan→PPK→KPA), Surat Tugas &amp; SPPD elektronik + <b>QR validasi</b>, notifikasi.</td>
+        <td class="num">18.000.000</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td><b>Pengembangan Modul Pelaporan &amp; Reimbursement</b></td>
+        <td>SPJ digital (laporan, unggah bukti), realisasi biaya, modul reimbursement/pencairan, <b>dashboard monitoring</b> &amp; cetak laporan.</td>
+        <td class="num">10.000.000</td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td><b>Integrasi dengan Sistem Keuangan</b></td>
+        <td>Pemetaan akun/DIPA, cek pagu &amp; serapan otomatis, endpoint/berkas pertukaran data ke sistem keuangan (SAKTI/lokal), ekspor SP2D.</td>
+        <td class="num">8.000.000</td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td><b>UAT, Pelatihan &amp; Dokumentasi</b></td>
+        <td>User Acceptance Test, perbaikan, pelatihan admin &amp; pengguna, manual book, serah terima &amp; garansi pendampingan.</td>
+        <td class="num">7.000.000</td>
+      </tr>
+      <tr class="total"><td colspan="3">TOTAL NILAI PENAWARAN (sesuai pagu 12c)</td><td class="num">50.000.000</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Komposisi Anggaran per Komponen</h3>
+  <div class="grid g2" style="align-items:center;margin-top:8px;">
+    <div style="display:flex;justify-content:center;">
+      <div class="donut" style="background:conic-gradient(
+        var(--navy) 0 14%,
+        var(--navy3) 14% 50%,
+        var(--gold) 50% 70%,
+        #2e86c1 70% 86%,
+        var(--green) 86% 100%);">
+        <div class="c"><div style="font-size:9pt;color:var(--muted);">Total</div><div style="font-weight:800;color:var(--navy);font-size:13pt;">Rp 50 jt</div></div>
+      </div>
+    </div>
+    <div class="legend">
+      <div><i style="background:var(--navy)"></i> Analisis &amp; Desain — Rp 7 jt <b style="margin-left:auto">14%</b></div>
+      <div><i style="background:var(--navy3)"></i> Modul Pengajuan &amp; Persetujuan — Rp 18 jt <b style="margin-left:auto">36%</b></div>
+      <div><i style="background:var(--gold)"></i> Modul Pelaporan &amp; Reimbursement — Rp 10 jt <b style="margin-left:auto">20%</b></div>
+      <div><i style="background:#2e86c1"></i> Integrasi Sistem Keuangan — Rp 8 jt <b style="margin-left:auto">16%</b></div>
+      <div><i style="background:var(--green)"></i> UAT, Pelatihan &amp; Dokumentasi — Rp 7 jt <b style="margin-left:auto">14%</b></div>
+    </div>
+  </div>
+
+  <div class="foot">SISFO SPPD (e-SPPD) — KPU Provinsi Jawa Barat</div>
+  <div class="pagenum">Hal. 3</div>
+</section>
+
+<!-- ============ 3. ALUR & FITUR ============ -->
+<section class="page">
+  <h2 class="sec"><span class="n">3</span> Alur Proses &amp; Fitur Utama</h2>
+
+  <h3>Siklus Lengkap Perjalanan Dinas</h3>
+  <div class="wf" style="margin:8px 0 4px;">
+    <div class="step">Pengajuan<br><span class="muted">Pegawai</span></div><div class="arr">›</div>
+    <div class="step">Verifikasi<br><span class="muted">Atasan</span></div><div class="arr">›</div>
+    <div class="step">Anggaran<br><span class="muted">Keuangan</span></div><div class="arr">›</div>
+    <div class="step">Persetujuan<br><span class="muted">PPK</span></div><div class="arr">›</div>
+    <div class="step">Pengesahan<br><span class="muted">KPA</span></div><div class="arr">›</div>
+    <div class="step">Dokumen+QR<br><span class="muted">Terbit</span></div>
+  </div>
+  <div class="wf" style="margin:8px 0;">
+    <div class="step" style="border-top-color:var(--gold)">Pelaksanaan<br><span class="muted">Check-in/Geotag</span></div><div class="arr">›</div>
+    <div class="step" style="border-top-color:var(--gold)">SPJ Digital<br><span class="muted">Bukti</span></div><div class="arr">›</div>
+    <div class="step" style="border-top-color:var(--gold)">Verifikasi SPJ<br><span class="muted">Bendahara/PPK/KPA</span></div><div class="arr">›</div>
+    <div class="step" style="border-top-color:var(--green)">Pembayaran<br><span class="muted">Pencairan</span></div><div class="arr">›</div>
+    <div class="step" style="border-top-color:var(--green)">Arsip Digital<br><span class="muted">Audit-ready</span></div>
+  </div>
+
+  <h3>Fitur per Modul</h3>
+  <div class="grid g2">
+    <div class="card k"><b>📝 Pengajuan &amp; Persetujuan</b>
+      <ul class="check small">
+        <li>Estimasi biaya otomatis dari <b>SBM</b></li>
+        <li>Cek ketersediaan pagu &amp; akun</li>
+        <li>Approval berjenjang + catatan (setuju/revisi/tolak)</li>
+        <li>Surat Tugas &amp; SPPD elektronik + <b>QR Code</b></li>
+        <li>Penanda Tanda Tangan Elektronik (BSrE-ready)</li>
+      </ul>
+    </div>
+    <div class="card k"><b>🧾 Pelaporan &amp; Reimbursement</b>
+      <ul class="check small">
+        <li>SPJ digital: laporan + unggah bukti (kamera HP)</li>
+        <li>Realisasi biaya riil vs estimasi</li>
+        <li><b>Deteksi duplikasi klaim</b></li>
+        <li>Pencairan/reimbursement + nomor SP2D</li>
+        <li>Cetak/Export PDF</li>
+      </ul>
+    </div>
+    <div class="card k"><b>📊 Dashboard &amp; Monitoring</b>
+      <ul class="check small">
+        <li>Serapan anggaran (DIPA) <b>real-time</b></li>
+        <li>Statistik per status &amp; per akun</li>
+        <li>Kotak persetujuan &amp; notifikasi</li>
+        <li>Pelacakan status end-to-end</li>
+      </ul>
+    </div>
+    <div class="card k"><b>🛡️ Integrasi &amp; Akuntabilitas</b>
+      <ul class="check small">
+        <li>Pemetaan akun/DIPA &amp; cek pagu otomatis</li>
+        <li>Pertukaran data ke sistem keuangan</li>
+        <li><b>Audit trail</b> tak-terhapus (audit BPK/Inspektorat)</li>
+        <li>Arsip digital permanen</li>
+        <li>RBAC 7 peran pengguna</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="foot">SISFO SPPD (e-SPPD) — KPU Provinsi Jawa Barat</div>
+  <div class="pagenum">Hal. 4</div>
+</section>
+
+<!-- ============ 4. DASHBOARD VISUAL ============ -->
+<section class="page">
+  <h2 class="sec"><span class="n">4</span> Pratinjau Dashboard &amp; Antarmuka</h2>
+  <p class="small muted">Visualisasi berikut menggambarkan dashboard monitoring SISFO SPPD (data ilustratif).</p>
+
+  <div class="browser">
+    <div class="bar2"><span class="d"></span><span class="d"></span><span class="d"></span><span class="url">sisfo-sppd-kpu-jabar — Dashboard</span></div>
+    <div style="padding:14px;background:#f4f6fa;">
+      <!-- stat cards -->
+      <div class="grid g4" style="margin-bottom:12px;">
+        <div class="stat navy"><div class="l">Total Perjalanan Dinas</div><div class="v">142</div></div>
+        <div class="stat gold"><div class="l">Dalam Proses</div><div class="v">23</div></div>
+        <div class="stat green"><div class="l">Selesai &amp; Dibayar</div><div class="v">98</div></div>
+        <div class="stat red"><div class="l">Tahap SPJ</div><div class="v">21</div></div>
+      </div>
+
+      <div class="grid g2" style="grid-template-columns:1.4fr 1fr;">
+        <!-- serapan per akun -->
+        <div class="card">
+          <b style="color:var(--navy);">Serapan Anggaran Perjalanan Dinas (DIPA)</b>
+          <div style="margin-top:10px;">
+            <div class="small" style="display:flex;justify-content:space-between;"><span>524111 — Perjadin Biasa</span><b>62%</b></div>
+            <div class="bar" style="margin:3px 0 9px;"><span style="width:62%"></span></div>
+            <div class="small" style="display:flex;justify-content:space-between;"><span>524113 — Dalam Kota</span><b>41%</b></div>
+            <div class="bar" style="margin:3px 0 9px;"><span style="width:41%"></span></div>
+            <div class="small" style="display:flex;justify-content:space-between;"><span>524114 — Paket Meeting Dalam Kota</span><b>53%</b></div>
+            <div class="bar" style="margin:3px 0 9px;"><span style="width:53%"></span></div>
+            <div class="small" style="display:flex;justify-content:space-between;"><span>524119 — Paket Meeting Luar Kota</span><b>33%</b></div>
+            <div class="bar" style="margin:3px 0 0;"><span style="width:33%"></span></div>
+          </div>
+        </div>
+        <!-- donut realisasi -->
+        <div class="card" style="display:flex;flex-direction:column;align-items:center;">
+          <b style="color:var(--navy);align-self:flex-start;">Realisasi Keseluruhan</b>
+          <div class="donut" style="margin:8px 0;background:conic-gradient(var(--green) 0 52%, var(--gold) 52% 66%, #eef2f7 66% 100%);">
+            <div class="c"><div style="font-weight:800;color:var(--navy);font-size:15pt;">52%</div><div class="small muted">terserap</div></div>
+          </div>
+          <div class="legend small" style="align-self:stretch;">
+            <div><i style="background:var(--green)"></i> Realisasi <b style="margin-left:auto">Rp 1,89 M</b></div>
+            <div><i style="background:var(--gold)"></i> Komitmen <b style="margin-left:auto">Rp 0,51 M</b></div>
+            <div><i style="background:#eef2f7;border:1px solid var(--line)"></i> Sisa Pagu <b style="margin-left:auto">Rp 1,24 M</b></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- tren bulanan (bar) -->
+      <div class="card" style="margin-top:12px;">
+        <b style="color:var(--navy);">Tren Pengajuan &amp; Realisasi per Bulan</b>
+        <div style="display:flex;align-items:flex-end;gap:10px;height:90px;margin-top:12px;padding:0 4px;">
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;"><div style="width:60%;height:38%;background:var(--navy3);border-radius:4px 4px 0 0;"></div><span class="small muted">Jan</span></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;"><div style="width:60%;height:55%;background:var(--navy3);border-radius:4px 4px 0 0;"></div><span class="small muted">Feb</span></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;"><div style="width:60%;height:48%;background:var(--navy3);border-radius:4px 4px 0 0;"></div><span class="small muted">Mar</span></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;"><div style="width:60%;height:72%;background:var(--navy3);border-radius:4px 4px 0 0;"></div><span class="small muted">Apr</span></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;"><div style="width:60%;height:64%;background:var(--gold);border-radius:4px 4px 0 0;"></div><span class="small muted">Mei</span></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;"><div style="width:60%;height:88%;background:var(--gold);border-radius:4px 4px 0 0;"></div><span class="small muted">Jun</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid g3" style="margin-top:12px;">
+    <div class="card small"><b>📄 Surat Tugas &amp; SPPD</b><br><span class="muted">Dokumen resmi otomatis + QR Code validasi keaslian, siap cetak/PDF.</span></div>
+    <div class="card small"><b>📍 Geotagging</b><br><span class="muted">Check-in lokasi kegiatan dengan koordinat GPS sebagai bukti pelaksanaan.</span></div>
+    <div class="card small"><b>📱 PWA Mobile-first</b><br><span class="muted">Dapat di-install di ponsel &amp; bekerja dalam mode offline.</span></div>
+  </div>
+
+  <div class="foot">SISFO SPPD (e-SPPD) — KPU Provinsi Jawa Barat</div>
+  <div class="pagenum">Hal. 5</div>
+</section>
+
+<!-- ============ 5. RAB RINCI ============ -->
+<section class="page">
+  <h2 class="sec"><span class="n">5</span> Rincian Anggaran Biaya (RAB) Penawaran</h2>
+  <p>RAB penawaran disusun <b>sama persis</b> dengan pagu pada dokumen anggaran KPU Provinsi Jawa Barat (Kegiatan 12c — e-SPPD), akun <span class="tag">522131</span> Belanja Jasa Konsultansi.</p>
+
+  <table>
+    <thead class="gold">
+      <tr><th style="width:30px;">No</th><th>Uraian Pekerjaan</th><th class="num" style="width:60px;">Vol.</th><th style="width:60px;">Satuan</th><th class="num" style="width:110px;">Harga Satuan</th><th class="num" style="width:120px;">Jumlah (Rp)</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>Analisis kebutuhan dan desain sistem</td><td class="num">1</td><td>paket</td><td class="num">7.000.000</td><td class="num">7.000.000</td></tr>
+      <tr><td>2</td><td>Pengembangan modul pengajuan dan persetujuan</td><td class="num">1</td><td>paket</td><td class="num">18.000.000</td><td class="num">18.000.000</td></tr>
+      <tr><td>3</td><td>Pengembangan modul pelaporan dan reimbursement</td><td class="num">1</td><td>paket</td><td class="num">10.000.000</td><td class="num">10.000.000</td></tr>
+      <tr><td>4</td><td>Integrasi dengan sistem keuangan</td><td class="num">1</td><td>paket</td><td class="num">8.000.000</td><td class="num">8.000.000</td></tr>
+      <tr><td>5</td><td>UAT, pelatihan dan dokumentasi</td><td class="num">1</td><td>paket</td><td class="num">7.000.000</td><td class="num">7.000.000</td></tr>
+      <tr class="total"><td colspan="5">JUMLAH TOTAL</td><td class="num">50.000.000</td></tr>
+    </tbody>
+  </table>
+  <p class="small muted">Terbilang: <i>lima puluh juta rupiah</i>. Harga bersifat lump-sum, sudah termasuk seluruh komponen pekerjaan; kewajiban perpajakan mengikuti ketentuan yang berlaku.</p>
+
+  <h3>Termin Pembayaran (Usulan)</h3>
+  <table>
+    <thead><tr><th>Termin</th><th>Tahap Penyelesaian</th><th class="num">%</th><th class="num">Nilai (Rp)</th></tr></thead>
+    <tbody>
+      <tr><td>Termin I</td><td>SPK + selesai Analisis &amp; Desain (Komponen 1)</td><td class="num">20%</td><td class="num">10.000.000</td></tr>
+      <tr><td>Termin II</td><td>Selesai Modul Pengajuan &amp; Persetujuan (Komponen 2)</td><td class="num">40%</td><td class="num">20.000.000</td></tr>
+      <tr><td>Termin III</td><td>Selesai Modul Pelaporan &amp; Integrasi Keuangan (Komp. 3–4)</td><td class="num">25%</td><td class="num">12.500.000</td></tr>
+      <tr><td>Termin IV</td><td>UAT, Pelatihan, Dokumentasi &amp; Serah Terima (Komponen 5)</td><td class="num">15%</td><td class="num">7.500.000</td></tr>
+      <tr class="total"><td colspan="2">TOTAL</td><td class="num">100%</td><td class="num">50.000.000</td></tr>
+    </tbody>
+  </table>
+
+  <div class="foot">SISFO SPPD (e-SPPD) — KPU Provinsi Jawa Barat</div>
+  <div class="pagenum">Hal. 6</div>
+</section>
+
+<!-- ============ 6. JADWAL & METODOLOGI ============ -->
+<section class="page">
+  <h2 class="sec"><span class="n">6</span> Jadwal Pelaksanaan &amp; Metodologi</h2>
+
+  <h3>Metodologi</h3>
+  <p>Pengembangan menggunakan pendekatan <b>Agile-iteratif</b> dengan keterlibatan pengguna (co-creation). Karena <b>purwarupa telah tersedia</b>, fokus pekerjaan adalah penyesuaian kebutuhan riil, integrasi keuangan, pengamanan, UAT, dan alih pengetahuan — sehingga risiko rendah dan waktu lebih singkat.</p>
+
+  <h3>Jadwal (12 Minggu)</h3>
+  <table class="gantt">
+    <thead><tr><th class="task">Tahap / Minggu</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th></tr></thead>
+    <tbody>
+      <tr><td class="task">1. Analisis &amp; Desain</td><td class="cellon">●</td><td class="cellon">●</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td class="task">2. Modul Pengajuan &amp; Persetujuan</td><td></td><td></td><td class="cellon">●</td><td class="cellon">●</td><td class="cellon">●</td><td class="cellon">●</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td class="task">3. Modul Pelaporan &amp; Reimbursement</td><td></td><td></td><td></td><td></td><td></td><td class="cellon">●</td><td class="cellon">●</td><td class="cellon">●</td><td></td><td></td><td></td><td></td></tr>
+      <tr><td class="task">4. Integrasi Sistem Keuangan</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="cellon">●</td><td class="cellon">●</td><td></td><td></td><td></td></tr>
+      <tr><td class="task">5. UAT, Pelatihan &amp; Dokumentasi</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="cellon">●</td><td class="cellon">●</td><td class="cellon">●</td></tr>
+      <tr><td class="task">Go-Live &amp; Serah Terima</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="cellon">★</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Spesifikasi Teknis</h3>
+  <div class="grid g2">
+    <div class="card small">
+      <b>Arsitektur &amp; Teknologi</b>
+      <ul class="clean"><li>Web App / <b>PWA</b> (mobile-first, installable, offline-capable)</li><li>Responsif: desktop, tablet, ponsel</li><li>Basis data relasional + REST API untuk integrasi</li><li>Keamanan: RBAC, enkripsi, audit log</li></ul>
+    </div>
+    <div class="card small">
+      <b>Integrasi (Ready)</b>
+      <div style="margin-top:4px;">
+        <span class="chip">SAKTI / Keuangan</span><span class="chip">SIASN</span><span class="chip">e-Sign BSrE</span>
+        <span class="chip">Presensi</span><span class="chip">Notifikasi WA/Email</span><span class="chip">OCR Bukti</span>
+      </div>
+      <b style="display:block;margin-top:8px;">Serah Terima</b>
+      <ul class="clean"><li>Source code + dokumentasi</li><li>Manual admin &amp; pengguna</li><li>Garansi &amp; pendampingan pasca go-live</li></ul>
+    </div>
+  </div>
+
+  <div class="foot">SISFO SPPD (e-SPPD) — KPU Provinsi Jawa Barat</div>
+  <div class="pagenum">Hal. 7</div>
+</section>
+
+<!-- ============ 7. KEUNGGULAN & PENUTUP ============ -->
+<section class="page">
+  <h2 class="sec"><span class="n">7</span> Keunggulan, Syarat &amp; Penutup</h2>
+
+  <h3>Mengapa Penawaran Ini</h3>
+  <div class="grid g2">
+    <div class="card k"><b>✅ Prototype sudah jadi &amp; teruji</b><div class="small muted">Dapat dicoba langsung — bukti kapabilitas, bukan sekadar janji. Mengurangi risiko proyek.</div></div>
+    <div class="card k"><b>✅ Sesuai 100% dengan RAB</b><div class="small muted">Lima komponen pekerjaan = lima baris anggaran 12c. Mudah dipertanggungjawabkan.</div></div>
+    <div class="card k"><b>✅ Paperless &amp; akuntabel</b><div class="small muted">Audit trail, arsip digital, dan dashboard mendukung pemeriksaan BPK/Inspektorat.</div></div>
+    <div class="card k"><b>✅ Mobile-first &amp; hemat</b><div class="small muted">PWA tanpa biaya lisensi mahal; ringan dan dapat di-host pada infrastruktur instansi.</div></div>
+  </div>
+
+  <h3>Syarat &amp; Ketentuan</h3>
+  <ul class="clean small">
+    <li>Masa berlaku penawaran: <b>60 hari kalender</b> sejak tanggal proposal.</li>
+    <li>Harga bersifat <b>lump-sum</b> sesuai pagu RAB 12c (Rp 50.000.000), pajak mengikuti ketentuan.</li>
+    <li>Jangka waktu pelaksanaan: <b>±12 minggu</b> sejak terbit SPK.</li>
+    <li>Hak kekayaan intelektual hasil pekerjaan diserahkan kepada KPU Provinsi Jawa Barat.</li>
+    <li>Termasuk garansi pemeliharaan &amp; pendampingan pasca go-live (sesuai kesepakatan).</li>
+  </ul>
+
+  <div class="note">
+    <b>Demo langsung dapat diakses:</b> <span class="tag">https://yunikepuspita-sudo.github.io/sisfo-sppd-kpu-jabar/</span><br>
+    <span class="small">Silakan menguji alur pengajuan → persetujuan → penerbitan dokumen + QR → SPJ → pembayaran pada lingkungan demo.</span>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;margin-top:40px;">
+    <div class="small">
+      <div class="muted">Mengetahui / Menyetujui,</div>
+      <div style="margin-top:50px;font-weight:800;border-top:1px solid var(--ink);display:inline-block;padding-top:3px;">Sekretariat KPU Provinsi Jawa Barat</div>
+    </div>
+    <div class="small" style="text-align:right;">
+      <div class="muted">Bandung, Juni 2026<br>Hormat kami,</div>
+      <div style="margin-top:50px;font-weight:800;border-top:1px solid var(--ink);display:inline-block;padding-top:3px;">[Nama Penyedia / Konsultan]</div>
+    </div>
+  </div>
+
+  <p class="small muted" style="margin-top:26px;text-align:center;">Dokumen ini disusun selaras dengan RAB Belanja Hibah Non Pemilihan TA 2026 — Kegiatan 12c (e-SPPD), Akun 522131. Angka pada pratinjau dashboard bersifat ilustratif.</p>
+
+  <div class="foot">SISFO SPPD (e-SPPD) — KPU Provinsi Jawa Barat</div>
+  <div class="pagenum">Hal. 8</div>
+</section>
+
+</body>
+</html>
