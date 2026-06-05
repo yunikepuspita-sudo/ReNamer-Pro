@@ -1,0 +1,12 @@
+# Dependensi (proyek ini tidak memerlukan, namun jaga-jaga)
+node_modules/
+
+# Berkas OS / editor
+.DS_Store
+Thumbs.db
+*.log
+.vscode/
+.idea/
+
+# Sementara
+*.tmp

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b2447" />
+  <meta name="description" content="SISFO SPPD KPU Jawa Barat — Sistem informasi pengajuan & pertanggungjawaban perjalanan dinas yang paperless, mobile-first, dan akuntabel." />
+  <title>SISFO SPPD — KPU Jawa Barat</title>
+
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="SPPD KPU Jabar" />
+
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <noscript>
+    <div style="padding:24px;font-family:sans-serif">
+      Aplikasi ini membutuhkan JavaScript. Mohon aktifkan JavaScript pada peramban Anda.
+    </div>
+  </noscript>
+
+  <div id="app" aria-busy="true">
+    <div class="boot">
+      <div class="boot-logo"></div>
+      <p>Memuat SISFO SPPD…</p>
+    </div>
+  </div>
+
+  <div id="toast-host" class="toast-host" aria-live="polite"></div>
+  <div id="modal-host" class="modal-host" hidden></div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
