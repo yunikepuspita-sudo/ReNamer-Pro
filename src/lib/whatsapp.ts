@@ -26,7 +26,7 @@ export const WA_PHONE: string = (env.VITE_WA_PHONE as string | undefined)?.repla
 
 /** Tautan Saluran WhatsApp (Channel). Kosongkan jika belum punya saluran. */
 export const WA_CHANNEL_URL: string =
-  (env.VITE_WA_CHANNEL_URL as string | undefined) || 'https://whatsapp.com/channel/ePustakaPemilu'
+  (env.VITE_WA_CHANNEL_URL as string | undefined) || 'https://whatsapp.com/channel/0029Vb80PMo8V0tuv79TCi1g'
 
 /** Nama saluran yang ditampilkan ke pengguna. */
 export const WA_CHANNEL_NAME: string =
