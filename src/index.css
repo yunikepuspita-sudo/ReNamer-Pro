@@ -591,3 +591,74 @@ a { color: inherit; text-decoration: none; }
   .wa-channel { padding: 20px; }
   .wa-channel__btn { width: 100%; text-align: center; }
 }
+
+/* ── Pustaka AI (Knowledge Hub) ──────────────────────────────────────────── */
+:root { --ai: #7c3aed; --ai-dark: #6d28d9; }
+.navlink-ai { color: var(--ai) !important; }
+.navlink-ai.active { background: #f5f3ff !important; }
+
+.ai__head { margin: 8px 0 18px; }
+.ai__head h1 { margin: 6px 0 4px; }
+.ai__head p { margin: 0; color: var(--muted); }
+
+.ai__tabs { display: flex; gap: 8px; margin-bottom: 16px; }
+.ai__tab { border: 1px solid var(--border); background: #fff; color: var(--muted); padding: 8px 16px; border-radius: 999px; font-size: 14px; font-weight: 600; cursor: pointer; }
+.ai__tab:hover { border-color: var(--ai); color: var(--ai); }
+.ai__tab.is-active { background: var(--ai); color: #fff; border-color: var(--ai); }
+
+.ai__notice {
+  border: 1px solid #ddd6fe; background: #f5f3ff; color: #5b21b6; border-radius: 12px;
+  padding: 14px 16px; margin-bottom: 16px; font-size: 14px; line-height: 1.5;
+}
+.ai__notice code { background: #ede9fe; padding: 1px 6px; border-radius: 5px; font-size: 12.5px; }
+.ai__notice a { color: var(--ai-dark); font-weight: 600; }
+
+/* Chat */
+.ai__chat { display: flex; flex-direction: column; gap: 12px; }
+.ai__thread {
+  min-height: 320px; max-height: 56vh; overflow-y: auto; display: flex; flex-direction: column; gap: 12px;
+  border: 1px solid var(--border); border-radius: 14px; padding: 16px; background: var(--surface);
+}
+.ai__empty { color: var(--muted); margin: auto 0; text-align: center; }
+.ai__chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 12px; }
+.ai__chip { border: 1px solid var(--border); background: #fafafe; color: var(--text); padding: 8px 14px; border-radius: 999px; font-size: 13px; cursor: pointer; }
+.ai__chip:hover { border-color: var(--ai); color: var(--ai); }
+
+.ai__msg { display: flex; }
+.ai__msg--user { justify-content: flex-end; }
+.ai__bubble { max-width: 78%; padding: 10px 14px; border-radius: 14px; font-size: 14.5px; line-height: 1.5; }
+.ai__msg--user .ai__bubble { background: var(--ai); color: #fff; border-bottom-right-radius: 4px; }
+.ai__msg--assistant .ai__bubble { background: #f4f4fb; color: #1f2430; border-bottom-left-radius: 4px; }
+.ai__bubble p { margin: 0 0 6px; }
+.ai__bubble p:last-child { margin-bottom: 0; }
+.ai__typing { color: var(--muted); font-style: italic; }
+.ai__error { color: #b91c1c; font-size: 14px; }
+
+.ai__refs { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.ai__ref { font-size: 12.5px; font-weight: 600; color: var(--ai-dark); background: #ede9fe; padding: 4px 10px; border-radius: 999px; text-decoration: none; }
+.ai__ref:hover { background: #ddd6fe; }
+
+.ai__form { display: flex; gap: 8px; }
+.ai__form input {
+  flex: 1; border: 1.5px solid var(--border); border-radius: 10px; padding: 11px 14px; font-size: 14px; outline: none;
+}
+.ai__form input:focus { border-color: var(--ai); }
+
+/* Pencarian cerdas */
+.ai__search { display: flex; flex-direction: column; gap: 14px; }
+.ai__hits { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.ai__hit { display: flex; gap: 14px; padding: 12px 14px; border: 1px solid var(--border); border-radius: 12px; background: #fff; }
+.ai__hit-cover { flex-shrink: 0; width: 44px; display: block; }
+.ai__hit-cover .book-cover, .ai__hit-cover img { width: 44px !important; height: 62px !important; border-radius: 6px; object-fit: cover; }
+.ai__hit-info { display: flex; flex-direction: column; }
+.ai__hit-title { font-weight: 700; color: #0f172a; text-decoration: none; }
+.ai__hit-title:hover { color: var(--ai); }
+.ai__hit-author { font-size: 13px; color: var(--muted); }
+.ai__hit-reason { margin: 6px 0 0; font-size: 13.5px; color: #4b5563; }
+
+/* Panel AI di halaman detail buku */
+.book-ai__answer { background: #f4f4fb; border-radius: 12px; padding: 14px 16px; margin: 4px 0 12px; font-size: 14.5px; line-height: 1.6; }
+.book-ai__answer p { margin: 0 0 8px; }
+.book-ai__answer p:last-child { margin-bottom: 0; }
+.book-ai__form { max-width: 520px; margin-top: 6px; }
+.book-ai__note { font-size: 12px; color: #94a3b8; margin: 8px 0 0; }

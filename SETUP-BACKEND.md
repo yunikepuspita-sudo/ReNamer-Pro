@@ -166,3 +166,39 @@ buku masuk Pustaka.
 terbuka di perangkat tersebut (order tetap tercatat di tabel `orders` untuk
 pembukuan). Kepemilikan lintas-perangkat memerlukan fitur login pengguna —
 bisa ditambahkan menyusul.
+
+---
+
+## 🤖 Pustaka AI (Knowledge Hub) — opsional
+
+Fitur AI (`/pustaka-ai`, panel "Tanya AI" di detail buku, dan pencarian cerdas)
+memanggil **Claude (Anthropic)** lewat Edge Function `pustaka-ai`. Kunci API
+disimpan sebagai secret di server — **tidak pernah ada di browser**. Selama
+secret belum diisi, UI otomatis menampilkan mode "AI sedang disiapkan".
+
+### 1. Siapkan kunci API Claude
+Dapatkan dari **console.anthropic.com** (bentuk `sk-ant-...`).
+
+### 2. Set secret di Supabase
+```bash
+supabase secrets set ANTHROPIC_API_KEY=sk-ant-xxxxx
+```
+(atau via Dashboard → **Edge Functions → Manage secrets**)
+
+### 3. Deploy fungsinya
+```bash
+supabase functions deploy pustaka-ai --no-verify-jwt
+```
+
+### 4. Selesai — uji
+Buka **✨ Pustaka AI** di navbar → ajukan pertanyaan, atau buka detail buku →
+**Ringkas & jelaskan dengan AI**.
+
+**Berkas terkait:**
+- `supabase/functions/pustaka-ai/` — proxy aman ke Claude (mode chat/search/book)
+- `src/lib/pustakaAi.ts` — klien frontend + degradasi anggun
+- `src/pages/PustakaAI.tsx`, `src/components/BookAiPanel.tsx` — UI
+
+**Model & biaya:** memakai `claude-opus-4-8` dengan thinking dimatikan + effort
+rendah agar respons cepat dan hemat. Biaya ditagih per token oleh Anthropic
+sesuai pemakaian; katalog dikirim ringkas (maks. 80 judul) sebagai konteks.

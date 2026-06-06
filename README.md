@@ -34,6 +34,14 @@ memfilter koleksi, membeli/menambahkan judul ke pustaka pribadi, lalu membacanya
   - **Level Pembaca** — gamifikasi aktivitas baca pribadi: poin, level berjenjang
     (Pembaca Baru → Maestro Literasi), statistik (buku dimiliki/selesai, halaman dibaca,
     tema dijelajahi), dan lencana. Semua dihitung dari data lokal, tanpa backend.
+- **Pustaka AI (Knowledge Hub)** — asisten cerdas bertenaga **Claude**:
+  - **Tanya Asisten** (`/pustaka-ai`) — chat tanya-jawab demokrasi/pemilu + rekomendasi
+    buku, dijawab berdasar katalog (judul yang disebut menjadi tautan).
+  - **Pencarian Cerdas** — ketik kebutuhan bahasa natural, AI memilihkan judul relevan.
+  - **Tanya AI per buku** — ringkasan otomatis & tanya-jawab di halaman detail buku.
+  - Aman untuk situs statis: panggilan LLM lewat **Supabase Edge Function** (`pustaka-ai`)
+    yang menyimpan `ANTHROPIC_API_KEY` di server. Tanpa kunci, UI menampilkan mode
+    "AI sedang disiapkan". Setup: lihat `SETUP-BACKEND.md`.
 - **Integrasi WhatsApp**:
   - **Saluran WhatsApp (Channel)** — banner ajakan mengikuti saluran broadcast untuk info
     koleksi & e-book baru (di Beranda dan footer).
