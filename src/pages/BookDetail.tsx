@@ -8,6 +8,7 @@ import { isPaymentEnabled } from '../lib/payments'
 import PdfCover from '../components/PdfCover'
 import QrisCheckout from '../components/QrisCheckout'
 import Shelf from '../components/Shelf'
+import ShareWhatsAppButton from '../components/ShareWhatsAppButton'
 
 export default function BookDetail() {
   const { id } = useParams()
@@ -102,6 +103,7 @@ export default function BookDetail() {
                 </button>
               </>
             )}
+            <ShareWhatsAppButton book={book} />
           </div>
         </div>
       </div>

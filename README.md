@@ -34,6 +34,16 @@ memfilter koleksi, membeli/menambahkan judul ke pustaka pribadi, lalu membacanya
   - **Level Pembaca** — gamifikasi aktivitas baca pribadi: poin, level berjenjang
     (Pembaca Baru → Maestro Literasi), statistik (buku dimiliki/selesai, halaman dibaca,
     tema dijelajahi), dan lencana. Semua dihitung dari data lokal, tanpa backend.
+- **Integrasi WhatsApp**:
+  - **Saluran WhatsApp (Channel)** — banner ajakan mengikuti saluran broadcast untuk info
+    koleksi & e-book baru (di Beranda dan footer).
+  - **Tombol mengambang WhatsApp** — menu cepat untuk chat Customer Care + ikuti saluran,
+    tampil di seluruh halaman (kecuali reader layar penuh).
+  - **Bagikan via WhatsApp** — tombol di halaman detail buku untuk menyebar judul + tautan
+    ke chat, grup, atau status.
+  - Semua nomor & tautan diatur lewat env (`VITE_WA_PHONE`, `VITE_WA_CHANNEL_URL`,
+    `VITE_WA_CHANNEL_NAME`, `VITE_SITE_URL`) — lihat `.env.example`. Banner/tombol saluran
+    otomatis tersembunyi selama tautan saluran masih placeholder.
 
 ## 🛠️ Teknologi
 

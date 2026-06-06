@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { THEMES, themeCount } from '../data/themes'
 import { useCatalog } from '../context/CatalogContext'
 import Shelf from '../components/Shelf'
+import WhatsAppChannel from '../components/WhatsAppChannel'
 
 export default function Home() {
   const { books: BOOKS } = useCatalog()
@@ -62,6 +63,8 @@ export default function Home() {
 
       <Shelf title="📈 Paling Populer" books={populer} />
       <Shelf title="🆕 Terbaru" books={terbaru} />
+
+      <WhatsAppChannel />
       <Shelf title="🎁 Gratis Dibaca" books={gratis} />
       <Shelf title="📕 Buku & Bahan Pustaka" books={buku} />
       <Shelf title="📚 Jurnal" books={jurnal} />
