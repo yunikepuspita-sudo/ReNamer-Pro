@@ -41,6 +41,7 @@ export default function Navbar() {
           <NavLink to="/" end>Beranda</NavLink>
           <NavLink to="/toko">Toko</NavLink>
           <NavLink to="/tema">Tema Pemilu</NavLink>
+          <NavLink to="/peringkat">Peringkat</NavLink>
           <NavLink to="/pustaka">Pustaka Saya</NavLink>
           <NavLink to="/premium" className="navlink-premium">
             {premium ? '★ Premium' : 'Premium'}
