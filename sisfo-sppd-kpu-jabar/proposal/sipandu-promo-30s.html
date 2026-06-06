@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SIPANDU — Motion Promo 30 Detik</title>
+<style>
+  :root{
+    --navy:#0b2447; --navy2:#143a6b; --navy3:#1d4e89; --gold:#f4b40e; --teal:#13a8a0; --green:#1e9e63; --red:#c1121f;
+    --font:"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:var(--font);background:#0a1322;color:#fff;display:flex;flex-direction:column;align-items:center;padding:22px 14px 60px;}
+  .hint{max-width:960px;width:100%;color:#9fb3d6;font-size:13px;margin:0 auto 12px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center;}
+  .hint b{color:#fff;}
+  .controls{display:flex;gap:8px;}
+  .btn{background:#1d4e89;color:#fff;border:0;border-radius:9px;padding:9px 16px;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit;}
+  .btn.gold{background:linear-gradient(135deg,var(--gold),#ffd34d);color:#3a2c00;}
+
+  /* ===== STAGE 16:9 ===== */
+  .stage{
+    width:min(96vw,960px);aspect-ratio:16/9;position:relative;overflow:hidden;border-radius:16px;
+    background:radial-gradient(1200px 700px at 78% -12%,#1d3e74 0,transparent 58%),linear-gradient(160deg,#0b2447 0%,#0a1f3d 60%,#102a52 100%);
+    box-shadow:0 30px 70px rgba(0,0,0,.5);container-type:inline-size;
+  }
+  .stage::after{content:"";position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='44'%3E%3Cpath d='M0 43h44M43 0v44' stroke='rgba(255,255,255,0.035)'/%3E%3C/svg%3E");pointer-events:none;}
+
+  .scene{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:6cqw;opacity:0;}
+  .scene .cap{position:absolute;left:6cqw;right:6cqw;bottom:4.6cqw;font-size:2.5cqw;color:#dbe7ff;font-weight:600;line-height:1.35;text-shadow:0 1px 6px rgba(0,0,0,.4);}
+  .scene .cap b{color:var(--gold);}
+  .kicker{font-size:2.3cqw;letter-spacing:.32em;font-weight:800;color:var(--gold);text-transform:uppercase;}
+  .big{font-size:7.2cqw;font-weight:800;line-height:1.08;letter-spacing:-.01em;}
+  .hl{background:linear-gradient(120deg,var(--gold),#ffe08a);-webkit-background-clip:text;background-clip:text;color:transparent;}
+
+  /* progress + clock */
+  .prog{position:absolute;left:0;bottom:0;height:5px;background:var(--gold);width:0;z-index:9;}
+  .clock{position:absolute;top:3cqw;right:3.4cqw;font-size:2cqw;font-weight:800;color:rgba(255,255,255,.55);font-variant-numeric:tabular-nums;z-index:9;}
+  .wm{position:absolute;top:3cqw;left:3.4cqw;display:flex;align-items:center;gap:1.4cqw;z-index:9;opacity:.92;}
+  .wm .mk{width:4.6cqw;height:4.6cqw;border-radius:1.2cqw;background:radial-gradient(circle at 50% 40%,#fff 0 30%,var(--gold) 31% 42%,var(--navy3) 43% 100%);}
+  .wm b{font-size:2.5cqw;}
+
+  /* logo mark big */
+  .mark{width:17cqw;height:17cqw;border-radius:4.4cqw;background:radial-gradient(circle at 50% 40%,#fff 0 30%,var(--gold) 31% 42%,var(--navy3) 43% 100%);box-shadow:0 18px 50px rgba(244,180,14,.35);}
+
+  /* chips/cards */
+  .row{display:flex;gap:2.4cqw;justify-content:center;flex-wrap:wrap;}
+  .fcard{width:24cqw;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);border-radius:2.2cqw;padding:2.6cqw 2cqw;backdrop-filter:blur(4px);}
+  .fcard .ic{font-size:6cqw;}
+  .fcard .t{font-size:2.5cqw;font-weight:800;margin-top:1cqw;}
+  .fcard .d{font-size:1.9cqw;color:#bcd0f0;margin-top:.4cqw;}
+  .badge{display:inline-flex;align-items:center;gap:1cqw;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);border-radius:99px;padding:1.4cqw 2.6cqw;font-size:2.3cqw;font-weight:700;color:#eaf2ff;}
+  .qr{width:9cqw;height:9cqw;border-radius:1.4cqw;background:
+     repeating-linear-gradient(0deg,#0b2447 0 1.2cqw,#fff 1.2cqw 2.4cqw),
+     repeating-linear-gradient(90deg,rgba(11,36,71,.6) 0 1.2cqw,transparent 1.2cqw 2.4cqw);box-shadow:0 8px 24px rgba(0,0,0,.4);}
+
+  /* dashboard mini for scene 4 */
+  .dash{width:74cqw;background:#0d2348;border:1px solid rgba(255,255,255,.14);border-radius:2cqw;padding:2.4cqw;box-shadow:0 18px 50px rgba(0,0,0,.45);}
+  .dstat{display:grid;grid-template-columns:repeat(4,1fr);gap:1.4cqw;margin-bottom:1.6cqw;}
+  .dstat .x{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:1.2cqw;padding:1.2cqw;text-align:left;}
+  .dstat .x .l{font-size:1.4cqw;color:#9fb3d6;font-weight:700;text-transform:uppercase;}
+  .dstat .x .v{font-size:3cqw;font-weight:800;}
+  .dbar{display:flex;align-items:center;gap:1.4cqw;margin-top:1cqw;}
+  .dbar .lab{font-size:1.7cqw;color:#cdd9ee;width:30cqw;text-align:left;}
+  .track{flex:1;height:1.5cqw;background:rgba(255,255,255,.12);border-radius:99px;overflow:hidden;}
+  .fill{height:100%;background:linear-gradient(90deg,var(--navy3),var(--gold));border-radius:99px;transform-origin:left;transform:scaleX(0);}
+  .dbar .pct{font-size:1.8cqw;font-weight:800;width:7cqw;text-align:right;}
+
+  /* floating papers (scene 1) */
+  .papers span{position:absolute;font-size:6cqw;opacity:.5;}
+  .p1{top:16%;left:12%}.p2{top:62%;left:18%}.p3{top:24%;right:14%}.p4{top:68%;right:16%}.p5{top:44%;left:46%;font-size:4cqw}
+
+  .cta-row{display:flex;gap:2.2cqw;justify-content:center;flex-wrap:wrap;margin-top:2.2cqw;}
+  .pillcta{background:linear-gradient(135deg,var(--gold),#ffd34d);color:#3a2c00;font-weight:800;border-radius:99px;padding:1.7cqw 3.4cqw;font-size:2.6cqw;}
+  .contact{font-size:2.4cqw;color:#cdd9ee;margin-top:2cqw;font-weight:700;}
+  .contact b{color:#fff;}
+
+  /* ===== ANIMATION CLOCK (runs only when .play) ===== */
+  .scene,.sub{opacity:0;}
+  @keyframes scIn{0%{opacity:0;transform:translateY(3cqw) scale(.985)}8%{opacity:1;transform:none}90%{opacity:1;transform:none}100%{opacity:0;transform:translateY(-2cqw)}}
+  @keyframes popUp{0%{opacity:0;transform:translateY(4cqw) scale(.9)}100%{opacity:1;transform:none}}
+  @keyframes zoomIn{0%{opacity:0;transform:scale(.4) rotate(-8deg)}60%{opacity:1;transform:scale(1.06)}100%{opacity:1;transform:scale(1)}}
+  @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-2.4cqw) rotate(6deg)}}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes fillX{to{transform:scaleX(1)}}
+  @keyframes growProg{to{width:100%}}
+  @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+
+  .stage.play .prog{animation:growProg 30s linear forwards;}
+  /* scenes */
+  .stage.play .s1{animation:scIn 5.2s ease 0s both;}
+  .stage.play .s2{animation:scIn 5.2s ease 5s both;}
+  .stage.play .s3{animation:scIn 6.2s ease 10s both;}
+  .stage.play .s4{animation:scIn 6.2s ease 16s both;}
+  .stage.play .s5{animation:scIn 5.2s ease 22s both;}
+  .stage.play .s6{animation:scIn 4s ease 27s both;}
+  /* sub-element motion (absolute delays) */
+  .stage.play .papers span{animation:floaty 3.5s ease-in-out infinite;}
+  .stage.play .s2 .mark{animation:zoomIn 1s ease 5.1s both, pulse 2.4s ease 6.2s infinite;}
+  .stage.play .s2 .brandtxt{animation:popUp .7s ease 5.6s both;}
+  .stage.play .s2 .tagline{animation:popUp .7s ease 6s both;}
+  .stage.play .s3 .fcard:nth-child(1){animation:popUp .6s ease 10.4s both;}
+  .stage.play .s3 .fcard:nth-child(2){animation:popUp .6s ease 11s both;}
+  .stage.play .s3 .fcard:nth-child(3){animation:popUp .6s ease 11.6s both;}
+  .stage.play .s3 .qr{animation:spin 9s linear 11.6s infinite;}
+  .stage.play .s4 .dash{animation:popUp .7s ease 16.3s both;}
+  .stage.play .s4 .fill{animation:fillX 1.2s ease 17s both;}
+  .stage.play .s5 .badge{animation:popUp .6s ease both;}
+  .stage.play .s5 .badge:nth-child(1){animation-delay:22.5s;}
+  .stage.play .s5 .badge:nth-child(2){animation-delay:22.9s;}
+  .stage.play .s5 .badge:nth-child(3){animation-delay:23.3s;}
+  .stage.play .s5 .badge:nth-child(4){animation-delay:23.7s;}
+  .stage.play .s6 .mark{animation:zoomIn .8s ease 27.1s both;}
+  .stage.play .s6 .pillcta{animation:pulse 1.6s ease 28s infinite;}
+
+  /* script panel */
+  .script{max-width:960px;width:100%;margin-top:22px;background:#0f1d33;border:1px solid #24375a;border-radius:14px;padding:18px 20px;}
+  .script h3{color:#fff;font-size:16px;margin-bottom:10px;}
+  table{width:100%;border-collapse:collapse;font-size:13px;}
+  th,td{border:1px solid #24375a;padding:8px 10px;text-align:left;vertical-align:top;}
+  th{background:#15294a;color:#cdd9ee;font-size:11px;text-transform:uppercase;letter-spacing:.4px;}
+  td .t{color:var(--gold);font-weight:800;white-space:nowrap;}
+  .vo{color:#eaf2ff;}
+  .muted{color:#9fb3d6;}
+</style>
+</head>
+<body>
+
+<div class="hint">
+  <div>🎬 <b>SIPANDU — Motion Promo 30 detik.</b> Putar otomatis. Untuk jadi video: rekam layar area panggung (OBS Studio / perekam layar) atau Chrome → DevTools recorder.</div>
+  <div class="controls"><button class="btn gold" id="replay">▶ Putar Ulang</button></div>
+</div>
+
+<!-- ===== STAGE ===== -->
+<div class="stage play" id="stage">
+  <div class="prog"></div>
+  <div class="clock" id="clock">0.0s</div>
+  <div class="wm"><span class="mk"></span><b>SIPANDU</b></div>
+
+  <!-- S1 : HOOK -->
+  <div class="scene s1">
+    <div class="papers" aria-hidden="true"><span class="p1">📄</span><span class="p2">📑</span><span class="p3">🖊️</span><span class="p4">🗂️</span><span class="p5">📋</span></div>
+    <div class="kicker">Perjalanan Dinas</div>
+    <div class="big" style="margin-top:2cqw;">Masih repot dengan<br><span class="hl">tumpukan kertas?</span></div>
+    <div class="cap">Pengajuan manual, tanda tangan basah, SPJ menumpuk…</div>
+  </div>
+
+  <!-- S2 : BRAND -->
+  <div class="scene s2">
+    <div class="mark"></div>
+    <div class="brandtxt big" style="margin-top:2.6cqw;letter-spacing:.04em;">SIPANDU</div>
+    <div class="tagline" style="font-size:2.8cqw;color:#cdd9ee;margin-top:.6cqw;">Sistem Informasi Perjalanan Dinas Terpadu</div>
+    <div class="cap">Saatnya beralih ke <b>SIPANDU</b> — solusi e-SPPD yang terpadu.</div>
+  </div>
+
+  <!-- S3 : FEATURES -->
+  <div class="scene s3">
+    <div class="kicker">Sekali Klik</div>
+    <div class="row" style="margin-top:2.6cqw;">
+      <div class="fcard"><div class="ic">📝</div><div class="t">Pengajuan &amp; Approval</div><div class="d">Berjenjang &amp; otomatis</div></div>
+      <div class="fcard"><div class="ic">📄</div><div class="t">Surat Tugas &amp; SPPD</div><div class="d">Elektronik + validasi</div></div>
+      <div class="fcard" style="display:flex;flex-direction:column;align-items:center;"><div class="qr"></div><div class="t" style="margin-top:1cqw;">QR Code</div><div class="d">Keaslian terjamin</div></div>
+    </div>
+    <div class="cap">Ajukan, setujui berjenjang, dan terbitkan dokumen ber-<b>QR</b> dalam hitungan menit.</div>
+  </div>
+
+  <!-- S4 : DASHBOARD -->
+  <div class="scene s4">
+    <div class="kicker">Real-time</div>
+    <div class="dash" style="margin-top:2cqw;">
+      <div class="dstat">
+        <div class="x"><div class="l">Total</div><div class="v">142</div></div>
+        <div class="x"><div class="l">Proses</div><div class="v">23</div></div>
+        <div class="x"><div class="l">Selesai</div><div class="v">98</div></div>
+        <div class="x"><div class="l">Tersalur</div><div class="v" style="font-size:2.4cqw;">Rp 1,9 M</div></div>
+      </div>
+      <div class="dbar"><span class="lab">524111 — Perjadin Biasa</span><span class="track"><span class="fill" style="width:62%"></span></span><span class="pct">62%</span></div>
+      <div class="dbar"><span class="lab">524114 — Paket Meeting</span><span class="track"><span class="fill" style="width:53%"></span></span><span class="pct">53%</span></div>
+      <div class="dbar"><span class="lab">524119 — Luar Kota</span><span class="track"><span class="fill" style="width:33%"></span></span><span class="pct">33%</span></div>
+    </div>
+    <div class="cap">Pantau <b>serapan anggaran</b> real-time, kelola <b>SPJ digital</b> &amp; audit trail.</div>
+  </div>
+
+  <!-- S5 : BENEFITS -->
+  <div class="scene s5">
+    <div class="big" style="font-size:5.4cqw;">Cepat. Transparan. <span class="hl">Akuntabel.</span></div>
+    <div class="row" style="margin-top:3cqw;">
+      <span class="badge">📵 Paperless</span>
+      <span class="badge">📱 Mobile-first</span>
+      <span class="badge">🛡️ Audit Trail</span>
+      <span class="badge">📜 SPBE-ready</span>
+    </div>
+    <div class="cap">Paperless, mobile-first, SPBE-ready — <b>sudah terbukti di KPU Jawa Barat.</b></div>
+  </div>
+
+  <!-- S6 : CTA -->
+  <div class="scene s6">
+    <div class="mark" style="width:12cqw;height:12cqw;"></div>
+    <div class="big" style="margin-top:1.6cqw;font-size:5.6cqw;">Coba Demonya <span class="hl">Sekarang</span></div>
+    <div class="cta-row"><span class="pillcta">▶ Demo &amp; Konsultasi Gratis</span></div>
+    <div class="contact">🌐 <b>yunikepuspita.com</b> &nbsp;·&nbsp; 💬 <b>0896-1706-1983</b></div>
+  </div>
+</div>
+
+<!-- ===== NASKAH VO + STORYBOARD ===== -->
+<div class="script">
+  <h3>🎙️ Naskah Voice-Over (VO) — 30 Detik &amp; Storyboard</h3>
+  <table>
+    <thead><tr><th style="width:64px;">Waktu</th><th style="width:150px;">Visual / Scene</th><th>Voice-Over (Bahasa Indonesia)</th></tr></thead>
+    <tbody>
+      <tr><td class="t">0–5 dtk</td><td>Kertas berserakan → teks "tumpukan kertas?"</td><td class="vo">"Masih repot mengurus perjalanan dinas dengan tumpukan kertas dan tanda tangan manual?"</td></tr>
+      <tr><td class="t">5–10 dtk</td><td>Logo SIPANDU muncul + tagline</td><td class="vo">"Saatnya beralih ke SIPANDU — Sistem Informasi Perjalanan Dinas Terpadu."</td></tr>
+      <tr><td class="t">10–16 dtk</td><td>3 kartu fitur + QR berputar</td><td class="vo">"Ajukan, setujui secara berjenjang, dan terbitkan Surat Tugas serta SPPD elektronik ber-QR — hanya dalam hitungan menit."</td></tr>
+      <tr><td class="t">16–22 dtk</td><td>Dashboard, bar serapan terisi</td><td class="vo">"Pantau serapan anggaran secara real-time, kelola SPJ digital, dan jaga akuntabilitas dengan audit trail lengkap."</td></tr>
+      <tr><td class="t">22–27 dtk</td><td>Badge manfaat + "KPU Jabar"</td><td class="vo">"Paperless, mobile-first, dan SPBE-ready — sudah terbukti di KPU Jawa Barat."</td></tr>
+      <tr><td class="t">27–30 dtk</td><td>CTA + kontak + WhatsApp</td><td class="vo">"SIPANDU. Coba demonya sekarang. Hubungi kami di yunikepuspita.com."</td></tr>
+    </tbody>
+  </table>
+  <p class="muted" style="margin-top:10px;font-size:12.5px;">
+    🎵 <b>Saran musik:</b> corporate/inspiring upbeat, ~110–120 BPM, naik di detik 22–30 (royalty-free). &nbsp;
+    🗣️ <b>Tone VO:</b> tegas, profesional, ramah; durasi baca ±28 detik (sisakan jeda di akhir). &nbsp;
+    🎚️ <b>Tips rekam:</b> sembunyikan panel ini saat merekam (zoom browser agar panggung memenuhi layar), atau gunakan OBS untuk menangkap area panggung 16:9.
+  </p>
+</div>
+
+<script>
+  var stage = document.getElementById('stage');
+  var clock = document.getElementById('clock');
+  var t0, raf;
+  function tick(){
+    var s = (performance.now()-t0)/1000;
+    if(s>30) s=30;
+    clock.textContent = s.toFixed(1)+'s';
+    if(s<30) raf = requestAnimationFrame(tick);
+  }
+  function play(){
+    cancelAnimationFrame(raf);
+    stage.classList.remove('play'); void stage.offsetWidth; stage.classList.add('play');
+    t0 = performance.now(); tick();
+  }
+  document.getElementById('replay').addEventListener('click', play);
+  // mulai ulang otomatis tiap 30s (loop) — hapus baris ini bila tak ingin loop
+  setInterval(play, 30500);
+  play();
+</script>
+</body>
+</html>
