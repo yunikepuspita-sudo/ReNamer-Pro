@@ -28,6 +28,12 @@ memfilter koleksi, membeli/menambahkan judul ke pustaka pribadi, lalu membacanya
 - **Pustaka Saya**: rak pribadi dengan progres baca per judul.
 - **Premium — All You Can Read**: paket langganan bulanan/tahunan membuka koleksi Premium.
 - **Persistensi lokal** (localStorage): pustaka, status Premium, progres baca, dan preferensi reader.
+- **Papan Peringkat** (`/peringkat`):
+  - **Buku Terpopuler** — koleksi diperingkat berdasarkan skor popularitas (dari rating),
+    dengan medali untuk 3 teratas, bar skor, dan filter jenis bahan.
+  - **Level Pembaca** — gamifikasi aktivitas baca pribadi: poin, level berjenjang
+    (Pembaca Baru → Maestro Literasi), statistik (buku dimiliki/selesai, halaman dibaca,
+    tema dijelajahi), dan lencana. Semua dihitung dari data lokal, tanpa backend.
 - **Integrasi WhatsApp**:
   - **Saluran WhatsApp (Channel)** — banner ajakan mengikuti saluran broadcast untuk info
     koleksi & e-book baru (di Beranda dan footer).

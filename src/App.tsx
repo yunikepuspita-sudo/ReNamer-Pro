@@ -9,6 +9,7 @@ import BookDetail from './pages/BookDetail'
 import Reader from './pages/Reader'
 import Library from './pages/Library'
 import Premium from './pages/Premium'
+import Leaderboard from './pages/Leaderboard'
 import Admin from './pages/Admin'
 import Auth from './pages/Auth'
 import NotFound from './pages/NotFound'
@@ -34,6 +35,7 @@ export default function App() {
                 <Route path="/tema/:id" element={<ThemeDetail />} />
                 <Route path="/buku/:id" element={<BookDetail />} />
                 <Route path="/pustaka" element={<Library />} />
+                <Route path="/peringkat" element={<Leaderboard />} />
                 <Route path="/premium" element={<Premium />} />
                 <Route path="/admin" element={<Admin />} />
                 <Route path="/masuk" element={<Auth />} />
