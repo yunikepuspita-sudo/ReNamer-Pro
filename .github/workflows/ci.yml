@@ -13,7 +13,9 @@ permissions:
 
 jobs:
   build:
-    name: Build & type-check
+    # Nama check = "build" agar cocok dengan required status check di
+    # Branch protection rule pada branch main.
+    name: build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
