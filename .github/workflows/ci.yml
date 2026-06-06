@@ -13,8 +13,8 @@ permissions:
 
 jobs:
   build:
-    # Nama check = "build" agar cocok dengan required status check di
-    # Branch protection rule pada branch main.
+    # Branch protection mewajibkan dua nama check: "build" dan
+    # "Build & type-check". Job ini menerbitkan check "build".
     name: build
     runs-on: ubuntu-latest
     steps:
@@ -32,3 +32,14 @@ jobs:
 
       - name: Type-check & build
         run: npm run build
+
+  # Check alias agar nama "Build & type-check" yang juga diwajibkan branch
+  # protection ikut terpenuhi. Hanya lolos bila job "build" di atas sukses,
+  # jadi tidak perlu membangun ulang.
+  build-type-check:
+    name: Build & type-check
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: OK
+        run: echo "Terverifikasi oleh job 'build'."
