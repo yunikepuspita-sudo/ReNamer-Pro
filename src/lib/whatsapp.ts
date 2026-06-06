@@ -22,11 +22,11 @@ const env = import.meta.env
 
 /** Nomor WhatsApp customer care, format internasional tanpa "+", spasi, atau "-".
  *  Contoh untuk Indonesia: 628123456789 (bukan 08123456789). */
-export const WA_PHONE: string = (env.VITE_WA_PHONE as string | undefined)?.replace(/[^0-9]/g, '') || '6281234567890'
+export const WA_PHONE: string = (env.VITE_WA_PHONE as string | undefined)?.replace(/[^0-9]/g, '') || '6289617061983'
 
 /** Tautan Saluran WhatsApp (Channel). Kosongkan jika belum punya saluran. */
 export const WA_CHANNEL_URL: string =
-  (env.VITE_WA_CHANNEL_URL as string | undefined) || 'https://whatsapp.com/channel/0000000000000000000000'
+  (env.VITE_WA_CHANNEL_URL as string | undefined) || 'https://whatsapp.com/channel/ePustakaPemilu'
 
 /** Nama saluran yang ditampilkan ke pengguna. */
 export const WA_CHANNEL_NAME: string =
