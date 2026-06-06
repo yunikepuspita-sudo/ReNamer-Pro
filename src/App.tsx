@@ -13,6 +13,7 @@ import Admin from './pages/Admin'
 import Auth from './pages/Auth'
 import NotFound from './pages/NotFound'
 import IosInstallHint from './components/IosInstallHint'
+import WhatsAppFab from './components/WhatsAppFab'
 
 export default function App() {
   return (
@@ -40,6 +41,7 @@ export default function App() {
               </Routes>
             </main>
             <Footer />
+            <WhatsAppFab />
           </div>
         }
       />

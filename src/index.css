@@ -475,3 +475,49 @@ a { color: inherit; text-decoration: none; }
   .search { order: 3; max-width: none; flex-basis: 100%; }
   .plans { grid-template-columns: 1fr; }
 }
+
+/* ── Integrasi WhatsApp ──────────────────────────────────────────────────── */
+:root { --wa: #25d366; --wa-dark: #128c7e; }
+
+/* Tombol mengambang */
+.wa-fab { position: fixed; right: 20px; bottom: 20px; z-index: 60; display: flex; flex-direction: column; align-items: flex-end; gap: 12px; }
+.wa-fab__btn {
+  width: 58px; height: 58px; border-radius: 50%; border: 0; cursor: pointer;
+  background: var(--wa); color: #fff; display: grid; place-items: center;
+  box-shadow: 0 6px 20px rgba(18,140,126,.45); transition: transform .15s, background .15s;
+}
+.wa-fab__btn:hover { background: var(--wa-dark); transform: scale(1.06); }
+.wa-fab__menu {
+  width: 290px; max-width: calc(100vw - 40px); background: #fff; border: 1px solid var(--border);
+  border-radius: 14px; box-shadow: var(--shadow); padding: 12px; animation: wa-pop .14s ease-out;
+}
+@keyframes wa-pop { from { opacity: 0; transform: translateY(8px) scale(.98); } to { opacity: 1; transform: none; } }
+.wa-fab__title { margin: 2px 6px 8px; font-size: 13px; font-weight: 700; color: var(--muted, #64748b); }
+.wa-fab__item {
+  display: flex; gap: 12px; align-items: center; padding: 10px; border-radius: 10px;
+  text-decoration: none; color: inherit; transition: background .12s;
+}
+.wa-fab__item:hover { background: #f0fdf4; }
+.wa-fab__item-icon { font-size: 22px; line-height: 1; }
+.wa-fab__item strong { display: block; font-size: 14px; color: #0f172a; }
+.wa-fab__item small { display: block; font-size: 12px; color: var(--muted, #64748b); margin-top: 2px; }
+
+/* Banner Saluran WhatsApp */
+.wa-channel {
+  display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap;
+  margin: 28px 0; padding: 24px 28px; border-radius: 16px;
+  background: linear-gradient(135deg, var(--wa-dark), var(--wa)); color: #fff;
+}
+.wa-channel__badge { display: inline-block; font-size: 11px; font-weight: 800; letter-spacing: 1.2px; opacity: .9; }
+.wa-channel h2 { margin: 8px 0 6px; font-size: 22px; }
+.wa-channel p { margin: 0; max-width: 620px; font-size: 14px; opacity: .95; line-height: 1.5; }
+.wa-channel__btn {
+  flex-shrink: 0; background: #fff; color: var(--wa-dark); font-weight: 700; text-decoration: none;
+  padding: 12px 24px; border-radius: 10px; transition: transform .15s, box-shadow .15s; white-space: nowrap;
+}
+.wa-channel__btn:hover { transform: translateY(-2px); box-shadow: 0 8px 18px rgba(0,0,0,.2); }
+
+@media (max-width: 720px) {
+  .wa-channel { padding: 20px; }
+  .wa-channel__btn { width: 100%; text-align: center; }
+}
