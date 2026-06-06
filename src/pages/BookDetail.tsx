@@ -9,6 +9,7 @@ import PdfCover from '../components/PdfCover'
 import QrisCheckout from '../components/QrisCheckout'
 import Shelf from '../components/Shelf'
 import ShareWhatsAppButton from '../components/ShareWhatsAppButton'
+import BookAiPanel from '../components/BookAiPanel'
 
 export default function BookDetail() {
   const { id } = useParams()
@@ -112,6 +113,8 @@ export default function BookDetail() {
         <h2>Sinopsis</h2>
         <p>{book.synopsis}</p>
       </section>
+
+      <BookAiPanel book={book} />
 
       {book.themes.length > 0 && (
         <section className="detail__section">
