@@ -28,6 +28,16 @@ memfilter koleksi, membeli/menambahkan judul ke pustaka pribadi, lalu membacanya
 - **Pustaka Saya**: rak pribadi dengan progres baca per judul.
 - **Premium — All You Can Read**: paket langganan bulanan/tahunan membuka koleksi Premium.
 - **Persistensi lokal** (localStorage): pustaka, status Premium, progres baca, dan preferensi reader.
+- **Integrasi WhatsApp**:
+  - **Saluran WhatsApp (Channel)** — banner ajakan mengikuti saluran broadcast untuk info
+    koleksi & e-book baru (di Beranda dan footer).
+  - **Tombol mengambang WhatsApp** — menu cepat untuk chat Customer Care + ikuti saluran,
+    tampil di seluruh halaman (kecuali reader layar penuh).
+  - **Bagikan via WhatsApp** — tombol di halaman detail buku untuk menyebar judul + tautan
+    ke chat, grup, atau status.
+  - Semua nomor & tautan diatur lewat env (`VITE_WA_PHONE`, `VITE_WA_CHANNEL_URL`,
+    `VITE_WA_CHANNEL_NAME`, `VITE_SITE_URL`) — lihat `.env.example`. Banner/tombol saluran
+    otomatis tersembunyi selama tautan saluran masih placeholder.
 
 ## 🛠️ Teknologi
 

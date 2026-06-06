@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { waChannelLink, waChatLink, hasChannel } from '../lib/whatsapp'
 
 export default function Footer() {
   return (
@@ -19,6 +20,17 @@ export default function Footer() {
         <div>
           <h4>Bantuan</h4>
           <p>customercare@e-pustaka-pemilu.id</p>
+          <p>
+            <a href={waChatLink('Halo E-Pustaka Pemilu, saya ingin bertanya.')} target="_blank" rel="noopener noreferrer">
+              💬 Chat WhatsApp
+            </a>
+            {hasChannel && (
+              <>
+                {' · '}
+                <a href={waChannelLink()} target="_blank" rel="noopener noreferrer">📢 Saluran WhatsApp</a>
+              </>
+            )}
+          </p>
           <p>Kebijakan Privasi · Syarat Penggunaan</p>
           <p><Link to="/admin">Masuk Admin</Link></p>
         </div>
