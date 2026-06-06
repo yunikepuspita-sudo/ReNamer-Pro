@@ -197,6 +197,50 @@
   .reveal.in{opacity:1;transform:none;}
   .center{text-align:center;}
   .mt{margin-top:34px;}
+
+  /* ===== Mockup dashboard penuh (replika aplikasi nyata) ===== */
+  .shotwrap{margin-top:28px;overflow-x:auto;border-radius:18px;box-shadow:0 26px 54px rgba(8,20,45,.26);}
+  .appshot{min-width:940px;background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;}
+  .appshot .abar{background:#0b2447;display:flex;align-items:center;gap:6px;padding:9px 12px;}
+  .appshot .abar .d{width:10px;height:10px;border-radius:50%;background:#39517d;}
+  .appshot .abar .u{margin-left:8px;background:rgba(255,255,255,.12);border-radius:6px;padding:3px 10px;color:#bcd0f0;font-size:11px;flex:1;}
+  .ashell{display:grid;grid-template-columns:212px 1fr;background:#f4f6fa;}
+  .aside{background:linear-gradient(180deg,#0b2447,#0a1f3d);color:#cdd9ee;padding:14px 12px;}
+  .abrand{display:flex;align-items:center;gap:9px;margin-bottom:16px;}
+  .abrand .amk{width:30px;height:30px;border-radius:8px;background:radial-gradient(circle at 50% 40%,#fff 0 30%,var(--gold) 31% 42%,var(--navy3) 43% 100%);flex:none;}
+  .abrand b{color:#fff;font-size:13px;display:block;line-height:1.1;}
+  .abrand small{color:#9fb3d1;font-size:9.5px;}
+  .aside nav{display:flex;flex-direction:column;gap:3px;}
+  .aside nav a{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:9px;font-size:12.5px;font-weight:600;color:#cdd9ee;}
+  .aside nav a.active{background:var(--navy3);color:#fff;}
+  .aside nav a em{margin-left:auto;background:#c1121f;color:#fff;font-style:normal;font-size:10px;font-weight:800;border-radius:99px;padding:0 7px;}
+  .amain{min-width:0;}
+  .atop{background:#fff;border-bottom:1px solid var(--line);padding:12px 18px;display:flex;align-items:center;justify-content:space-between;}
+  .atop b{color:var(--navy);}
+  .atop .auser{display:flex;align-items:center;gap:8px;font-size:12px;color:#33415c;font-weight:700;}
+  .atop .auser i{width:28px;height:28px;border-radius:50%;background:var(--navy3);color:#fff;display:grid;place-items:center;font-style:normal;font-size:11px;}
+  .acontent{padding:18px;}
+  .agreet{display:flex;align-items:center;gap:12px;font-size:17px;font-weight:800;color:var(--navy);margin-bottom:14px;flex-wrap:wrap;}
+  .agreet .apill{font-size:12px;font-weight:700;background:#fff3cd;color:#7a5d00;border-radius:99px;padding:5px 12px;}
+  .astats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px;}
+  .astat{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px;}
+  .astat .l{font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;}
+  .astat .v{font-size:23px;font-weight:800;color:var(--navy);}
+  .astat .s{font-size:10.5px;color:var(--muted);}
+  .astat.n{border-top:3px solid var(--navy3);}.astat.g{border-top:3px solid var(--gold);}.astat.e{border-top:3px solid var(--green);}.astat.r{border-top:3px solid #d9534f;}
+  .acols{display:grid;grid-template-columns:1.45fr 1fr;gap:14px;margin-bottom:14px;}
+  .acard{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;}
+  .acard h5{font-size:13px;color:var(--navy);margin-bottom:10px;display:flex;justify-content:space-between;gap:8px;}
+  .arow{display:flex;justify-content:space-between;gap:8px;font-size:11.5px;color:#33415c;margin-top:8px;}
+  .abar2{height:8px;background:#eef2f7;border-radius:99px;overflow:hidden;margin-top:3px;}
+  .abar2>span{display:block;height:100%;background:linear-gradient(90deg,var(--navy3),var(--gold));}
+  .atrip{border:1px solid var(--line);border-radius:10px;padding:10px;margin-top:8px;}
+  .atrip .tt{font-weight:800;color:var(--navy);font-size:12.5px;}
+  .atrip .tm{font-size:11px;color:var(--muted);}
+  .atag{font-family:ui-monospace,monospace;font-size:10px;background:#eef2f7;border-radius:5px;padding:1px 6px;}
+  .abadge{font-size:10px;font-weight:800;border-radius:99px;padding:2px 9px;background:#fff3cd;color:#7a5d00;white-space:nowrap;}
+  .atl{font-size:11.5px;}.atl > div{display:flex;gap:8px;margin:9px 0;}
+  .atl i{width:8px;height:8px;border-radius:50%;background:var(--green);margin-top:5px;flex:none;}
 </style>
 </head>
 <body>
@@ -366,6 +410,81 @@
     <span class="eyebrow center" style="display:block;text-align:center;">Pratinjau Dashboard</span>
     <h2 class="title" style="margin-top:8px;">Pengambilan Keputusan Berbasis Data</h2>
     <p class="sub">Pimpinan dapat memantau serapan anggaran dan kinerja perjalanan dinas dalam sekejap (data ilustratif).</p>
+
+    <!-- Replika dashboard aplikasi nyata -->
+    <div class="shotwrap reveal">
+      <div class="appshot">
+        <div class="abar"><span class="d"></span><span class="d"></span><span class="d"></span><span class="u">sisfo-sppd-kpu-jabar — Dashboard</span></div>
+        <div class="ashell">
+          <aside class="aside">
+            <div class="abrand"><span class="amk"></span><div><b>SISFO SPPD</b><small>KPU Jawa Barat</small></div></div>
+            <nav>
+              <a class="active"><span>📊</span> Dashboard</a>
+              <a><span>🧳</span> Perjalanan Dinas</a>
+              <a><span>✅</span> Kotak Persetujuan <em>1</em></a>
+              <a><span>📁</span> Anggaran (DIPA)</a>
+              <a><span>🗄️</span> Arsip Digital</a>
+              <a><span>🛡️</span> Audit Trail</a>
+              <a><span>⚙️</span> Master Data</a>
+            </nav>
+          </aside>
+          <main class="amain">
+            <div class="atop"><b>Dashboard</b><span class="auser"><i>HW</i> Drs. Hendra Wijaya · KPA</span></div>
+            <div class="acontent">
+              <div class="agreet">Selamat pagi, Drs. Hendra Wijaya 👋 <span class="apill">✅ 1 menunggu tindakan Anda</span></div>
+              <div class="astats">
+                <div class="astat n"><div class="l">Total Perjalanan Dinas</div><div class="v">6</div><div class="s">tahun anggaran berjalan</div></div>
+                <div class="astat g"><div class="l">Dalam Proses</div><div class="v">3</div><div class="s">menunggu persetujuan</div></div>
+                <div class="astat e"><div class="l">Selesai &amp; Dibayar</div><div class="v">1</div><div class="s">Rp 6 jt tersalurkan</div></div>
+                <div class="astat r"><div class="l">Tahap SPJ</div><div class="v">1</div><div class="s">pertanggungjawaban</div></div>
+              </div>
+              <div class="acols">
+                <div class="acard">
+                  <h5>📁 Serapan Anggaran Perjalanan Dinas (DIPA) <span style="color:var(--navy3);font-weight:600;">Lihat detail →</span></h5>
+                  <div class="arow"><span style="color:var(--muted)">Realisasi keseluruhan</span><b>Rp 1,21 M / Rp 3,81 M (32%)</b></div>
+                  <div class="abar2" style="margin:6px 0 12px;"><span style="width:32%"></span></div>
+                  <div class="arow"><span><span class="atag">524111</span> Belanja Perjalanan Dinas Biasa</span><b>33%</b></div><div class="abar2"><span style="width:33%"></span></div>
+                  <div class="arow"><span><span class="atag">524113</span> Belanja Perjalanan Dinas Dalam Kota</span><b>24%</b></div><div class="abar2"><span style="width:24%"></span></div>
+                  <div class="arow"><span><span class="atag">524114</span> Paket Meeting Dalam Kota</span><b>31%</b></div><div class="abar2"><span style="width:31%"></span></div>
+                  <div class="arow"><span><span class="atag">524119</span> Paket Meeting Luar Kota</span><b>33%</b></div><div class="abar2"><span style="width:33%"></span></div>
+                </div>
+                <div class="acard">
+                  <h5>🔔 Perlu Tindakan Anda</h5>
+                  <div class="atrip">
+                    <div style="display:flex;justify-content:space-between;gap:8px;"><span class="tt">Supervisi Logistik Pemilu ke KPU Kabupaten</span><span class="abadge">Pengesahan KPA</span></div>
+                    <div class="tm">Cirebon, Jawa Barat · 9–10 Jun 2026 · 2 hari</div>
+                    <div class="arow"><span>👤 Fajar Ramadhan &nbsp;<span class="atag">524113</span></span><b>Rp 2.190.000</b></div>
+                  </div>
+                </div>
+              </div>
+              <div class="acols">
+                <div class="acard">
+                  <h5>🧳 Perjalanan Dinas Terbaru <span style="color:var(--navy3);font-weight:600;">Semua →</span></h5>
+                  <div class="atrip">
+                    <div style="display:flex;justify-content:space-between;gap:8px;"><span class="tt">Supervisi Logistik Pemilu ke KPU Kabupaten</span><span class="abadge">Pengesahan KPA</span></div>
+                    <div class="tm">Cirebon, Jawa Barat · 9–10 Jun 2026 · 2 hari · <b>Rp 2.190.000</b></div>
+                  </div>
+                  <div class="atrip">
+                    <div style="display:flex;justify-content:space-between;gap:8px;"><span class="tt">Rapat Koordinasi Pemutakhiran Data Pemilih</span><span class="abadge">Menunggu Atasan</span></div>
+                    <div class="tm">Jakarta Pusat, DKI Jakarta · 12–14 Jun 2026 · 3 hari · <b>Rp 5.770.000</b></div>
+                  </div>
+                </div>
+                <div class="acard">
+                  <h5>🛡️ Aktivitas Terbaru (Audit Trail) <span style="color:var(--navy3);font-weight:600;">Semua →</span></h5>
+                  <div class="atl">
+                    <div><i></i><div><b>Menyetujui (teknis &amp; administrasi)</b><br><span class="tm">Bambang Susanto · 16 jam lalu</span></div></div>
+                    <div><i></i><div><b>Mengajukan</b><br><span class="tm">Andi Nugraha · 18 jam lalu</span></div></div>
+                    <div><i></i><div><b>Menyetujui</b><br><span class="tm">Dewi Lestari · 2 hari lalu</span></div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+    </div>
+    <p class="center" style="color:var(--muted);font-size:13px;margin-top:14px;">Tampilan dashboard nyata SISFO SPPD (mode KPA/Sekretaris). <a href="https://yunikepuspita-sudo.github.io/sisfo-sppd-kpu-jabar/" target="_blank" rel="noopener" style="color:var(--navy3);font-weight:700;">Coba demo langsung →</a></p>
+
     <div class="dash reveal mt">
       <div class="dstat">
         <div class="x"><div class="l">Total Perjadin</div><div class="v">142</div></div>
@@ -527,11 +646,12 @@
       <div class="row">
         <a class="btn btn-primary" href="https://yunikepuspita-sudo.github.io/sisfo-sppd-kpu-jabar/" target="_blank" rel="noopener">▶ Coba Demo Sekarang</a>
         <a class="btn btn-ghost" href="mailto:yunike.puspita@gmail.com?subject=Penawaran%20SIPANDU%20e-SPPD">✉ Minta Penawaran</a>
-        <a class="btn btn-ghost" href="https://wa.me/62XXXXXXXXXXX?text=Halo%2C%20saya%20tertarik%20dengan%20SIPANDU%20e-SPPD" target="_blank" rel="noopener">💬 WhatsApp</a>
+        <a class="btn btn-ghost" href="https://wa.me/6289617061983?text=Halo%2C%20saya%20tertarik%20dengan%20SIPANDU%20e-SPPD" target="_blank" rel="noopener">💬 WhatsApp</a>
       </div>
       <div style="margin-top:20px;color:#9fb3d6;font-size:14px;">
         🌐 <a href="https://yunikepuspita.com" target="_blank" rel="noopener" style="color:#fff;font-weight:700;">yunikepuspita.com</a>
         &nbsp;·&nbsp; ✉ yunike.puspita@gmail.com
+        &nbsp;·&nbsp; 💬 <a href="https://wa.me/6289617061983" target="_blank" rel="noopener" style="color:#fff;font-weight:700;">+62 896-1706-1983</a>
       </div>
     </div>
   </div>
@@ -557,6 +677,7 @@
         <div style="display:flex;flex-direction:column;gap:7px;font-size:14px;">
           <a href="https://yunikepuspita.com" target="_blank" rel="noopener">yunikepuspita.com</a>
           <a href="mailto:yunike.puspita@gmail.com">yunike.puspita@gmail.com</a>
+          <a href="https://wa.me/6289617061983" target="_blank" rel="noopener">WhatsApp: +62 896-1706-1983</a>
           <a href="#kontak">Minta Penawaran</a>
         </div>
       </div>
