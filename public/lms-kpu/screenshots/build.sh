@@ -18,5 +18,9 @@ node generate.mjs "$TMP"
 for f in 01-beranda 02-alur 03-knowledge 04-ai; do rsvg-convert -w 1080 -h 1920 "$TMP/$f.svg" -o "$f.png"; done
 for f in 05-arsitektur 06-talent;             do rsvg-convert -w 1920 -h 1080 "$TMP/$f.svg" -o "$f.png"; done
 
+echo "▶ Slide sisipan Usulan HNP (dari usulan-slides.mjs)"
+node usulan-slides.mjs "$TMP"
+for f in usulan-sipinter-slide usulan-akronim-slide; do rsvg-convert -w 1920 -h 1080 "$TMP/$f.svg" -o "$f.png"; done
+
 rm -rf "$TMP"
 echo "✓ Selesai. PNG ter-update di icons/ dan screenshots/."
