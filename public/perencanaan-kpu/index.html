@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>AI Planning Document Factory — KPU</title>
+  <meta name="description" content="Ubah ide kegiatan menjadi seluruh dokumen perencanaan (KAK, TOR, Nota Dinas, RAB, Jadwal, SK, SPT) otomatis, sesuai regulasi, dengan validasi anggaran APBN/HNP dan approval elektronik." />
+  <meta name="theme-color" content="#1d4ed8" />
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="icon" href="./icons/icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="./icons/icon-192.png" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="logo">🏛️</div>
+    <div>
+      <h1>AI Planning Document Factory</h1>
+      <div class="sub">KPU Provinsi Jawa Barat · Perencanaan APBN &amp; HNP 2026</div>
+    </div>
+    <div class="spacer"></div>
+  </header>
+
+  <main class="wrap" id="app"><!-- diisi oleh skrip --></main>
+
+  <script src="./data.js"></script>
+  <script src="./templates.js"></script>
+  <script src="./generators.js"></script>
+  <script src="./ai.js"></script>
+  <script src="./app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('./service-worker.js').catch(function () {});
+      });
+    }
+  </script>
+</body>
+</html>

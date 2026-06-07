@@ -53,6 +53,33 @@ memfilter koleksi, membeli/menambahkan judul ke pustaka pribadi, lalu membacanya
     `VITE_WA_CHANNEL_NAME`, `VITE_SITE_URL`) — lihat `.env.example`. Banner/tombol saluran
     otomatis tersembunyi selama tautan saluran masih placeholder.
 
+## 🏛️ Sub-aplikasi: AI Planning Document Factory — KPU
+
+Aplikasi mandiri (PWA, vanilla JS, offline-first) untuk **perencanaan dokumen
+pemerintah** di KPU Provinsi Jawa Barat. Mengubah satu ide kegiatan menjadi
+**seluruh dokumen perencanaan** (Nota Dinas, KAK, TOR, RAB, Jadwal, SK Tim, SPT,
+Matriks Risiko) secara otomatis — sesuai regulasi — dengan **validasi anggaran**,
+**alur persetujuan berjenjang**, dan **TTE + arsip elektronik**.
+
+- 📂 Lokasi: `public/perencanaan-kpu/` → akses di `…/perencanaan-kpu/`
+  ([demo](https://yunikepuspita-sudo.github.io/ReNamer-Pro/perencanaan-kpu/)).
+- 💰 **Pilihan sumber anggaran**: **APBN (Rupiah Murni)** atau **HNP 2026
+  (Hibah / HLD, Reg. 22S6FR8A)** — berbasis data DIPA KPU Jabar TA 2026 (Rev 8,
+  pagu Rp 25.427.437.000). Sumber anggaran menentukan dasar hukum, akun belanja,
+  aturan validasi SBM/SHBJ, dan dokumen tambahan (mis. SP2HL/SPHL & pengadaan).
+- 🤖 Fitur: AI Requirement Analyzer · Knowledge Base Regulasi · **Bagan Akun
+  Standar (BAS)** · RAB Generator + AI Budget Validator (kepatuhan SBM, deteksi
+  duplikasi, simulasi efisiensi) · AI Review Assistant (Compliance/Quality/Risk) ·
+  Workflow Approval (6 jenjang) · TTE (hash SHA-256 + QR verifikasi) · Dashboard.
+- 📄 **Template dokumen nyata KPU Jabar**: Nota Dinas (format `PP.05-ND/32`),
+  KAK/RAB Pengadaan (pola SAE PISAN), KAK Swakelola Tipe I & Kontrak Swakelola.
+- 🧠 **Mode AI (Claude)** opsional: AI Copilot (kalimat → formulir) & penulisan
+  narasi dokumen bertenaga Claude, lewat **Supabase Edge Function**
+  (`perencanaan-ai`, kunci di server) atau kunci langsung. Tanpa kunci, aplikasi
+  tetap berjalan memakai generator template.
+
+Detail lengkap: lihat `public/perencanaan-kpu/README.md`.
+
 ## 🛠️ Teknologi
 
 - **React 18** + **TypeScript**
