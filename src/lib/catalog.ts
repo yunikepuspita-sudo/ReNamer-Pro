@@ -116,3 +116,38 @@ export async function deleteBook(id: string): Promise<{ error?: string }> {
   const { error } = await supabase.from('books').delete().eq('id', id)
   return error ? { error: error.message } : {}
 }
+
+/** Field yang bisa diubah lewat panel edit admin. */
+export interface BookEditInput {
+  title: string
+  author: string
+  publisher: string
+  type: ContentType
+  category: string
+  themes: string[]
+  year: number
+  price: number
+  premium: boolean
+  synopsis: string
+}
+
+/** Memperbarui metadata buku di Supabase. */
+export async function updateBook(id: string, input: BookEditInput): Promise<{ error?: string }> {
+  if (!supabase) return { error: 'Supabase belum dikonfigurasi.' }
+  const { error } = await supabase
+    .from('books')
+    .update({
+      title: input.title,
+      author: input.author,
+      publisher: input.publisher,
+      type: input.type,
+      category: input.category,
+      themes: input.themes,
+      year: input.year,
+      price: input.price,
+      premium: input.premium,
+      synopsis: input.synopsis,
+    })
+    .eq('id', id)
+  return error ? { error: error.message } : {}
+}

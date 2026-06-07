@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import type { Session } from '@supabase/supabase-js'
 import { isSupabaseEnabled } from '../lib/supabase'
 import { getSession, onAuthChange, signIn, signOut } from '../lib/auth'
-import { createBook, deleteBook, fetchCatalog, type NewBookInput } from '../lib/catalog'
+import { createBook, deleteBook, updateBook, fetchCatalog, type NewBookInput, type BookEditInput } from '../lib/catalog'
 import { CATEGORIES } from '../data/books'
 import { THEMES } from '../data/themes'
 import type { Book, ContentType } from '../types'
@@ -112,6 +112,7 @@ function AdminPanel({ onSignOut, email }: { onSignOut: () => void; email: string
   const [busy, setBusy] = useState(false)
   const [msg, setMsg] = useState('')
   const [err, setErr] = useState('')
+  const [editing, setEditing] = useState<Book | null>(null)
 
   function refresh() {
     fetchCatalog().then(setBooks)
@@ -261,7 +262,10 @@ function AdminPanel({ onSignOut, email }: { onSignOut: () => void; email: string
                   {b.id.startsWith('up-') || !isManaged(b) ? (
                     <span className="muted">bawaan</span>
                   ) : (
-                    <button className="btn btn--ghost btn--sm" onClick={() => remove(b.id)}>Hapus</button>
+                    <div className="admin__row-actions">
+                      <button className="btn btn--ghost btn--sm" onClick={() => setEditing(b)}>Edit</button>
+                      <button className="btn btn--ghost btn--sm" onClick={() => remove(b.id)}>Hapus</button>
+                    </div>
                   )}
                 </td>
               </tr>
@@ -269,6 +273,133 @@ function AdminPanel({ onSignOut, email }: { onSignOut: () => void; email: string
           </tbody>
         </table>
       </section>
+
+      {editing && (
+        <EditModal
+          book={editing}
+          onClose={() => setEditing(null)}
+          onSaved={() => {
+            setEditing(null)
+            setMsg('Koleksi berhasil diperbarui.')
+            refresh()
+          }}
+        />
+      )}
+    </div>
+  )
+}
+
+/** Modal untuk mengedit metadata buku (judul, sinopsis, dll). */
+function EditModal({ book, onClose, onSaved }: { book: Book; onClose: () => void; onSaved: () => void }) {
+  const [form, setForm] = useState<BookEditInput>({
+    title: book.title,
+    author: book.author,
+    publisher: book.publisher,
+    type: book.type,
+    category: book.category,
+    themes: book.themes ?? [],
+    year: book.year,
+    price: book.price,
+    premium: book.premium,
+    synopsis: book.synopsis,
+  })
+  const [busy, setBusy] = useState(false)
+  const [err, setErr] = useState('')
+
+  function set<K extends keyof BookEditInput>(key: K, val: BookEditInput[K]) {
+    setForm((f) => ({ ...f, [key]: val }))
+  }
+  function toggleTheme(id: string) {
+    set('themes', form.themes.includes(id) ? form.themes.filter((t) => t !== id) : [...form.themes, id])
+  }
+
+  async function save(e: React.FormEvent) {
+    e.preventDefault()
+    setErr('')
+    if (!form.title.trim() || !form.author.trim()) {
+      setErr('Judul dan penulis wajib diisi.')
+      return
+    }
+    setBusy(true)
+    const { error } = await updateBook(book.id, form)
+    setBusy(false)
+    if (error) return setErr(error)
+    onSaved()
+  }
+
+  return (
+    <div className="reader__drawer-backdrop" onClick={onClose}>
+      <div className="admin-edit" onClick={(e) => e.stopPropagation()}>
+        <button className="qris__close" onClick={onClose} aria-label="Tutup">✕</button>
+        <h2>Edit Koleksi</h2>
+        <form className="upload-form" onSubmit={save}>
+          <div className="upload-form__grid">
+            <label>Judul<input value={form.title} onChange={(e) => set('title', e.target.value)} /></label>
+            <label>Penulis<input value={form.author} onChange={(e) => set('author', e.target.value)} /></label>
+            <label>Penerbit<input value={form.publisher} onChange={(e) => set('publisher', e.target.value)} /></label>
+            <label>
+              Jenis
+              <select value={form.type} onChange={(e) => set('type', e.target.value as ContentType)}>
+                <option value="buku">Buku</option>
+                <option value="jurnal">Jurnal</option>
+                <option value="peraturan">Peraturan</option>
+                <option value="modul">Modul</option>
+                <option value="majalah">Majalah</option>
+                <option value="koran">Koran</option>
+              </select>
+            </label>
+            <label>
+              Kategori
+              <select value={form.category} onChange={(e) => set('category', e.target.value)}>
+                {CATEGORIES.map((c) => (
+                  <option key={c} value={c}>{c}</option>
+                ))}
+              </select>
+            </label>
+            <label>Tahun<input type="number" value={form.year} onChange={(e) => set('year', Number(e.target.value))} /></label>
+            <label>Harga (Rp, 0 = gratis)<input type="number" value={form.price} onChange={(e) => set('price', Number(e.target.value))} /></label>
+            <label className="filters__check" style={{ marginTop: 24 }}>
+              <input type="checkbox" checked={form.premium} onChange={(e) => set('premium', e.target.checked)} />
+              Koleksi Premium
+            </label>
+          </div>
+
+          <label style={{ display: 'block', marginTop: 14 }}>
+            Sinopsis
+            <textarea
+              rows={4}
+              value={form.synopsis}
+              onChange={(e) => set('synopsis', e.target.value)}
+              style={{ width: '100%', borderRadius: 8, border: '1.5px solid var(--border)', padding: 10, fontFamily: 'inherit' }}
+            />
+          </label>
+
+          <div style={{ marginTop: 12 }}>
+            <span className="muted">Tema Pemilu:</span>
+            <div className="theme-chips" style={{ marginTop: 8 }}>
+              {THEMES.map((t) => (
+                <button
+                  type="button"
+                  key={t.id}
+                  className="theme-chip"
+                  onClick={() => toggleTheme(t.id)}
+                  style={form.themes.includes(t.id) ? { borderColor: 'var(--brand)', color: 'var(--brand)' } : undefined}
+                >
+                  {t.icon} {t.name}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {err && <p className="upload-form__err">{err}</p>}
+          <div className="upload-form__actions">
+            <button className="btn btn--primary" disabled={busy}>
+              {busy ? 'Menyimpan…' : 'Simpan Perubahan'}
+            </button>
+            <button type="button" className="btn btn--ghost" onClick={onClose}>Batal</button>
+          </div>
+        </form>
+      </div>
     </div>
   )
 }
