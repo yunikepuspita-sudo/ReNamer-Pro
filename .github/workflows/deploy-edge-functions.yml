@@ -1,0 +1,69 @@
+name: Deploy Supabase Edge Functions
+
+# Men-deploy Edge Function AI ke Supabase saat ada perubahan di
+# supabase/functions/** pada branch utama, atau dijalankan manual.
+#
+# Membutuhkan Repository Secrets (Settings → Secrets and variables → Actions):
+#   SUPABASE_ACCESS_TOKEN  → Personal Access Token Supabase (Account → Access Tokens)
+#   SUPABASE_PROJECT_REF   → ref project (mis. abcdefgh; ada di URL dashboard)
+#
+# Catatan: SECRET fungsi (mis. ANTHROPIC_API_KEY) di-set sekali via
+#   supabase secrets set ANTHROPIC_API_KEY=sk-ant-...
+# dan TIDAK perlu diulang pada tiap deploy.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'supabase/functions/**'
+      - '.github/workflows/deploy-edge-functions.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Hindari deploy bersamaan ke project yang sama.
+concurrency:
+  group: supabase-functions
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Deploy Edge Functions
+    runs-on: ubuntu-latest
+    # Lewati dengan rapi bila secret belum dikonfigurasi (mis. fork).
+    if: ${{ github.event_name == 'workflow_dispatch' || github.repository_owner == 'yunikepuspita-sudo' }}
+    strategy:
+      # Deploy tiap fungsi independen; satu gagal tidak menghentikan lainnya.
+      fail-fast: false
+      matrix:
+        # Fungsi AI (relay publik) memakai --no-verify-jwt.
+        function: [perencanaan-ai, pustaka-ai]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Periksa konfigurasi secret
+        id: cfg
+        run: |
+          if [ -z "${{ secrets.SUPABASE_ACCESS_TOKEN }}" ] || [ -z "${{ secrets.SUPABASE_PROJECT_REF }}" ]; then
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::SUPABASE_ACCESS_TOKEN / SUPABASE_PROJECT_REF belum diset — deploy dilewati."
+          else
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Setup Supabase CLI
+        if: steps.cfg.outputs.configured == 'true'
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Deploy ${{ matrix.function }}
+        if: steps.cfg.outputs.configured == 'true'
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          supabase functions deploy ${{ matrix.function }} \
+            --project-ref "${{ secrets.SUPABASE_PROJECT_REF }}" \
+            --no-verify-jwt

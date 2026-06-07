@@ -56,6 +56,19 @@ Dua jalur:
 
 Model: Claude Sonnet 4.6 (default), Opus 4.8, atau Haiku 4.5.
 
+### Auto-deploy Edge Function (CI)
+
+Workflow `.github/workflows/deploy-edge-functions.yml` otomatis men-deploy fungsi
+AI (`perencanaan-ai`, `pustaka-ai`) ke Supabase saat ada perubahan di
+`supabase/functions/**` pada branch `main` (atau dijalankan manual dari tab
+Actions). Set dua Repository Secret agar aktif (jika kosong, workflow dilewati):
+
+- `SUPABASE_ACCESS_TOKEN` — Personal Access Token Supabase (Account → Access Tokens)
+- `SUPABASE_PROJECT_REF` — ref project (ada di URL dashboard)
+
+Secret fungsi `ANTHROPIC_API_KEY` cukup di-set sekali via
+`supabase secrets set ANTHROPIC_API_KEY=sk-ant-...` (tidak diulang tiap deploy).
+
 ## Bagan Akun Standar (BAS)
 
 Tab **📒 BAS** menampilkan struktur akun belanja pemerintah (51 Belanja Pegawai,
