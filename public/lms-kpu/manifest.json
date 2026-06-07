@@ -1,7 +1,7 @@
 {
-  "name": "LMS Kepemiluan — Tiered Facilitation Model (KPU)",
-  "short_name": "LMS Kepemiluan",
-  "description": "LMS berjenjang pengembangan kompetensi Komisioner KPU: alur 7 tahap, peta kompetensi, bank kasus, fasilitator, dan evaluasi berbasis dampak.",
+  "name": "SiPINTER KPU — Election Knowledge & Competency Platform",
+  "short_name": "SiPINTER KPU",
+  "description": "Platform pembelajaran berjenjang KPU (ELSA): 10 tier penyelenggara→publik, alur 7 tahap Tiered Facilitation Model, Knowledge Hub, AI Assistant, sertifikasi & succession planning.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

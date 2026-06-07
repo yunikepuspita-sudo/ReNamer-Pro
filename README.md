@@ -80,25 +80,32 @@ Matriks Risiko) secara otomatis — sesuai regulasi — dengan **validasi anggar
 
 Detail lengkap: lihat `public/perencanaan-kpu/README.md`.
 
-## 🎓 Sub-aplikasi: LMS Kepemiluan — *Tiered Facilitation Model* (KPU)
+## 🎓 Sub-aplikasi: SiPINTER KPU — *Election Knowledge & Competency Platform*
 
-**Learning Management System berjenjang** (PWA, vanilla JS, offline-first) untuk
-**pengembangan kompetensi Komisioner KPU**, mengoperasionalkan *Policy Brief*
-**"Tiered Facilitation Model"**. Kerangka fitur LMS terinspirasi
+**SiPINTER KPU** (*Sistem Pembelajaran Integratif, Terstruktur & Berjenjang*; alias
+**ELSA — Election Learning & Succession Academy**) — platform yang **bukan sekadar
+e-learning**, melainkan mengintegrasikan **pembelajaran + sertifikasi + knowledge
+management + succession planning** secara berjenjang. PWA *offline-first* (vanilla JS),
+berbasis *Policy Brief* **"Tiered Facilitation Model"**; core LMS terinspirasi
 [Frappe LMS](https://github.com/frappe/lms).
 
 - 📂 Lokasi: `public/lms-kpu/` → akses di `…/lms-kpu/`
   ([demo](https://yunikepuspita-sudo.github.io/ReNamer-Pro/lms-kpu/)).
-- 🪜 **Berjenjang (3 tier)** — modul **Tahap 2 dipersonalisasi** per jenjang:
-  **KPU RI** (strategis & visioner) · **Provinsi** (operasional regional) ·
-  **Kabupaten/Kota** (operasional lapangan).
-- 🔄 **Alur 7 tahap**: Orientasi & Self-Assessment → Penguatan Kompetensi sesuai
-  Jenjang → Peer Learning → Etika & Integritas → Pembelajaran Adaptif → Manajemen
-  Pengetahuan → Refleksi Akhir & Peer Review.
-- 🎯 Fitur: **peta kompetensi** (radar awal vs akhir) · **Bank Kasus** kepemiluan
-  (memori institusional, dapat dikontribusi) · direktori **Fasilitator** (*critical
-  partner*) · **evaluasi berbasis dampak** · kuis (ambang 70%) · **sertifikat** cetak/PDF.
-- 📐 Arsitektur & pemetaan ke Policy Brief: lihat `public/lms-kpu/ARCHITECTURE.md`.
+- 🪜 **Tiered Competency Engine — 10 tier**: Komisioner KPU RI · Provinsi · Kab/Kota ·
+  Sekretariat Prov · Sekretariat Kab/Kota · PPK · PPS · KPPS · Relawan Demokrasi ·
+  Masyarakat Umum (alur & modul **Tahap 2 dipersonalisasi** per jenjang).
+- 🔄 **Alur 7 tahap** (Tiered Facilitation Model): Orientasi & Self-Assessment →
+  Penguatan Kompetensi sesuai Jenjang → Peer Learning → Etika & Integritas →
+  Pembelajaran Adaptif → Manajemen Pengetahuan → Refleksi Akhir & Peer Review.
+- 🗂️ **Knowledge Management**: Bank Kasus Sengketa · Putusan DKPP/MK · PKPU/JDIH ·
+  Best Practice · Lesson Learned · Digital Library · FAQ (pencarian + kontribusi).
+- 🤖 **AI Learning Assistant**: *offline* (RAG ringan atas Knowledge Base) **+ live
+  Claude** via Supabase Edge Function (`lms-ai`) — tanya regulasi/tahapan/sengketa.
+- 🏅 **Certification & Talent**: CPD Point · Digital Badge · Sertifikat · **Talent Pool
+  & Succession Planning** (skor talenta + leadership pipeline).
+- 📊 **Analytics**: dashboard · heatmap kompetensi · evaluasi berbasis dampak · predictive.
+- 🏗️ **Tab Arsitektur** in-app + `public/lms-kpu/ARCHITECTURE.md` (blueprint 8 layer,
+  integrasi SIAKBA/JDIH/SIREKAP/SIDALIH/SIPOL/SIMPEG, tech stack, roadmap 6 level).
 
 Detail lengkap: lihat `public/lms-kpu/README.md`.
 

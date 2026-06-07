@@ -1,174 +1,243 @@
-# Arsitektur LMS Kepemiluan — *Tiered Facilitation Model* (KPU)
+# Arsitektur SiPINTER KPU — *Election Knowledge & Competency Platform*
 
-Dokumen ini menjabarkan **arsitektur sistem pembelajaran (LMS)** untuk pengembangan
-kompetensi **Komisioner KPU**, sebagai operasionalisasi *Policy Brief* **"Tiered
-Facilitation Model: Kerangka Strategis Pengembangan Kompetensi Komisioner KPU"**
-(Pusat Pembelajaran dan Strategi Kebijakan, Talenta ASN Nasional).
+**SiPINTER KPU** (*Sistem Pembelajaran Integratif, Terstruktur & Berjenjang*) — alias
+**ELSA** (*Election Learning & Succession Academy*) — adalah **Election Knowledge &
+Competency Platform** untuk pengembangan kompetensi penyelenggara pemilu secara
+**berjenjang (*tiered*)**, **berkelanjutan**, **non-hierarkis**, dan **terintegrasi dengan
+manajemen pengetahuan kelembagaan**.
 
-Arsitektur dirancang **berjenjang (*tiered*)**, **berkelanjutan**, **non-hierarkis**,
-dan **berbasis kesukarelaan** — selaras rekomendasi kebijakan — serta dikemas sebagai
-**Progressive Web App (PWA)** *offline-first*. Kerangka fitur LMS (Course → Chapter →
-Lesson → Quiz → Batch → Certificate) mengadopsi pola **[Frappe LMS](https://github.com/frappe/lms)**
-yang dipetakan ke alur 7 tahap dan 3 jenjang komisioner.
-
----
-
-## 1. Tujuan & Prinsip Desain
-
-| Prinsip (dari Policy Brief) | Wujud dalam arsitektur |
-| --- | --- |
-| **Berjenjang** (*tiered*) | 3 *learning path* sesuai jenjang: KPU RI, Provinsi, Kab/Kota. Tahap 2 dipersonalisasi per jenjang. |
-| **Berkelanjutan** (sepanjang masa jabatan) | Alur 7 tahap dari *induction* (awal jabatan) → *exit reflection* (akhir jabatan). |
-| **Non-hierarkis** | *Peer learning* & *mentoring* kolektif; komisioner = pembelajar **dan** sumber pengetahuan. |
-| **Kesukarelaan & independensi** | Tanpa relasi komando; fasilitator sebagai *critical partner*, bukan pengawas/evaluator. |
-| **Terintegrasi manajemen pengetahuan** | **Bank Kasus** kepemiluan sebagai memori institusional lintas periode. |
-| **Evaluasi berbasis dampak** | Indikator kinerja kelembagaan, bukan sekadar penyelesaian aktivitas. |
+Platform ini **bukan sekadar e-learning**, melainkan mengintegrasikan **pembelajaran +
+sertifikasi + knowledge management + succession planning** — selaras rekomendasi *Policy
+Brief* **"Tiered Facilitation Model: Kerangka Strategis Pengembangan Kompetensi Komisioner
+KPU"** (Pusbang & Strategi Kebijakan, Talenta ASN Nasional). Core LMS mengadopsi
+**[Frappe LMS](https://github.com/frappe/lms)** dan dikemas sebagai **PWA offline-first**.
 
 ---
 
-## 2. Model Berjenjang (*Tiered Facilitation*)
+## 1. Diagram Arsitektur (Tiered LMS KPU)
 
 ```
-┌──────────────────────── TIER 1 · KPU RI (Pusat) ────────────────────────┐
-│  Fokus: Kepemimpinan strategis & visioner                               │
-│  Desain kebijakan nasional · data pemilih skala besar · penetapan hasil │
-│  · manajemen krisis · komunikasi publik nasional                        │
-│  Fasilitator: Mantan Komisioner Pusat · Akademisi · DKPP/MK · Internasional
-└─────────────────────────────────────────────────────────────────────────┘
-┌─────────────────── TIER 2 · KPU/KIP Provinsi ───────────────────────────┐
-│  Fokus: Kepemimpinan operasional regional                               │
-│  Sinkronisasi pusat–daerah · konflik regional · koordinasi lintas kab/kota
-│  Fasilitator: Mantan Komisioner · Akademisi · Fasilitator Lokal         │
-└─────────────────────────────────────────────────────────────────────────┘
-┌─────────────────── TIER 3 · KPU/KIP Kabupaten/Kota ─────────────────────┐
-│  Fokus: Kepemimpinan operasional lapangan                               │
-│  Logistik · pemutakhiran data pemilih · dinamika sosial-politik lokal   │
-│  Fasilitator: Akademisi · DKPP/MK · Fasilitator Lokal                   │
-└─────────────────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────┐
+│              PWA FRONTEND                    │
+│ Android │ iOS │ Tablet │ Desktop │ Offline  │
+└─────────────────────────────────────────────┘
+                     │
+                     ▼
+┌─────────────────────────────────────────────┐
+│             API GATEWAY                      │
+│ REST API │ GraphQL │ SSO KPU │ OAuth2        │
+└─────────────────────────────────────────────┘
+                     │
+                     ▼
+┌─────────────────────────────────────────────┐
+│        CORE LMS ENGINE — Frappe LMS          │
+│ Courses │ Learning Path │ Quiz │ Webinar     │
+│ Assignment │ Exam │ Certificate              │
+└─────────────────────────────────────────────┘
+                     │
+                     ▼
+┌─────────────────────────────────────────────┐
+│         TIERED COMPETENCY ENGINE             │
+│ Tier 1  Komisioner KPU RI                    │
+│ Tier 2  Komisioner KPU Provinsi              │
+│ Tier 3  Komisioner KPU Kab/Kota              │
+│ Tier 4  Sekretariat Provinsi                 │
+│ Tier 5  Sekretariat Kab/Kota                 │
+│ Tier 6  PPK    │ Tier 7  PPS │ Tier 8 KPPS   │
+│ Tier 9  Relawan Demokrasi                    │
+│ Tier 10 Masyarakat Umum                      │
+└─────────────────────────────────────────────┘
+        │             │              │
+        ▼             ▼              ▼
+┌──────────────┐ ┌──────────────┐ ┌──────────────┐
+│ KNOWLEDGE    │ │ CERTIFICATION│ │ AI LEARNING  │
+│ MANAGEMENT   │ │ & TALENT     │ │ ASSISTANT    │
+│ Bank Kasus   │ │ Sertifikasi  │ │ Chatbot      │
+│ Best Practice│ │ Badge Digital│ │ AI Tutor     │
+│ Lesson Learn │ │ CPD Point    │ │ Translator   │
+│ Digital Lib  │ │ Talent Pool  │ │ Quiz Gen     │
+│ FAQ          │ │ Succession   │ │ Recommendation│
+│ AI Sem.Search│ │ Leadership   │ │ Summarizer   │
+└──────────────┘ └──────────────┘ └──────────────┘
+                     │
+                     ▼
+┌─────────────────────────────────────────────┐
+│             ANALYTICS CENTER                 │
+│ Learning Dashboard │ Kompetensi Dashboard    │
+│ Heatmap Kompetensi │ Predictive Talent       │
+│ Kinerja Pembelajaran                         │
+└─────────────────────────────────────────────┘
 ```
 
-Jenjang bersifat **non-hierarkis**: bukan tangga promosi, melainkan **perbedaan
-kewenangan & kompleksitas**. Materi yang sama (mis. etika, manajemen krisis) hadir di
-semua jenjang dengan kedalaman/konteks berbeda.
+> Dalam aplikasi, blueprint ini dapat dilihat langsung pada tab **🏗️ Arsitektur**.
 
 ---
 
-## 3. Alur Pembelajaran — 7 Tahap
+## 2. Lapisan Arsitektur (8 Layer)
 
-Tiap tahap = *Chapter* besar berisi **modul** (Course) → **materi** (Lesson) → **kuis**.
-
-| Tahap | Nama | Waktu | Inti |
-| --- | --- | --- | --- |
-| **1** | Orientasi & Evaluasi Mandiri | Awal jabatan | *Induction* + **self-assessment** kompetensi (baseline). |
-| **2** | Penguatan Kompetensi Strategis **sesuai Jenjang** | Inti | **Dipersonalisasi per tier** (lihat §2). |
-| **3** | *Peer Learning* & *Mentoring* Kolektif | Berkelanjutan | Refleksi dilema kebijakan, non-hierarkis. |
-| **4** | Etika, Integritas & Independensi | Poros utama | Klinik etika, difasilitasi DKPP/MK. |
-| **5** | Pembelajaran Adaptif (*E-Learning* & Inovasi) | *On-demand* | Teknologi pemilu, disinformasi, tren global. |
-| **6** | Integrasi Manajemen Pengetahuan | Berkelanjutan | Kontribusi **Bank Kasus**. |
-| **7** | Refleksi Akhir & *Peer Review* | Akhir jabatan | Peta kompetensi **akhir** + transfer pengetahuan. |
-
----
-
-## 4. Model Data (Domain)
-
-Dipetakan dari konsep Frappe LMS ke domain kepemiluan:
-
-```
-Tier (Jenjang)                 ← Audience / Cohort
- └─ LearningPath (7 Stages)    ← Course pathway
-     └─ Stage                  ← Chapter
-         └─ Module             ← Course/Sub-course   (Tahap 2: per-tier)
-             ├─ Lesson         ← Lesson  {baca|video|refleksi|diskusi|studi-kasus}
-             └─ Quiz           ← Quiz    {soal[], kunci, ambang 70%}
-
-CompetencyFramework (8 domain) ← skill matrix  (self-assessment awal/akhir → radar)
-Facilitator (5 tipe)           ← Instructor    (critical partner, per-tier)
-CaseBank (praktik-baik|gagal)  ← Knowledge Mgmt (memori institusional, kontribusi)
-ImpactEvaluation (5 indikator) ← Outcome eval   (sebelum/sesudah → Δ kinerja kelembagaan)
-Certificate                    ← Certificate    (syarat: alur 100% + kuis lulus + dll)
-```
-
-**Penyimpanan (prototipe):** seluruh *state* peserta (`tier`, `done`, `kuis`, `komp`,
-`dampak`, `kasus`) disimpan di `localStorage` (`lms_kpu_v1`) — *offline-first*, tanpa
-backend. Lihat §7 untuk jalur produksi.
-
----
-
-## 5. Arsitektur Aplikasi (PWA)
-
-```
-public/lms-kpu/
-├── index.html          App shell + registrasi service worker
-├── styles.css          Desain sistem (tokens, komponen, cetak sertifikat)
-├── data.js   ┐         Kurikulum: TIERS, KOMPETENSI, FASILITATOR, DAMPAK,
-│            │          STAGES (7), BANK_KASUS_SEED  → window.LMS
-├── app.js    ┘         Engine + UI: router tab, progres, kuis, radar, modal
-├── manifest.json       Metadata PWA (installable, standalone)
-├── service-worker.js   Cache app-shell (network-first, fallback offline)
-└── icons/              Ikon adaptif (SVG + PNG 192/512)
-```
-
-- **Tanpa framework / build step** — *vanilla* JS, sejalan sub-aplikasi KPU lain di repo
-  ini (`perencanaan-kpu`, `event-attendance`). Ringan, mudah diaudit, dan stabil di
-  perangkat pemerintah beragam.
-- **Render** berbasis *template literal* + delegasi event; satu sumber kebenaran `S`
-  (state) yang di-*persist* tiap perubahan.
-- **PWA**: *installable* (Add to Home Screen), berjalan *standalone*, materi & app-shell
-  tersedia **offline** setelah kunjungan pertama (cocok untuk daerah konektivitas rendah).
-
-### Strategi *Offline / Service Worker*
-`network-first` untuk app-shell (selalu versi terbaru saat *online*; *cache* sebagai
-*fallback* saat *offline*). `CACHE_VERSION` di-*bump* tiap rilis untuk invalidasi.
-
----
-
-## 6. Komponen Fungsional (Tab)
-
-| Tab | Fungsi | Tahap terkait |
+| Layer | Komponen | Catatan |
 | --- | --- | --- |
-| 🏠 **Beranda** | Ringkasan progres alur, *continue learning*, prinsip model | — |
-| 🪜 **Alur 7 Tahap** | Daftar tahap → modul → materi (+kuis), tandai selesai, refleksi | 1–7 |
-| 🎯 **Kompetensi** | Self-assessment 8 domain (awal vs akhir) → **radar** pertumbuhan | 1 & 7 |
-| 🗂️ **Bank Kasus** | Praktik baik & kegagalan; kontribusi kolektif (memori institusional) | 6 |
-| 🤝 **Fasilitator** | Direktori 5 tipe fasilitator + relevansi per jenjang | semua |
-| 📊 **Evaluasi Dampak** | 5 indikator dampak (sebelum/sesudah) → Δ kinerja kelembagaan | 7 |
-| 🏅 **Sertifikat** | Syarat penyelesaian + sertifikat cetak/PDF | 7 |
+| **PWA Frontend** | Android · iOS · Tablet · Desktop · *offline-first* | Installable, *standalone*, *service worker*. |
+| **API Gateway** | REST · GraphQL · SSO KPU · OAuth2 | Otentikasi & otorisasi peran per tier. |
+| **Core LMS Engine** | **Frappe LMS** — Course, Learning Path, Quiz, Webinar, Assignment, Exam, Certificate | Sistem inti pembelajaran (open source). |
+| **Tiered Competency Engine** | 10 tier · alur 7 tahap · self-assessment & radar | Personalisasi konten per jenjang. |
+| **Knowledge Management** | Bank Kasus, Best Practice, Lesson Learned, Digital Library, FAQ, AI Semantic Search | Memori institusional lintas periode. |
+| **Certification & Talent** | Sertifikasi, Badge, CPD Point, Talent Pool, Succession, Leadership Pipeline | Menghubungkan belajar → karier. |
+| **AI Learning Assistant** | Chatbot, Tutor, Translator, Quiz Generator, Recommendation, Summarizer | Claude + RAG knowledge base. |
+| **Analytics Center** | Learning/Kompetensi Dashboard, Heatmap, Predictive Talent | Evaluasi berbasis dampak. |
 
 ---
 
-## 7. Jalur Produksi & Integrasi (Roadmap)
+## 3. Tiered Competency Engine — 10 Tier
 
-Prototipe ini *frontend-only*. Untuk implementasi kelembagaan:
+Bersifat **non-hierarkis**: bukan tangga promosi semata, melainkan **perbedaan kewenangan
+& kompleksitas**. Kedalaman alur (jumlah tahap aktif) menyesuaikan kelompok jenjang.
 
-1. **Backend LMS** — adopsi **Frappe LMS** (open source) sebagai sistem inti:
-   *Course*, *Batch* (kohort per periode jabatan), *Enrollment*, *Progress*, *Quiz*,
-   *Assignment*, *Certificate*, *Discussion*. PWA ini menjadi *front-end* kustom /
-   *headless client* via REST API Frappe.
-2. **SSO & Identitas** — integrasi akun resmi KPU (mis. *single sign-on* internal) dengan
-   peran: Komisioner (per jenjang), Fasilitator, Admin Pusbang.
-3. **Manajemen Pengetahuan** — Bank Kasus terhubung ke repositori dokumen resmi
-   (praktik baik, kegagalan kebijakan, putusan sengketa MK/DKPP) dengan kurasi & retensi.
-4. **Evaluasi Dampak** — tautkan indikator ke data kelembagaan (tren sengketa
-   administratif, survei kepercayaan publik) untuk evaluasi *outcome*, bukan output.
-5. **Privasi & Independensi** — data pembelajaran komisioner bersifat **reflektif &
-   sukarela**; akses fasilitator dibatasi sebagai *critical partner*, bukan penilai
-   kinerja, untuk menjaga independensi (sesuai amanat Policy Brief).
-6. **Sertifikasi** — opsi pengembangan menjadi instrumen **sertifikasi calon
-   penyelenggara pemilu** (sesuai gagasan di Policy Brief), dengan TTE & verifikasi.
+| Tier | Jenjang | Kelompok | Fokus | Alur aktif |
+| --- | --- | --- | --- | --- |
+| 1 | Komisioner KPU RI | Komisioner | Strategis & visioner nasional | 7 tahap |
+| 2 | Komisioner KPU Provinsi | Komisioner | Operasional regional | 7 tahap |
+| 3 | Komisioner KPU Kab/Kota | Komisioner | Operasional lapangan | 7 tahap |
+| 4 | Sekretariat Provinsi | Sekretariat | Tata kelola & dukungan teknis | 5 tahap |
+| 5 | Sekretariat Kab/Kota | Sekretariat | Administrasi & logistik | 5 tahap |
+| 6 | PPK | Badan Ad Hoc | Rekapitulasi kecamatan | 4 tahap |
+| 7 | PPS | Badan Ad Hoc | Coklit & pembentukan KPPS | 4 tahap |
+| 8 | KPPS | Badan Ad Hoc | Pemungutan & penghitungan TPS | 4 tahap |
+| 9 | Relawan Demokrasi | Publik | Sosialisasi & pendidikan pemilih | 3 tahap |
+| 10 | Masyarakat Umum | Publik | Literasi kepemiluan | 3 tahap |
+
+**Tahap 2 (Strategic Learning)** dipersonalisasi penuh per tier (mis. Komisioner RI →
+desain kebijakan nasional & manajemen krisis; PPS → Coklit & pembentukan KPPS; KPPS →
+pemungutan & penghitungan suara; Masyarakat → hak pilih & anti-hoaks).
 
 ---
 
-## 8. Pemetaan ke Policy Brief (Telusur)
+## 4. Tiered Facilitation Model — Alur 7 Tahap
 
-| Rekomendasi Policy Brief | Realisasi arsitektur |
+| Tahap | Nama | Inti |
+| --- | --- | --- |
+| 1 | Orientasi & Evaluasi Mandiri | Induction + self-assessment (baseline). |
+| 2 | Penguatan Kompetensi **sesuai Jenjang** | **Dipersonalisasi per tier.** |
+| 3 | Peer Learning & Mentoring Kolektif | Non-hierarkis; pembelajar = sumber pengetahuan. |
+| 4 | Etika, Integritas & Independensi | Klinik etika (DKPP/MK). |
+| 5 | Pembelajaran Adaptif | E-learning, webinar, microlearning, AI recommendation. |
+| 6 | Integrasi Manajemen Pengetahuan | Kontribusi Knowledge Hub. |
+| 7 | Refleksi Akhir & Peer Review | Peta kompetensi akhir + transfer pengetahuan. |
+
+---
+
+## 5. Modul Utama PWA
+
+1. **Learning** — Course, Webinar, Video Learning, Podcast
+2. **Assessment** — Quiz, CAT, Simulasi Tahapan
+3. **Certification** — Digital Certificate, QR Validation, Open Badge
+4. **Community** — Forum, Peer Learning, Mentoring
+5. **Knowledge Hub** — Putusan DKPP, Putusan MK, PKPU, JDIH
+6. **AI Assistant** — Tanya Regulasi, Tanya Tahapan, Tanya Sengketa
+7. **Mobile Offline** — Download Modul/Video, Sinkronisasi saat online
+
+---
+
+## 6. AI Learning Assistant (RAG)
+
+Dua lapis (lihat `ai.js`):
+
+- **Offline** (selalu aktif) — *retrieval* kata kunci atas Knowledge Base lokal + FAQ.
+  Berjalan tanpa jaringan; cocok untuk daerah konektivitas rendah.
+- **Live** (opsional) — **Claude (Anthropic)** via:
+  - **Edge Function `lms-ai`** (Supabase) — kunci `ANTHROPIC_API_KEY` aman di server
+    (direkomendasikan). Lihat `supabase/functions/lms-ai/index.ts`.
+  - **Direct** — Anthropic API langsung dari browser (kunci di `localStorage`, uji coba).
+
+Jawaban Live **di-grounding** pada hasil *retrieval* (pola **RAG ringan**) sehingga tidak
+mengarang dasar hukum/nomor putusan. Produksi: ganti *keyword retrieval* dengan **Vector
+Database + embeddings** (mis. LangChain) atas korpus JDIH/DKPP/MK.
+
+---
+
+## 7. Certification, Talent & Succession
+
+- **CPD Point** — materi selesai ×2 + kuis lulus ×5 + kontribusi knowledge ×10.
+- **Digital Badge / Open Badge** — per tahap selesai & per domain kompetensi yang dikuasai.
+- **Sertifikat Kompetensi** — terbit bila syarat penyelesaian terpenuhi (alur 100%, kuis
+  lulus, peta kompetensi akhir, kontribusi knowledge). Roadmap: **QR validation** & TTE.
+- **Skor Talenta** — komposit (penyelesaian 50% · rata-rata kompetensi akhir 30% · CPD 20%)
+  → kesiapan menapaki **leadership pipeline** dalam kelompok jenjang (*succession planning*).
+
+---
+
+## 8. Integrasi Sistem KPU
+
+| Sistem | Arah | Kegunaan |
+| --- | --- | --- |
+| **SSO KPU** | ⇄ | Identitas & peran penyelenggara. |
+| **SIAKBA** | → | Data badan ad hoc → enrolment & sertifikasi. |
+| **SIMPEG** | → | Kepegawaian → profil & CPD. |
+| **JDIH KPU** | → | Regulasi & PKPU → Knowledge Hub & AI Summarizer. |
+| **SIDALIH** | → | Data pemilih → modul Coklit/DPT. |
+| **SIREKAP** | → | Konteks rekapitulasi → studi kasus & simulasi. |
+| **SIPOL** | → | Data peserta pemilu → materi pendukung. |
+| **e-Office** | ⇄ | Persuratan & penugasan pembelajaran. |
+| **DKPP Knowledge Center** | → | Putusan & kasus etik → bank kasus. |
+| **MK Election Case Repository** | → | Putusan sengketa → bank kasus & lesson learned. |
+| **Knowledge Repository KPU** | ⇄ | Repositori dokumen & best practice. |
+
+---
+
+## 9. Teknologi Stack
+
+| Lapisan | Teknologi |
 | --- | --- |
-| Alur berjenjang & berkelanjutan | §2 (3 tier) + §3 (7 tahap) |
-| Integrasi manajemen pengetahuan; bank kasus | Tab **Bank Kasus** (§6), `BANK_KASUS_SEED` |
-| Evaluasi **berbasis dampak** kelembagaan | Tab **Evaluasi Dampak** (5 indikator) |
-| Netralitas & independensi; fasilitator independen | Model **Fasilitator** = *critical partner* (§6) |
-| Self-assessment & refleksi (kesadaran profesional) | **Kompetensi** (radar) + materi refleksi |
-| Replikasi lintas periode tanpa kehilangan pengetahuan | *Cohort/Batch* (§7) + Bank Kasus |
+| **Frontend PWA** | React / Next.js · Ionic PWA · Service Worker |
+| **Backend** | Frappe Framework · ERPNext Integration · Python · PostgreSQL |
+| **AI Layer** | Claude / LLM · RAG Knowledge Base · Vector Database · LangChain |
+| **Infrastructure** | Kubernetes · Docker · NGINX · Redis · MinIO |
 
-> Prototipe edukatif. Konten, nama fasilitator (sebagai peran), dan studi kasus disusun
-> ulang untuk pembelajaran; verifikasi terhadap regulasi & data resmi sebelum penggunaan
-> kelembagaan.
+> **Prototipe ini** sengaja *frontend-only* (vanilla JS, `localStorage`) agar ringan,
+> mudah diaudit, & konsisten dengan sub-aplikasi KPU lain di repo. Stack di atas adalah
+> **target produksi**: PWA menjadi *front-end* atas Frappe LMS (headless via REST/GraphQL).
+
+---
+
+## 10. Roadmap Kematangan (6 Level)
+
+| Level | Kapabilitas |
+| --- | --- |
+| **L1** | LMS Dasar — course, learning path, quiz, sertifikat. |
+| **L2** | + Sertifikasi — sertifikasi kompetensi, badge, QR validation. |
+| **L3** | + Knowledge Management — bank kasus, putusan DKPP/MK, lesson learned, digital library. |
+| **L4** | + AI Assistant — chatbot, tutor, summarizer, recommendation (RAG). |
+| **L5** | + Talent Pool & Succession — CPD, talent pool, leadership pipeline. |
+| **L6** | **National Election Learning Ecosystem** — lintas pemangku: KPU RI–Prov–Kab/Kota, PPK/PPS/KPPS, akademisi, pemantau pemilu, partai politik, masyarakat. |
+
+---
+
+## 11. Implementasi Prototipe (apa yang sudah berjalan)
+
+| Layer / Modul | Status di prototipe PWA |
+| --- | --- |
+| Tiered Competency Engine (10 tier) | ✅ Onboarding + personalisasi alur per tier |
+| Alur 7 tahap + Quiz | ✅ Fungsional, progres di `localStorage` |
+| Kompetensi (radar awal/akhir) | ✅ Self-assessment + visualisasi |
+| Knowledge Management | ✅ 8 kategori + pencarian + kontribusi |
+| AI Learning Assistant | ✅ Offline (RAG ringan) + Live (Claude via Edge/direct) |
+| Certification & Talent | ✅ CPD, badge, sertifikat, talent score, pipeline |
+| Analytics Center | ✅ Dashboard, heatmap, evaluasi dampak, predictive |
+| Arsitektur (blueprint) | ✅ Tab visual (layer, tier, integrasi, tech, roadmap) |
+| Core LMS (Frappe), API Gateway, SSO, Vector DB, Infra | ⏳ Roadmap produksi (lihat §9–10) |
+
+---
+
+## 12. Pemetaan ke Policy Brief
+
+| Rekomendasi Policy Brief | Realisasi platform |
+| --- | --- |
+| Pembelajaran **berjenjang & berkelanjutan** | Tiered Competency Engine (§3) + alur 7 tahap (§4) |
+| **Terintegrasi manajemen pengetahuan** | Knowledge Management System (§5–8) |
+| **Evaluasi berbasis dampak** kelembagaan | Analytics Center — Evaluasi Dampak |
+| **Netralitas & independensi**; fasilitator independen | Fasilitator = *critical partner* (tab Fasilitator) |
+| Self-assessment & refleksi (kesadaran profesional) | Kompetensi (radar) + materi refleksi |
+| **Investasi kelembagaan** lintas periode | Talent/Succession + memori institusional (Knowledge Hub) |
+
+> Prototipe edukatif. Kutipan kasus/angka disusun ulang untuk pembelajaran; verifikasi ke
+> sumber resmi (JDIH KPU, DKPP, MK) sebelum penggunaan kelembagaan.

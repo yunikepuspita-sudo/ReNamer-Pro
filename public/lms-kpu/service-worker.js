@@ -1,12 +1,13 @@
-/* LMS Kepemiluan — Tiered Facilitation Model (KPU) · Service Worker
+/* SiPINTER KPU — Election Knowledge & Competency Platform · Service Worker
  * Network-first untuk app-shell (selalu versi terbaru saat online; cache sebagai
  * fallback offline). Bump CACHE_VERSION pada tiap rilis. */
-const CACHE_VERSION = 'lms-kpu-v1';
+const CACHE_VERSION = 'sipinter-kpu-v2';
 const APP_SHELL = [
   './',
   './index.html',
   './styles.css',
   './data.js',
+  './ai.js',
   './app.js',
   './manifest.json',
   './icons/icon.svg'
