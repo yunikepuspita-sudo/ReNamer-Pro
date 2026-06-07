@@ -11,6 +11,7 @@
 
   const LMS = window.LMS;
   const AI = window.LMSAI;
+  const SYNC = window.LMSSync;
   const { PLATFORM, GROUPS, TIERS, KOMPETENSI, FASILITATOR, DAMPAK, STAGES,
     KN_CATS, KNOWLEDGE, INTEGRASI, ARCH_LAYERS, PWA_MODULES, TECH, MATURITY } = LMS;
   const app = document.getElementById('app');
@@ -71,6 +72,7 @@
     ['beranda', '🏠 Beranda'], ['alur', '🪜 Alur 7 Tahap'], ['kompetensi', '🎯 Kompetensi'],
     ['knowledge', '🗂️ Knowledge Hub'], ['ai', '🤖 AI Assistant'], ['talent', '🏅 Sertifikasi & Talent'],
     ['analytics', '📊 Analytics'], ['fasilitator', '🤝 Fasilitator'], ['arsitektur', '🏗️ Arsitektur'],
+    ['sync', '📥 Sinkronisasi'],
   ];
   function go(view) { S.view = view; save(); render(); window.scrollTo(0, 0); }
 
@@ -85,7 +87,7 @@
     const v = app.querySelector('#view');
     ({ beranda: viewBeranda, alur: viewAlur, kompetensi: viewKompetensi, knowledge: viewKnowledge,
        ai: viewAI, talent: viewTalent, analytics: viewAnalytics, fasilitator: viewFasilitator,
-       arsitektur: viewArsitektur }[S.view] || viewBeranda)(v);
+       arsitektur: viewArsitektur, sync: viewSync }[S.view] || viewBeranda)(v);
   }
 
   /* ── ONBOARDING (10 tier, dikelompokkan) ─────────────────────────────── */
@@ -502,6 +504,64 @@
       <section class="panel"><h4>📈 Roadmap Kematangan</h4>
         <div class="maturity">${MATURITY.map((m) => `<div class="mat-step"><div class="mat-lvl">L${m.lvl}</div><div><b>${esc(m.judul)}</b><div class="small muted">${esc(m.desc)}</div></div></div>`).join('')}</div></section>`;
   }
+
+  /* ── SINKRONISASI & DATA ─────────────────────────────────────────────── */
+  function viewSync(v) {
+    const fc = SYNC.getFrappe();
+    const swOn = ('serviceWorker' in navigator);
+    v.innerHTML =
+      `<section class="panel"><h3>📥 Sinkronisasi & Data</h3>
+        <p class="small muted">Modul <b>Mobile Offline → Sinkronisasi saat online</b>. Progres tersimpan
+        di perangkat (<code>localStorage</code>). Pindahkan ke perangkat lain via ekspor/impor, atau
+        sambungkan ke <b>Frappe LMS</b> (headless) untuk produksi.</p>
+        <div class="sync-stat">
+          <span class="pill ${swOn ? 'req' : 'opt'}">${swOn ? '● Offline-ready (service worker)' : '○ Service worker tak tersedia'}</span>
+          <span class="pill ${AI.isLive() ? 'req' : 'opt'}">AI ${AI.isLive() ? 'Live' : 'Offline'}</span>
+          <span class="pill ${fc.baseUrl ? 'req' : 'opt'}">Frappe ${fc.baseUrl ? 'terkonfigurasi' : 'belum diatur'}</span>
+        </div>
+      </section>
+
+      <section class="panel"><h4>💾 Ekspor / Impor Progres</h4>
+        <p class="small muted">Cadangkan seluruh progres (alur, kuis, kompetensi, kontribusi knowledge) sebagai
+        berkas JSON. Rahasia (kunci API) tidak ikut diekspor.</p>
+        <div class="rab-actions">
+          <button class="btn primary" data-export>⬇️ Ekspor JSON</button>
+          <label class="btn" style="cursor:pointer">⬆️ Impor JSON<input id="impf" type="file" accept="application/json,.json" hidden></label>
+        </div>
+        <div id="syncmsg" class="ringkas"></div>
+      </section>
+
+      <section class="panel"><h4>🔗 Konektor Frappe LMS (headless · eksperimental)</h4>
+        <p class="small muted">Untuk produksi, PWA ini menjadi front-end atas <b>Frappe LMS</b> via REST
+        (token auth). Tanpa backend, aplikasi tetap berjalan offline-first.</p>
+        <div class="cfg">
+          <label>Base URL<input id="fr-url" placeholder="https://lms.kpu.go.id" value="${esc(fc.baseUrl || '')}"/></label>
+          <div class="grid2"><label>API Key<input id="fr-key" value="${esc(fc.apiKey || '')}"/></label>
+            <label>API Secret<input id="fr-sec" type="password" value="${esc(fc.apiSecret || '')}"/></label></div>
+          <div class="rab-actions"><button class="btn primary sm" id="fr-save">Simpan</button>
+            <button class="btn sm" id="fr-test">Uji koneksi</button>
+            <button class="btn sm" id="fr-pull">Tarik katalog kursus</button></div>
+          <div id="frmsg" class="ringkas"></div>
+        </div>
+        <h4 class="sec">Pemetaan model → doctype Frappe LMS</h4>
+        <table class="doc-table"><thead><tr><th>Model lokal</th><th>Frappe LMS</th><th>Keterangan</th></tr></thead>
+          <tbody>${SYNC.FRAPPE_MAP.map((m) => `<tr><td><b>${esc(m.lokal)}</b></td><td>${esc(m.frappe)}</td><td class="small muted">${esc(m.ket)}</td></tr>`).join('')}</tbody></table>
+        <p class="small muted">Langkah deploy lengkap: lihat <code>public/lms-kpu/DEPLOY.md</code>.</p>
+      </section>`;
+
+    v.querySelector('[data-export]').onclick = () => { SYNC.exportDownload(); flash(v, '#syncmsg', '✅ Berkas ekspor diunduh.'); };
+    v.querySelector('#impf').onchange = (e) => {
+      const file = e.target.files && e.target.files[0]; if (!file) return;
+      const r = new FileReader();
+      r.onload = () => { const res = SYNC.importText(String(r.result)); flash(v, '#syncmsg', (res.ok ? '✅ ' : '⚠️ ') + res.msg); if (res.ok) { S = load(); save(); setTimeout(render, 600); } };
+      r.onerror = () => flash(v, '#syncmsg', '⚠️ Gagal membaca berkas.');
+      r.readAsText(file);
+    };
+    v.querySelector('#fr-save').onclick = () => { SYNC.setFrappe({ baseUrl: v.querySelector('#fr-url').value.trim(), apiKey: v.querySelector('#fr-key').value.trim(), apiSecret: v.querySelector('#fr-sec').value.trim() }); flash(v, '#frmsg', '✅ Konfigurasi Frappe disimpan.'); };
+    v.querySelector('#fr-test').onclick = async () => { flash(v, '#frmsg', '⏳ Menguji…'); const r = await SYNC.testConnection(); flash(v, '#frmsg', (r.ok ? '✅ ' : '⚠️ ') + r.msg); };
+    v.querySelector('#fr-pull').onclick = async () => { flash(v, '#frmsg', '⏳ Menarik katalog…'); const r = await SYNC.pullCourses(); flash(v, '#frmsg', (r.ok ? '✅ ' : '⚠️ ') + r.msg + (r.courses && r.courses.length ? ' — ' + r.courses.slice(0, 8).join(', ') : '')); };
+  }
+  function flash(v, sel, msg) { const el = v.querySelector(sel); if (el) el.innerHTML = esc(msg); }
 
   /* ── Modal util ──────────────────────────────────────────────────────── */
   function modal(html, actions) {

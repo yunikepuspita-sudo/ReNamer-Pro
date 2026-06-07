@@ -234,6 +234,10 @@ button.chip.on{background:var(--brand);color:#fff;border-color:var(--brand)}
 .mat-step{display:flex;align-items:center;gap:.7rem;background:#fff;border:1px solid var(--line);border-radius:10px;padding:.6rem .8rem}
 .mat-lvl{display:grid;place-items:center;width:38px;height:38px;border-radius:10px;background:var(--brand);color:#fff;font-weight:800;flex-shrink:0}
 
+/* ── Sinkronisasi ── */
+.sync-stat{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.5rem}
+code{background:#f1f5f9;border:1px solid var(--line);border-radius:5px;padding:0 .3rem;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.82em}
+
 /* Print */
 @media print{
   .topbar,.tabs,.appfoot,.rab-actions,.checklist,.panel:not(.printpage){display:none!important}

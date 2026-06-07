@@ -30,6 +30,8 @@ Berbasis *Policy Brief* **"Tiered Facilitation Model"**; core LMS terinspirasi
 - **Analytics Center** — learning dashboard · heatmap kompetensi · **evaluasi berbasis
   dampak** · predictive talent analytics.
 - **Peta Kompetensi** — self-assessment 8 domain (awal vs akhir) divisualkan **radar**.
+- **Sinkronisasi & Data** — ekspor/impor progres (JSON) untuk pindah perangkat + **konektor
+  Frappe LMS** (headless, REST token auth) untuk jalur produksi. Offline-first.
 
 ## 🗂️ Struktur
 
@@ -39,15 +41,18 @@ lms-kpu/
 ├── styles.css          # desain sistem
 ├── data.js             # kurikulum 10 tier, 7 tahap, Knowledge Base, metadata arsitektur
 ├── ai.js               # AI Assistant: offline (RAG) + live Claude
-├── app.js              # engine + UI (9 tab)
+├── sync.js             # ekspor/impor JSON + konektor headless Frappe LMS
+├── app.js              # engine + UI (10 tab)
 ├── manifest.json       # PWA installable
 ├── service-worker.js   # cache app-shell (offline-first)
 ├── icons/              # ikon adaptif
 ├── ARCHITECTURE.md     # blueprint platform (pemetaan ke Policy Brief)
+├── DEPLOY.md           # panduan deployment & integrasi (AI, Frappe, SSO, RAG)
 └── README.md
 ```
 
 Edge Function AI: `supabase/functions/lms-ai/index.ts` (relay Claude, kunci di server).
+Panduan produksi (Frappe LMS headless, SSO, RAG, infra): **[`DEPLOY.md`](./DEPLOY.md)**.
 
 ## 🤖 Mengaktifkan AI Live (opsional)
 

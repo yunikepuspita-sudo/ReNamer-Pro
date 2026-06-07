@@ -1,13 +1,14 @@
 /* SiPINTER KPU — Election Knowledge & Competency Platform · Service Worker
  * Network-first untuk app-shell (selalu versi terbaru saat online; cache sebagai
  * fallback offline). Bump CACHE_VERSION pada tiap rilis. */
-const CACHE_VERSION = 'sipinter-kpu-v2';
+const CACHE_VERSION = 'sipinter-kpu-v3';
 const APP_SHELL = [
   './',
   './index.html',
   './styles.css',
   './data.js',
   './ai.js',
+  './sync.js',
   './app.js',
   './manifest.json',
   './icons/icon.svg'
