@@ -37,6 +37,39 @@ serta dokumen tambahan yang diperlukan (mis. SP2HL/SPHL & pengadaan untuk hibah)
 Plus **Dashboard Monitoring**: pipeline (Draft/Review/Approval/Selesai), pagu per
 sumber & per program, total rencana anggaran.
 
+## Mode AI (Claude) — opsional
+
+Tanpa konfigurasi, aplikasi memakai **generator template** (offline). Aktifkan
+**Mode AI** di tab **⚙️ AI** untuk:
+
+- **AI Copilot Perencanaan** — ketik satu kalimat kebutuhan, formulir Tahap 1 terisi otomatis.
+- **Buat dengan AI** — pada Tahap 4, narasi dokumen (Nota Dinas, KAK, dll) ditulis
+  Claude, **di-grounding** pada blueprint dokumen contoh KPU Jabar (`templates.js`),
+  data form, sumber anggaran, **BAS**, dan RAB. Validasi tetap memakai validator lokal.
+
+Dua jalur:
+
+| Jalur | Keterangan |
+| ----- | ---------- |
+| **Supabase Edge Function** (disarankan) | Kunci API di server. Deploy `supabase functions deploy perencanaan-ai --no-verify-jwt`, set secret `ANTHROPIC_API_KEY`, lalu isi URL + Anon Key di tab AI. |
+| **Langsung ke Anthropic** | Kunci `sk-ant-...` disimpan di localStorage perangkat (untuk uji coba internal). |
+
+Model: Claude Sonnet 4.6 (default), Opus 4.8, atau Haiku 4.5.
+
+## Bagan Akun Standar (BAS)
+
+Tab **📒 BAS** menampilkan struktur akun belanja pemerintah (51 Belanja Pegawai,
+52 Belanja Barang, 53 Belanja Modal) mengacu PMK Bagan Akun Standar — termasuk
+akun yang dipakai pada DIPA KPU Jabar 2026. BAS dipakai untuk penyusunan &
+validasi RAB serta sebagai konteks Mode AI.
+
+## Dokumen contoh sebagai template
+
+Blueprint pada `templates.js` dipelajari dari dokumen nyata KPU Jawa Barat:
+**Nota Dinas Penataan Staf** (format nomor `PP.05-ND/32`), **KAK/RAB Pengadaan**
+(pola SAE PISAN, Pengadaan Langsung + PPN 11%), serta **KAK Swakelola Tipe I &
+Kontrak Swakelola Tipe IV** (Pokok Perjanjian, hirarki dokumen kontrak).
+
 ## Catatan
 
 - Angka **SBM bersifat indikatif** (mengikuti pola PMK Standar Biaya Masukan).
@@ -49,8 +82,12 @@ sumber & per program, total rencana anggaran.
 | File | Fungsi |
 | ---- | ------ |
 | `index.html` | Shell aplikasi + registrasi service worker |
-| `data.js` | Knowledge Base: SBM, regulasi, data RKA/DIPA, aturan dokumen |
+| `data.js` | Knowledge Base: SBM, **BAS**, regulasi, data RKA/DIPA, aturan dokumen |
+| `templates.js` | Blueprint dokumen contoh KPU Jabar (grounding template & AI) |
 | `generators.js` | Requirement analyzer, RAB generator, validator, generator dokumen, review AI |
-| `app.js` | UI wizard, state, workflow, TTE/hash/QR, dashboard, arsip |
+| `ai.js` | Klien Mode AI (Edge Function / direct), prompt building, Copilot |
+| `app.js` | UI wizard, state, workflow, TTE/hash/QR, dashboard, arsip, BAS, settings AI |
 | `styles.css` | Gaya UI + tata letak dokumen cetak |
 | `service-worker.js` | Cache offline (network-first app-shell) |
+
+Backend AI: `supabase/functions/perencanaan-ai/` (relay ke Claude, kunci di server).

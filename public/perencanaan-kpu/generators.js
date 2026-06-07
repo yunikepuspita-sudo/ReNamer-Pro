@@ -53,28 +53,36 @@ window.GEN = (function () {
   // 1. AI REQUIREMENT ANALYZER
   // ════════════════════════════════════════════════════════════════════════
   function analyzeRequirements(f) {
-    const isPengadaan = f.jenis === 'pengadaan' || f.sumber === 'HNP' && f.jenis === 'pengadaan';
+    const isPengadaan = f.jenis === 'pengadaan';
+    const isSwakelola = isPengadaan && f.mekanisme === 'swakelola';
+    const isPenyedia = isPengadaan && f.mekanisme !== 'swakelola';
     const adaNarasumber = ['bimtek', 'sosialisasi', 'rakor', 'fgd'].includes(f.jenis);
     const banyakPeserta = Number(f.peserta) >= 30;
 
     const docs = [
       { id: 'nota_dinas', nama: 'Nota Dinas', status: 'Wajib' },
-      { id: 'kak', nama: 'KAK (Kerangka Acuan Kerja)', status: 'Wajib' },
-      { id: 'tor', nama: 'TOR (Term of Reference)', status: 'Wajib' },
       { id: 'rab', nama: 'RAB (Rincian Anggaran Biaya)', status: 'Wajib' },
       { id: 'jadwal', nama: 'Jadwal Kegiatan', status: 'Wajib' },
-      { id: 'sk_panitia', nama: 'SK Panitia/Tim', status: banyakPeserta || adaNarasumber ? 'Perlu' : 'Opsional' },
-      { id: 'spt', nama: 'SPT (Surat Perintah Tugas)', status: adaNarasumber ? 'Perlu' : 'Opsional' },
       { id: 'matriks_risiko', nama: 'Matriks Risiko', status: 'Perlu' },
     ];
 
-    if (adaNarasumber) {
-      docs.push({ id: 'kontrak_ns', nama: 'Kontrak/SPK Narasumber', status: 'Opsional' });
-    }
-    if (isPengadaan || f.sumber === 'HNP') {
-      docs.push({ id: 'kak_pengadaan', nama: 'Spesifikasi Teknis / KAK Pengadaan', status: isPengadaan ? 'Wajib' : 'Opsional' });
-      docs.push({ id: 'hps', nama: 'HPS (Harga Perkiraan Sendiri)', status: isPengadaan ? 'Wajib' : 'Opsional' });
-      docs.push({ id: 'rancangan_kontrak', nama: 'Rancangan Kontrak', status: isPengadaan ? 'Perlu' : 'Opsional' });
+    if (isPengadaan) {
+      // Pengadaan: KAK mengikuti pola Penyedia atau Swakelola
+      if (isSwakelola) {
+        docs.splice(1, 0, { id: 'kak_swakelola', nama: 'KAK Swakelola', status: 'Wajib' });
+        docs.push({ id: 'kontrak_swakelola', nama: 'Kontrak Swakelola (Pokok Perjanjian)', status: 'Wajib' });
+      } else {
+        docs.splice(1, 0, { id: 'kak_pengadaan', nama: 'KAK Pengadaan (Penyedia)', status: 'Wajib' });
+        docs.push({ id: 'hps', nama: 'HPS (Harga Perkiraan Sendiri)', status: 'Wajib' });
+        docs.push({ id: 'rancangan_kontrak', nama: 'Rancangan Kontrak/SPK', status: 'Perlu' });
+      }
+    } else {
+      // Kegiatan pertemuan: KAK + TOR umum
+      docs.splice(1, 0, { id: 'kak', nama: 'KAK (Kerangka Acuan Kerja)', status: 'Wajib' });
+      docs.splice(2, 0, { id: 'tor', nama: 'TOR (Term of Reference)', status: 'Wajib' });
+      docs.push({ id: 'sk_panitia', nama: 'SK Panitia/Tim', status: banyakPeserta || adaNarasumber ? 'Perlu' : 'Opsional' });
+      docs.push({ id: 'spt', nama: 'SPT (Surat Perintah Tugas)', status: adaNarasumber ? 'Perlu' : 'Opsional' });
+      if (adaNarasumber) docs.push({ id: 'kontrak_ns', nama: 'Kontrak/SPK Narasumber', status: 'Opsional' });
     }
     if (f.sumber === 'HNP') {
       docs.push({ id: 'sp2hl', nama: 'SP2HL/SPHL (Pengesahan Hibah)', status: 'Perlu' });
@@ -109,18 +117,31 @@ window.GEN = (function () {
       });
     };
 
+    if (jenis === 'pengadaan' && f.mekanisme === 'swakelola') {
+      // Swakelola: honor narasumber/fasilitator, konsumsi, bahan, transport
+      push('narasumber_es3', 2 * 4 * hari, null);
+      push('panitia_ketua', 1, null);
+      push('panitia_anggota', 3, null);
+      push('konsumsi_makan', peserta * hari, null);
+      push('konsumsi_snack', peserta * hari, null);
+      push('transport_lokal', peserta * hari, null);
+      push('atk_paket', 1, null, 2500000);
+      items.push({ uraian: 'Bahan praktik/material swakelola', akun: '521211', akunNama: KB.AKUN['521211'], vol: 1, satuan: 'Paket', harga: 3000000, jumlah: 3000000, sbmMax: null, sbmKey: null });
+      return finalizeRAB(items);
+    }
+
     if (jenis === 'pengadaan') {
-      // Belanja Modal (mis. HNP 2026 — Peralatan & Mesin)
+      // Pengadaan melalui Penyedia (mis. Belanja Modal HNP 2026 / Jasa)
       items.push({
-        uraian: 'Pengadaan Peralatan dan Mesin (sesuai spesifikasi teknis)',
-        akun: '532111', akunNama: KB.AKUN['532111'],
-        vol: 1, satuan: 'Paket', harga: 0, jumlah: 0, sbmMax: null, sbmKey: null,
+        uraian: 'Pengadaan barang/jasa sesuai spesifikasi teknis (nilai pekerjaan)',
+        akun: f.sumber === 'HNP' ? '532111' : '522191', akunNama: KB.AKUN[f.sumber === 'HNP' ? '532111' : '522191'],
+        vol: 1, satuan: 'Paket', harga: 36000000, jumlah: 36000000, sbmMax: null, sbmKey: null,
         editableHarga: true,
       });
       items.push({
-        uraian: 'Biaya pendukung/administrasi pengadaan (ATK, penggandaan)',
-        akun: '521211', akunNama: KB.AKUN['521211'],
-        vol: 1, satuan: 'Paket', harga: 2500000, jumlah: 2500000, sbmMax: null, sbmKey: null,
+        uraian: 'PPN 11%',
+        akun: '-', akunNama: 'Pajak Pertambahan Nilai', vol: 1, satuan: 'Paket',
+        harga: 3960000, jumlah: 3960000, sbmMax: null, sbmKey: null, isPPN: true,
       });
       return finalizeRAB(items);
     }
@@ -269,21 +290,47 @@ window.GEN = (function () {
     return `<p><b>Sumber Dana:</b> ${s.label || '-'}${s.register ? ' · Register Hibah No. ' + s.register : ''} · DIPA KPU Prov. Jawa Barat TA ${KB.RKA.tahun}.</p>`;
   };
 
+  // Nomor dokumen mengikuti format KPU (templates.js); seq default placeholder.
+  function nomorDok(jenis, m) {
+    const TPL = window.TPL;
+    const d = new Date((m.tglDok || new Date().toISOString().slice(0, 10)) + 'T00:00:00');
+    const seq = m.seq || '......';
+    const thn = d.getFullYear();
+    if (!TPL) return `${seq}/KPU-Prov.JABAR/${thn}`;
+    if (jenis === 'nota_dinas') return TPL.NOMOR.notaDinas(seq, TPL.ROMAWI[d.getMonth() + 1], thn);
+    if (jenis === 'sk') return TPL.NOMOR.sk(seq, thn);
+    if (jenis === 'spt') return TPL.NOMOR.spt(seq, thn);
+    if (jenis === 'kontrak') return TPL.NOMOR.kontrak(seq, thn);
+    return TPL.NOMOR.kak(seq, thn);
+  }
+
   function docNotaDinas(f, m) {
+    const bp = window.TPL ? window.TPL.BLUEPRINT.nota_dinas : null;
+    const dasar = (bp ? bp.contohDasar : KB.REGULASI.nasional.slice(0, 3));
     return KOP(f) + `
       <h2 class="doc-title">NOTA DINAS</h2>
-      <p class="doc-nomor">Nomor: ${m.nomor}</p>
+      <p class="doc-nomor">Nomor: ${nomorDok('nota_dinas', m)}</p>
       <table class="doc-meta">
         <tr><td>Yth.</td><td>:</td><td>Sekretaris KPU Provinsi Jawa Barat</td></tr>
-        <tr><td>Dari</td><td>:</td><td>${f.pemrakarsa || 'Kepala Bagian/Subbagian Pemrakarsa'}</td></tr>
-        <tr><td>Hal</td><td>:</td><td>Permohonan Persetujuan Kegiatan ${f.nama}</td></tr>
+        <tr><td></td><td></td><td>di Bandung</td></tr>
+        <tr><td>Dari</td><td>:</td><td>${esc2(f.pemrakarsa) || 'Kepala Bagian/Subbagian Pemrakarsa'}</td></tr>
         <tr><td>Tanggal</td><td>:</td><td>${tglID(m.tglDok)}</td></tr>
+        <tr><td>Sifat</td><td>:</td><td>Penting/Segera</td></tr>
+        <tr><td>Lampiran</td><td>:</td><td>1 (satu) berkas</td></tr>
+        <tr><td>Hal</td><td>:</td><td>Permohonan Persetujuan Kegiatan ${esc2(f.nama)}</td></tr>
       </table>
-      <p>Dengan hormat, dalam rangka ${f.tujuan || 'pelaksanaan tugas dan fungsi'}, bersama ini kami mengajukan permohonan persetujuan pelaksanaan kegiatan <b>${f.nama}</b> yang akan dilaksanakan pada ${tglID(f.tanggal)} di ${f.lokasi || '-'} dengan sasaran ${f.sasaran || f.peserta + ' peserta'}.</p>
-      <p>Kegiatan ini direncanakan dengan total anggaran sebesar <b>${rupiah(m.total)}</b> (${terbilang(m.total)}) yang bersumber dari ${(KB.SUMBER[f.sumber] || {}).label || '-'}.</p>
-      <p>Sebagai bahan pertimbangan, terlampir KAK, TOR, RAB, dan jadwal kegiatan. Atas perkenan dan persetujuan Bapak/Ibu, kami ucapkan terima kasih.</p>
-      ${ttdBlok(f, m, f.pemrakarsa || 'Pemrakarsa Kegiatan')}`;
+      <p>Dalam rangka ${esc2(f.tujuan) || 'pelaksanaan tugas dan fungsi'}, bersama ini kami sampaikan permohonan persetujuan pelaksanaan kegiatan dengan uraian sebagai berikut:</p>
+      <ol class="doc-ol">
+        <li><b>Dasar.</b><ul>${dasar.map((d) => '<li>' + d + '</li>').join('')}</ul></li>
+        <li><b>Maksud dan Tujuan.</b> Menyelenggarakan <b>${esc2(f.nama)}</b> guna ${esc2(f.tujuan) || '...'}.</li>
+        <li><b>Pelaksanaan.</b> ${tglID(f.tanggal)}${Number(f.hari) > 1 ? ' s.d. ' + tglID(addDays(f.tanggal, Number(f.hari) - 1)) : ''} di ${esc2(f.lokasi) || '-'}, dengan sasaran ${esc2(f.sasaran) || (f.peserta + ' peserta')}.</li>
+        <li><b>Pembiayaan.</b> Total ${rupiah(m.total)} (${terbilang(m.total)}) bersumber dari ${(KB.SUMBER[f.sumber] || {}).label || '-'}, DIPA KPU Prov. Jawa Barat TA ${KB.RKA.tahun}.</li>
+      </ol>
+      <p>Sebagai bahan pertimbangan, terlampir KAK/TOR, RAB, dan jadwal kegiatan. Atas perkenan dan persetujuan Bapak/Ibu, kami ucapkan terima kasih.</p>
+      ${ttdBlok(f, m, esc2(f.pemrakarsa) || 'Pemrakarsa Kegiatan')}`;
   }
+
+  function esc2(s) { return String(s == null ? '' : s).replace(/[<>]/g, (c) => ({ '<': '&lt;', '>': '&gt;' }[c])); }
 
   function docKAK(f, m) {
     const s = KB.SUMBER[f.sumber] || {};
@@ -421,6 +468,91 @@ window.GEN = (function () {
       ${ttdBlok(f, m, f.pemrakarsa || 'Pengelola Risiko')}`;
   }
 
+  // ── KAK Pengadaan (melalui Penyedia) — pola SAE PISAN ──────────────────────
+  function docKAKPengadaan(f, m) {
+    const bp = window.TPL ? window.TPL.BLUEPRINT.kak_pengadaan : { contohDasar: [], strategi: '' };
+    const ppn = Math.round(m.total * 0.11);
+    return KOP(f) + `
+      <h2 class="doc-title">KERANGKA ACUAN KERJA (KAK)</h2>
+      <p class="doc-nomor">Pengadaan melalui Penyedia · Nomor: ${nomorDok('kak', m)} · TA ${KB.RKA.tahun}</p>
+      <ol class="doc-ol">
+        <li><b>Latar Belakang.</b> Dalam rangka ${esc2(f.tujuan) || 'mendukung tugas dan fungsi KPU'}, diperlukan pengadaan <b>${esc2(f.nama)}</b> guna menjawab kebutuhan organisasi secara efisien, akuntabel, dan patuh regulasi PBJ.</li>
+        <li><b>Maksud dan Tujuan.</b> Maksud: tersedianya ${esc2(f.output) || 'barang/jasa yang dibutuhkan'}. Tujuan: ${esc2(f.tujuan) || '-'}.</li>
+        <li><b>Sasaran.</b> ${esc2(f.sasaran) || (f.peserta + ' penerima manfaat')}.</li>
+        <li><b>Dasar Hukum.</b><ul>${bp.contohDasar.map((d) => '<li>' + d + '</li>').join('')}</ul></li>
+        <li><b>Ruang Lingkup Pekerjaan.</b> Mencakup lingkup fungsional, teknis, dan non-fungsional sesuai spesifikasi teknis terlampir; termasuk dokumentasi, pelatihan, dan garansi/pemeliharaan.</li>
+        <li><b>Keluaran (Deliverables).</b> ${esc2(f.output) || '-'}; laporan; dokumentasi; Berita Acara Serah Terima.</li>
+        <li><b>Jangka Waktu Pelaksanaan.</b> ${f.hari || 60} hari kalender sejak SPMK.</li>
+        <li><b>Tenaga Ahli/Spesifikasi.</b> Disesuaikan kebutuhan teknis pekerjaan (terlampir).</li>
+        <li><b>Indikator Keberhasilan.</b> Pekerjaan selesai tepat waktu, sesuai spesifikasi, dan diterima melalui BAST.</li>
+        <li><b>Lokasi Pekerjaan.</b> ${esc2(f.lokasi) || 'KPU Provinsi Jawa Barat'}.</li>
+        <li><b>Sumber Pendanaan.</b> DIPA KPU Prov. Jawa Barat TA ${KB.RKA.tahun}, sumber ${(KB.SUMBER[f.sumber] || {}).label || '-'}; pagu ${rupiah(m.total)} (termasuk PPN 11% ${rupiah(ppn)} bila berlaku).</li>
+        <li><b>Strategi Pengadaan.</b> ${bp.strategi || 'Mengikuti Perpres 16/2018 jo. 12/2021.'}</li>
+      </ol>
+      ${pengesahanBlok(f, m)}`;
+  }
+
+  // ── KAK Swakelola (Tipe I) ─────────────────────────────────────────────────
+  function docKAKSwakelola(f, m) {
+    const bp = window.TPL ? window.TPL.BLUEPRINT.kak_swakelola : { tipeSwakelola: {} };
+    const tipe = (f.tipeSwakelola || 'I');
+    const tipeDesc = (bp.tipeSwakelola && bp.tipeSwakelola[tipe]) || '';
+    return KOP(f) + `
+      <h2 class="doc-title">KERANGKA ACUAN KERJA (KAK) — SWAKELOLA TIPE ${tipe}</h2>
+      <p class="doc-nomor">${esc2(f.nama)} · Nomor: ${nomorDok('kak', m)} · TA ${KB.RKA.tahun}</p>
+      <p class="muted small"><i>${tipeDesc}</i></p>
+      <ol class="doc-ol">
+        <li><b>Latar Belakang.</b> ${esc2(f.tujuan) || 'Dalam rangka pelaksanaan tugas dan fungsi KPU'}, kegiatan <b>${esc2(f.nama)}</b> dilaksanakan secara swakelola untuk efektivitas dan efisiensi.</li>
+        <li><b>Maksud dan Tujuan.</b> Memberikan ${esc2(f.tujuan) || 'penguatan kapasitas'} bagi ${esc2(f.sasaran) || 'peserta'}.</li>
+        <li><b>Sasaran.</b> ${esc2(f.sasaran) || (f.peserta + ' orang peserta')}.</li>
+        <li><b>Lokasi Pekerjaan.</b> ${esc2(f.lokasi) || '-'}.</li>
+        <li><b>Nilai dan Sumber Pendanaan.</b> ${rupiah(m.total)} (${terbilang(m.total)}), ${(KB.SUMBER[f.sumber] || {}).label || '-'}, DIPA KPU Prov. Jawa Barat TA ${KB.RKA.tahun}.</li>
+        <li><b>Nama & Organisasi PPK.</b> ${esc2(f.pemrakarsa) || 'PPK'} — KPU Provinsi Jawa Barat.</li>
+        <li><b>Data Penunjang.</b> Renstra KPU; standar teknis & referensi hukum terkait (Perpres 16/2018 jo. 12/2021; Perlem LKPP tentang Swakelola).</li>
+        <li><b>Ruang Lingkup.</b> Penyelenggaraan ${esc2(f.nama)} bagi ${f.peserta || '-'} peserta selama ${f.hari || 1} hari (kelas/teori dan/atau praktik/lapangan), termasuk ATK, konsumsi, transport lokal, narasumber/fasilitator.</li>
+        <li><b>Keluaran/Output.</b> ${esc2(f.output) || '-'}; modul; daftar hadir; laporan akhir.</li>
+        <li><b>Peralatan & Personel.</b> Disiapkan PPK (tempat, ATK, peralatan presentasi) dan Pelaksana Swakelola (bahan praktik, dokumentasi).</li>
+        <li><b>Jangka Waktu Penyelesaian.</b> ${f.hari || 1} hari kalender.</li>
+        <li><b>Organisasi & Personel Tim Pelaksana.</b> Tim Persiapan, Tim Pelaksana, dan Tim Pengawas sesuai ketentuan swakelola.</li>
+        <li><b>Hal-Hal Lain.</b> Mengutamakan Produk Dalam Negeri & UMKK; alih pengetahuan sesuai kebutuhan.</li>
+      </ol>
+      ${ttdBlok(f, m, esc2(f.pemrakarsa) || 'Pejabat Pembuat Komitmen')}`;
+  }
+
+  // ── Kontrak Swakelola (Pokok Perjanjian) ───────────────────────────────────
+  function docKontrakSwakelola(f, m) {
+    const bp = window.TPL ? window.TPL.BLUEPRINT.kontrak_swakelola : { hirarki: [] };
+    return KOP(f) + `
+      <h2 class="doc-title">KONTRAK SWAKELOLA</h2>
+      <p class="c"><b>POKOK PERJANJIAN</b><br/>untuk melaksanakan Swakelola ${esc2(f.nama)}</p>
+      <p class="doc-nomor">Nomor: ${nomorDok('kontrak', m)}</p>
+      <p>Kontrak Swakelola ini berikut lampirannya (“Kontrak”) dibuat dan ditandatangani di Bandung pada ${tglID(m.tglDok)}, antara:</p>
+      <ol class="doc-ol">
+        <li><b>${esc2(f.pemrakarsa) || 'Pejabat Penandatangan Kontrak'}</b>, bertindak untuk dan atas nama KPU Provinsi Jawa Barat — selanjutnya disebut <b>“Pejabat Penandatangan Kontrak”</b>; dan</li>
+        <li><b>[Ketua Tim/Pelaksana Swakelola]</b>, selanjutnya disebut <b>“Pelaksana Swakelola”</b>.</li>
+      </ol>
+      <p><b>MENGINGAT BAHWA</b> Pejabat Penandatangan Kontrak telah meminta Pelaksana Swakelola menyediakan barang/jasa sebagaimana KAK terlampir, dan Pelaksana Swakelola memiliki keahlian serta sumber daya untuk itu, maka Para Pihak menyepakati:</p>
+      <ol class="doc-ol">
+        <li><b>Nilai Kontrak</b> termasuk biaya lain yang sah sebesar <b>${rupiah(m.total)}</b> (${terbilang(m.total)}).</li>
+        <li><b>Hirarki Dokumen Kontrak</b> (saling melengkapi; yang lebih tinggi berlaku bila bertentangan): ${bp.hirarki.map((h) => h).join('; ')}.</li>
+        <li><b>Hak & Kewajiban.</b> Pejabat Penandatangan Kontrak mengawasi, memeriksa, menerima hasil, dan membayar; Pelaksana Swakelola melaksanakan, melaporkan secara periodik, dan menyerahkan hasil sesuai KAK & jadwal.</li>
+        <li><b>Pembayaran</b> dilakukan sesuai SSKK.</li>
+        <li>Kontrak <b>berlaku efektif</b> sejak tanggal ditandatangani.</li>
+      </ol>
+      <div class="doc-ttd">
+        <div class="ttd-box"><p>Pelaksana Swakelola</p><div class="ttd-space"></div><p class="ttd-nama">( .............................. )</p></div>
+        <div class="ttd-box"><p>Bandung, ${tglID(m.tglDok)}</p><p>Pejabat Penandatangan Kontrak</p>${m.tte ? `<div class="tte-stamp">✔ TTE BSrE<br/><span class="mono">${(m.hash || '').slice(0, 32)}…</span></div>` : '<div class="ttd-space"></div>'}<p class="ttd-nama">( ${esc2(f.pemrakarsa) || '..............................'} )</p></div>
+      </div>`;
+  }
+
+  // Lembar Pengesahan ganda (PPK & KPA) — untuk dokumen pengadaan.
+  function pengesahanBlok(f, m) {
+    return `<div class="doc-ttd">
+      <div class="ttd-box"><p>Disusun oleh,</p><p>Pejabat Pembuat Komitmen</p>${m.tte ? `<div class="tte-stamp">✔ TTE BSrE</div>` : '<div class="ttd-space"></div>'}<p class="ttd-nama">${esc2(f.pemrakarsa) || '( .......................... )'}<br/>NIP. ......................</p></div>
+      <div class="ttd-box"><p>Bandung, ${tglID(m.tglDok)}</p><p>Disetujui oleh, Kuasa Pengguna Anggaran</p><div class="ttd-space"></div><p class="ttd-nama">( .......................... )<br/>NIP. ......................</p></div>
+    </div>`;
+  }
+
   function ttdBlok(f, m, jabatan) {
     return `
       <div class="doc-ttd">
@@ -438,6 +570,9 @@ window.GEN = (function () {
   const DOC_FN = {
     nota_dinas: docNotaDinas,
     kak: docKAK,
+    kak_pengadaan: docKAKPengadaan,
+    kak_swakelola: docKAKSwakelola,
+    kontrak_swakelola: docKontrakSwakelola,
     tor: docTOR,
     rab: docRAB,
     jadwal: docJadwal,
@@ -452,8 +587,8 @@ window.GEN = (function () {
   }
 
   return {
-    rupiah, terbilang, tglID, addDays,
+    rupiah, terbilang, tglID, addDays, nomorDok,
     analyzeRequirements, generateRAB, recomputeRAB, validateBudget, reviewAssistant,
-    generateDoc, DOC_FN,
+    generateDoc, DOC_FN, kop: KOP,
   };
 })();

@@ -75,19 +75,103 @@ window.KB = (function () {
     ],
   };
 
-  // ── Akun belanja (kode MAK) yang relevan ───────────────────────────────────
-  const AKUN = {
-    '521211': 'Belanja Bahan',
-    '521213': 'Belanja Honor Output Kegiatan',
-    '521219': 'Belanja Barang Non Operasional Lainnya',
-    '522131': 'Belanja Jasa Konsultan',
-    '522151': 'Belanja Jasa Profesi (Narasumber/Moderator)',
-    '522191': 'Belanja Jasa Lainnya',
-    '524111': 'Belanja Perjalanan Dinas Biasa',
-    '524113': 'Belanja Perjalanan Dinas Dalam Kota',
-    '524114': 'Belanja Perjalanan Dinas Paket Meeting Dalam Kota',
-    '532111': 'Belanja Modal Peralatan dan Mesin',
+  // ── Bagan Akun Standar (BAS) — struktur akun belanja pemerintah ────────────
+  // Sesuai PMK Bagan Akun Standar. Hierarki: Akun (5) → Kelompok (2 digit) →
+  // Jenis (3 digit) → Detil/Akun 6 digit. Hanya cabang Belanja (5) yang relevan
+  // untuk perencanaan kegiatan & disusun mendekati BAS resmi + akun pada RKA.
+  const BAS = {
+    kode: '5',
+    nama: 'BELANJA',
+    kelompok: [
+      {
+        kode: '51', nama: 'Belanja Pegawai',
+        jenis: [
+          {
+            kode: '511', nama: 'Belanja Gaji dan Tunjangan',
+            akun: [
+              { kode: '511111', nama: 'Belanja Gaji Pokok PNS' },
+              { kode: '511119', nama: 'Belanja Pembulatan Gaji PNS' },
+              { kode: '511121', nama: 'Belanja Tunj. Suami/Istri PNS' },
+              { kode: '511122', nama: 'Belanja Tunj. Anak PNS' },
+              { kode: '511123', nama: 'Belanja Tunj. Struktural PNS' },
+              { kode: '511124', nama: 'Belanja Tunj. Fungsional PNS' },
+              { kode: '511126', nama: 'Belanja Tunj. Beras PNS' },
+              { kode: '511129', nama: 'Belanja Uang Makan PNS' },
+              { kode: '511151', nama: 'Belanja Tunjangan Umum PNS' },
+              { kode: '511332', nama: 'Belanja Uang Kehormatan Pejabat Negara' },
+              { kode: '511611', nama: 'Belanja Gaji Pokok PPPK' },
+              { kode: '511628', nama: 'Belanja Uang Makan PPPK' },
+            ],
+          },
+          {
+            kode: '512', nama: 'Belanja Pegawai (Tunjangan Khusus/Kegiatan)',
+            akun: [
+              { kode: '512411', nama: 'Belanja Pegawai (Tunjangan Khusus/Kegiatan/Kinerja) PNS' },
+              { kode: '512414', nama: 'Belanja Pegawai Tunjangan Kinerja PPPK' },
+            ],
+          },
+        ],
+      },
+      {
+        kode: '52', nama: 'Belanja Barang',
+        jenis: [
+          {
+            kode: '521', nama: 'Belanja Barang Operasional & Non-Operasional',
+            akun: [
+              { kode: '521111', nama: 'Belanja Keperluan Perkantoran' },
+              { kode: '521115', nama: 'Belanja Honor Operasional Satuan Kerja' },
+              { kode: '521119', nama: 'Belanja Barang Operasional Lainnya' },
+              { kode: '521211', nama: 'Belanja Bahan' },
+              { kode: '521213', nama: 'Belanja Honor Output Kegiatan' },
+              { kode: '521219', nama: 'Belanja Barang Non Operasional Lainnya' },
+            ],
+          },
+          {
+            kode: '522', nama: 'Belanja Jasa',
+            akun: [
+              { kode: '522111', nama: 'Belanja Langganan Listrik' },
+              { kode: '522131', nama: 'Belanja Jasa Konsultan' },
+              { kode: '522141', nama: 'Belanja Sewa' },
+              { kode: '522151', nama: 'Belanja Jasa Profesi (Narasumber/Moderator)' },
+              { kode: '522191', nama: 'Belanja Jasa Lainnya' },
+            ],
+          },
+          {
+            kode: '523', nama: 'Belanja Pemeliharaan',
+            akun: [
+              { kode: '523111', nama: 'Belanja Pemeliharaan Gedung dan Bangunan' },
+              { kode: '523121', nama: 'Belanja Pemeliharaan Peralatan dan Mesin' },
+            ],
+          },
+          {
+            kode: '524', nama: 'Belanja Perjalanan Dinas',
+            akun: [
+              { kode: '524111', nama: 'Belanja Perjalanan Dinas Biasa' },
+              { kode: '524113', nama: 'Belanja Perjalanan Dinas Dalam Kota' },
+              { kode: '524114', nama: 'Belanja Perjalanan Dinas Paket Meeting Dalam Kota' },
+              { kode: '524119', nama: 'Belanja Perjalanan Dinas Paket Meeting Luar Kota' },
+            ],
+          },
+        ],
+      },
+      {
+        kode: '53', nama: 'Belanja Modal',
+        jenis: [
+          { kode: '531', nama: 'Belanja Modal Tanah', akun: [{ kode: '531111', nama: 'Belanja Modal Tanah' }] },
+          { kode: '532', nama: 'Belanja Modal Peralatan dan Mesin', akun: [{ kode: '532111', nama: 'Belanja Modal Peralatan dan Mesin' }] },
+          { kode: '533', nama: 'Belanja Modal Gedung dan Bangunan', akun: [{ kode: '533111', nama: 'Belanja Modal Gedung dan Bangunan' }] },
+          { kode: '536', nama: 'Belanja Modal Lainnya', akun: [{ kode: '536111', nama: 'Belanja Modal Lainnya' }] },
+        ],
+      },
+    ],
   };
+
+  // Peta datar kode akun → nama (diturunkan dari BAS) untuk lookup cepat.
+  const AKUN = (function () {
+    const m = {};
+    BAS.kelompok.forEach((k) => k.jenis.forEach((j) => j.akun.forEach((a) => { m[a.kode] = a.nama; })));
+    return m;
+  })();
 
   // ── Standar Biaya Masukan (indikatif, pola PMK SBM) ────────────────────────
   // Nilai dalam Rupiah. satuan: OJ=Orang/Jam, OH=Orang/Hari, OK=Orang/Kegiatan,
@@ -154,5 +238,5 @@ window.KB = (function () {
     pengadaan: { label: 'Pengadaan Barang/Jasa (Belanja Modal)', pola: 'pengadaan' },
   };
 
-  return { SUMBER, RKA, AKUN, SBM, REGULASI, JENIS_KEGIATAN };
+  return { SUMBER, RKA, AKUN, BAS, SBM, REGULASI, JENIS_KEGIATAN };
 })();

@@ -2,13 +2,15 @@
  * Network-first untuk app-shell (selalu versi terbaru saat online; cache sebagai
  * fallback offline). Stale-while-revalidate untuk library CDN (qrcodejs).
  * Bump CACHE_VERSION pada tiap rilis. */
-const CACHE_VERSION = 'kpu-plan-v1';
+const CACHE_VERSION = 'kpu-plan-v2';
 const APP_SHELL = [
   './',
   './index.html',
   './styles.css',
   './data.js',
+  './templates.js',
   './generators.js',
+  './ai.js',
   './app.js',
   './manifest.json',
   './icons/icon.svg'

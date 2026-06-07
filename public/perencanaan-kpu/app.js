@@ -49,7 +49,7 @@
     return {
       id: 'BK-' + Date.now().toString(36).toUpperCase(),
       dibuat: new Date().toISOString(),
-      form: { nama: '', tujuan: '', output: '', lokasi: 'Kota Bandung', tanggal: '', hari: 1, peserta: 30, sumber: 'APBN', sasaran: '', jenis: 'bimtek', pemrakarsa: 'Kepala Subbagian Teknis' },
+      form: { nama: '', tujuan: '', output: '', lokasi: 'Kota Bandung', tanggal: '', hari: 1, peserta: 30, sumber: 'APBN', sasaran: '', jenis: 'bimtek', mekanisme: 'penyedia', tipeSwakelola: 'I', pemrakarsa: 'Kepala Subbagian Teknis' },
       rab: null,
       requirements: null,
       validasi: null,
@@ -64,11 +64,14 @@
   // RENDER ROOT
   // ════════════════════════════════════════════════════════════════════════
   function render() {
+    const aiOn = window.KPAI && window.KPAI.isEnabled();
     app.innerHTML = `
       <nav class="tabs">
         <button data-view="dashboard" class="${state.view === 'dashboard' ? 'on' : ''}">📊 Dashboard</button>
         <button data-view="wizard" class="${state.view === 'wizard' ? 'on' : ''}">✨ Buat Dokumen</button>
         <button data-view="arsip" class="${state.view === 'arsip' ? 'on' : ''}">🗄️ Arsip</button>
+        <button data-view="bas" class="${state.view === 'bas' ? 'on' : ''}">📒 BAS</button>
+        <button data-view="settings" class="${state.view === 'settings' ? 'on' : ''}">⚙️ AI ${aiOn ? '<span class="dot on"></span>' : '<span class="dot"></span>'}</button>
       </nav>
       <div id="screen"></div>`;
     app.querySelectorAll('.tabs button').forEach((b) =>
@@ -81,6 +84,8 @@
     const s = $('#screen');
     if (state.view === 'dashboard') renderDashboard(s);
     else if (state.view === 'arsip') renderArsip(s);
+    else if (state.view === 'bas') renderBAS(s);
+    else if (state.view === 'settings') renderSettings(s);
     else renderWizard(s);
   }
 
@@ -174,13 +179,34 @@
   function stepInput(body) {
     const f = state.current.form;
     const opt = (o, sel) => Object.entries(o).map(([k, v]) => `<option value="${k}" ${k === sel ? 'selected' : ''}>${v.label}</option>`).join('');
+    const aiOn = window.KPAI && window.KPAI.isEnabled();
     body.innerHTML = `
+      ${aiOn ? `<div class="panel ai-copilot">
+        <h3>🤖 AI Copilot Perencanaan</h3>
+        <p class="muted">Ketik kebutuhan dalam satu kalimat — AI mengisi formulir otomatis.</p>
+        <div class="copilot-row">
+          <input id="brief" placeholder="Buatkan KAK Bimtek Penyusunan RKAKL untuk 100 peserta selama 3 hari di Bandung, sumber APBN"/>
+          <button class="btn primary" id="copilotgo">Isikan ✨</button>
+        </div>
+        <div id="copilotmsg" class="muted small"></div>
+      </div>` : ''}
       <div class="panel">
         <h3>Tahap 1 · Form Singkat Kebutuhan</h3>
-        <p class="muted">Isi ringkas — AI akan menyusun seluruh dokumen perencanaan otomatis.</p>
+        <p class="muted">Isi ringkas — sistem akan menyusun seluruh dokumen perencanaan otomatis.</p>
         <div class="grid2">
           <label>Nama Kegiatan<input id="nama" value="${esc(f.nama)}" placeholder="Bimtek Pengelolaan Arsip Digital"/></label>
           <label>Jenis Kegiatan<select id="jenis">${opt(KB.JENIS_KEGIATAN, f.jenis)}</select></label>
+          <div class="full" id="pengadaan-fields" style="${f.jenis === 'pengadaan' ? '' : 'display:none'}">
+            <div class="grid2">
+              <label>Mekanisme Pengadaan<select id="mekanisme">
+                <option value="penyedia" ${f.mekanisme === 'penyedia' ? 'selected' : ''}>Melalui Penyedia</option>
+                <option value="swakelola" ${f.mekanisme === 'swakelola' ? 'selected' : ''}>Swakelola</option>
+              </select></label>
+              <label>Tipe Swakelola<select id="tipeSwakelola">
+                ${['I', 'II', 'III', 'IV'].map((t) => `<option value="${t}" ${f.tipeSwakelola === t ? 'selected' : ''}>Tipe ${t}</option>`).join('')}
+              </select></label>
+            </div>
+          </div>
           <label class="full">Tujuan<textarea id="tujuan" placeholder="Meningkatkan kapasitas pegawai dalam...">${esc(f.tujuan)}</textarea></label>
           <label class="full">Output / Keluaran<input id="output" value="${esc(f.output)}" placeholder="60 pegawai tersertifikasi pengelolaan arsip"/></label>
           <label>Lokasi<input id="lokasi" value="${esc(f.lokasi)}"/></label>
@@ -209,13 +235,40 @@
     $('#sumber', body).addEventListener('change', refreshNote);
     refreshNote();
 
+    // Toggle field pengadaan saat jenis berubah
+    $('#jenis', body).addEventListener('change', (e) => {
+      $('#pengadaan-fields', body).style.display = e.target.value === 'pengadaan' ? '' : 'none';
+    });
+
+    // AI Copilot → isi form dari brief
+    const cg = $('#copilotgo', body);
+    if (cg) cg.addEventListener('click', async () => {
+      const brief = $('#brief', body).value.trim();
+      const msg = $('#copilotmsg', body);
+      if (!brief) { msg.textContent = 'Tulis dulu kebutuhan kegiatannya.'; return; }
+      cg.disabled = true; cg.textContent = 'Memproses…'; msg.textContent = '';
+      try {
+        const data = await window.KPAI.copilot(brief);
+        Object.assign(f, {
+          nama: data.nama || f.nama, tujuan: data.tujuan || f.tujuan, output: data.output || f.output,
+          lokasi: data.lokasi || f.lokasi, hari: Number(data.hari) || f.hari, peserta: Number(data.peserta) || f.peserta,
+          sasaran: data.sasaran || f.sasaran, jenis: data.jenis || f.jenis,
+          mekanisme: data.mekanisme || f.mekanisme, sumber: (data.sumber === 'HNP' ? 'HNP' : 'APBN'),
+        });
+        renderWizard($('#screen')); // render ulang dengan nilai terisi
+      } catch (err) {
+        msg.textContent = 'AI gagal: ' + err.message;
+        cg.disabled = false; cg.textContent = 'Isikan ✨';
+      }
+    });
+
     wireNav(() => {
-      const g = (id) => $('#' + id, body).value;
+      const g = (id) => { const el = $('#' + id, body); return el ? el.value : ''; };
       Object.assign(f, {
         nama: g('nama'), jenis: g('jenis'), tujuan: g('tujuan'), output: g('output'),
         lokasi: g('lokasi'), tanggal: g('tanggal'), hari: Number(g('hari')) || 1,
         peserta: Number(g('peserta')) || 1, sasaran: g('sasaran'), pemrakarsa: g('pemrakarsa'),
-        sumber: g('sumber'),
+        sumber: g('sumber'), mekanisme: g('mekanisme') || 'penyedia', tipeSwakelola: g('tipeSwakelola') || 'I',
       });
       if (!f.nama) { alert('Nama kegiatan wajib diisi.'); return; }
       state.current.requirements = GEN.analyzeRequirements(f);
@@ -334,33 +387,58 @@
     const b = state.current; const f = b.form;
     const docMeta = () => ({
       nomor: b.arsip ? b.arsip.nomor : '......./KPU-Prov.JABAR/' + (new Date().getFullYear()),
+      seq: b.arsip ? (b.arsip.nomor.split('/')[0]) : undefined,
       tglDok: f.tanggal || new Date().toISOString().slice(0, 10),
       total: b.rab.total, rab: b.rab, tte: !!b.arsip, hash: b.arsip ? b.arsip.hash : '',
     });
     const generatable = b.requirements.filter((d) => GEN.DOC_FN[d.id]);
+    const aiOn = window.KPAI && window.KPAI.isEnabled();
+    let curDoc = null;
     body.innerHTML = `
       <div class="panel">
-        <h3>Tahap 4 · AI Document Generator</h3>
-        <p class="muted">Seluruh dokumen dibentuk otomatis. Klik untuk pratinjau lalu cetak / simpan PDF.</p>
+        <h3>Tahap 4 · ${aiOn ? 'AI' : 'Template'} Document Generator</h3>
+        <p class="muted">Seluruh dokumen dibentuk otomatis. Klik untuk pratinjau, ${aiOn ? 'buat versi AI yang kaya narasi, ' : ''}lalu cetak / simpan PDF.
+          ${aiOn ? '<span class="pill req">Mode AI aktif</span>' : '<span class="pill opt">Mode template (AI nonaktif)</span>'}</p>
         <div class="docgrid">
           ${generatable.map((d) => `<button class="doccard" data-doc="${d.id}"><span class="docicon">📄</span><span>${d.nama}</span><span class="pill ${d.status === 'Wajib' ? 'req' : d.status === 'Perlu' ? 'need' : 'opt'}">${d.status}</span></button>`).join('')}
         </div>
       </div>
       <div class="panel" id="previewpanel" style="display:none">
-        <div class="preview-bar"><b id="prevtitle"></b><span></span><button class="btn" id="printdoc">🖨️ Cetak / PDF</button></div>
+        <div class="preview-bar"><b id="prevtitle"></b><span class="spacer"></span>
+          ${aiOn ? '<button class="btn primary" id="aidoc">✨ Buat dengan AI</button>' : ''}
+          <button class="btn" id="printdoc">🖨️ Cetak / PDF</button>
+        </div>
+        <div id="aistatus" class="muted small"></div>
         <div class="doc-paper" id="docpaper"></div>
       </div>
       ${navButtons(null, 'Lanjut ke Review →')}`;
 
-    body.querySelectorAll('.doccard').forEach((c) => c.addEventListener('click', () => {
-      const id = c.dataset.doc;
-      const html = GEN.generateDoc(id, f, docMeta());
-      $('#prevtitle', body).textContent = c.textContent.trim();
-      $('#docpaper', body).innerHTML = html;
+    const showDoc = (id, label) => {
+      curDoc = id;
+      $('#prevtitle', body).textContent = label;
+      $('#aistatus', body).textContent = '';
+      $('#docpaper', body).innerHTML = GEN.generateDoc(id, f, docMeta());
       $('#previewpanel', body).style.display = 'block';
       $('#previewpanel', body).scrollIntoView({ behavior: 'smooth' });
-    }));
+    };
+    body.querySelectorAll('.doccard').forEach((c) => c.addEventListener('click', () => showDoc(c.dataset.doc, c.textContent.trim())));
     $('#printdoc', body).addEventListener('click', () => printNode($('#docpaper', body).innerHTML));
+
+    const aibtn = $('#aidoc', body);
+    if (aibtn) aibtn.addEventListener('click', async () => {
+      if (!curDoc) return;
+      const st = $('#aistatus', body);
+      aibtn.disabled = true; aibtn.textContent = 'AI menyusun…'; st.textContent = '⏳ Menyusun narasi dengan Claude…';
+      try {
+        const html = await window.KPAI.generateDocument(curDoc, f, docMeta());
+        $('#docpaper', body).innerHTML = html;
+        st.innerHTML = '✨ <b>Versi AI</b> — tinjau & sunting bila perlu sebelum cetak.';
+      } catch (err) {
+        st.innerHTML = '⚠️ AI gagal (' + esc(err.message) + '). Menampilkan versi template.';
+      } finally {
+        aibtn.disabled = false; aibtn.textContent = '✨ Buat dengan AI';
+      }
+    });
     wireNav(() => { b.status = b.status === 'Draft' ? 'Review' : b.status; upsert(b); state.step = 4; renderWizard($('#screen')); });
   }
 
@@ -370,6 +448,7 @@
     b.review = GEN.reviewAssistant(f, b.rab, b.validasi || GEN.validateBudget(b.rab));
     upsert(b);
     const list = (arr) => arr.map((x) => `<li class="${x.ok ? 'pass' : 'fail'}">${x.ok ? '✅' : '⚠️'} ${x.label}</li>`).join('');
+    const aiOn = window.KPAI && window.KPAI.isEnabled();
     body.innerHTML = `
       <div class="panel">
         <h3>Tahap 5 · AI Review Assistant</h3>
@@ -381,7 +460,23 @@
         <div class="panel"><h4>✍️ Quality Check</h4><ul class="checklist">${list(b.review.quality)}</ul></div>
         <div class="panel"><h4>🛡️ Risk Check</h4><ul class="checklist">${list(b.review.risk)}</ul></div>
       </div>
+      ${aiOn ? `<div class="panel">
+        <h4>📝 AI Approval Summary (ringkasan 1 halaman untuk pimpinan)</h4>
+        <button class="btn primary" id="genringkas">✨ Buat Ringkasan AI</button>
+        <div id="ringkasbox" class="ringkas"></div>
+      </div>` : ''}
       ${navButtons(null, 'Ajukan ke Approval →')}`;
+
+    const gr = $('#genringkas', body);
+    if (gr) gr.addEventListener('click', async () => {
+      const box = $('#ringkasbox', body);
+      gr.disabled = true; gr.textContent = 'Menyusun…'; box.innerHTML = '<p class="muted small">⏳ Claude menyusun ringkasan…</p>';
+      try {
+        box.innerHTML = await window.KPAI.approvalSummary(f, b.rab, b.validasi || GEN.validateBudget(b.rab));
+      } catch (err) { box.innerHTML = '<p class="muted small">⚠️ Gagal: ' + esc(err.message) + '</p>'; }
+      gr.disabled = false; gr.textContent = '✨ Buat Ringkasan AI';
+    });
+
     wireNav(() => { b.status = 'Approval'; upsert(b); state.step = 5; renderWizard($('#screen')); });
   }
 
@@ -502,6 +597,108 @@
     }));
   }
   function statusPill(st) { return st === 'Selesai' ? 'req' : st === 'Ditolak' ? 'err' : st === 'Approval' ? 'need' : 'opt'; }
+
+  // ════════════════════════════════════════════════════════════════════════
+  // BAS — Bagan Akun Standar (referensi akun belanja)
+  // ════════════════════════════════════════════════════════════════════════
+  function renderBAS(s) {
+    const bas = KB.BAS;
+    const draw = (q) => {
+      q = (q || '').toLowerCase();
+      return bas.kelompok.map((k) => {
+        const jenis = k.jenis.map((j) => {
+          const akun = j.akun.filter((a) => !q || a.kode.includes(q) || a.nama.toLowerCase().includes(q));
+          if (!akun.length) return '';
+          return `<tr class="bas-jenis"><td class="mono">${j.kode}</td><td colspan="2"><b>${j.nama}</b></td></tr>` +
+            akun.map((a) => `<tr><td></td><td class="mono">${a.kode}</td><td>${a.nama}</td></tr>`).join('');
+        }).join('');
+        if (!jenis) return '';
+        return `<tr class="bas-kel"><td class="mono">${k.kode}</td><td colspan="2"><b>${k.nama}</b></td></tr>` + jenis;
+      }).join('');
+    };
+    s.innerHTML = `
+      <div class="panel">
+        <h3>📒 Bagan Akun Standar (BAS) — Belanja</h3>
+        <p class="muted small">Struktur akun belanja pemerintah (mengacu PMK Bagan Akun Standar). Dipakai untuk penyusunan & validasi RAB. Akun pada DIPA KPU Jabar 2026 termuat di sini.</p>
+        <input id="bassearch" placeholder="Cari akun: ketik kode (mis. 5241) atau nama (mis. perjalanan)…"/>
+        <table class="doc-table bas-table"><thead><tr><th>Kelompok/Jenis</th><th>Kode Akun</th><th>Uraian</th></tr></thead>
+        <tbody id="basbody">${draw('')}</tbody></table>
+      </div>`;
+    $('#bassearch', s).addEventListener('input', (e) => { $('#basbody', s).innerHTML = draw(e.target.value); });
+  }
+
+  // ════════════════════════════════════════════════════════════════════════
+  // SETTINGS — Konfigurasi Mode AI (Claude)
+  // ════════════════════════════════════════════════════════════════════════
+  function renderSettings(s) {
+    const c = window.KPAI.getConfig();
+    s.innerHTML = `
+      <div class="panel">
+        <h3>⚙️ Pengaturan Mode AI (Claude)</h3>
+        <p class="muted">Mode AI memperkaya narasi dokumen & mengaktifkan AI Copilot. Tanpa konfigurasi, aplikasi tetap berjalan memakai generator template.</p>
+        <label>Penyedia AI
+          <select id="provider">
+            <option value="off" ${c.provider === 'off' ? 'selected' : ''}>Nonaktif (template saja)</option>
+            <option value="edge" ${c.provider === 'edge' ? 'selected' : ''}>Supabase Edge Function (disarankan — kunci di server)</option>
+            <option value="direct" ${c.provider === 'direct' ? 'selected' : ''}>Langsung ke Anthropic (kunci di perangkat ini)</option>
+          </select>
+        </label>
+        <div id="edgecfg" class="cfg-group" style="${c.provider === 'edge' ? '' : 'display:none'}">
+          <label>URL Edge Function<input id="edgeUrl" value="${esc(c.edgeUrl)}" placeholder="https://xxxx.supabase.co/functions/v1/perencanaan-ai"/></label>
+          <label>Supabase Anon Key<input id="edgeAnon" value="${esc(c.edgeAnon)}" placeholder="eyJhbGciOi..."/></label>
+        </div>
+        <div id="directcfg" class="cfg-group" style="${c.provider === 'direct' ? '' : 'display:none'}">
+          <label>Anthropic API Key<input id="apiKey" type="password" value="${esc(c.apiKey)}" placeholder="sk-ant-..."/></label>
+          <p class="muted small">⚠️ Kunci tersimpan di localStorage perangkat ini. Untuk produksi, gunakan Edge Function.</p>
+        </div>
+        <label>Model
+          <select id="model">
+            <option value="claude-sonnet-4-6" ${c.model === 'claude-sonnet-4-6' ? 'selected' : ''}>Claude Sonnet 4.6 (cepat & hemat — disarankan)</option>
+            <option value="claude-opus-4-8" ${c.model === 'claude-opus-4-8' ? 'selected' : ''}>Claude Opus 4.8 (paling cakap)</option>
+            <option value="claude-haiku-4-5-20251001" ${c.model === 'claude-haiku-4-5-20251001' ? 'selected' : ''}>Claude Haiku 4.5 (paling ringan)</option>
+          </select>
+        </label>
+        <div class="navbtns" style="justify-content:flex-start;gap:.5rem">
+          <button class="btn primary" id="savecfg">Simpan</button>
+          <button class="btn" id="testcfg">Uji Koneksi</button>
+        </div>
+        <div id="cfgmsg" class="muted small"></div>
+      </div>
+      <div class="panel">
+        <h4>📘 Cara mengaktifkan (Edge Function)</h4>
+        <ol class="bullet small">
+          <li>Deploy: <span class="mono">supabase functions deploy perencanaan-ai --no-verify-jwt</span></li>
+          <li>Set secret: <span class="mono">supabase secrets set ANTHROPIC_API_KEY=sk-ant-...</span></li>
+          <li>Isi URL Edge Function + Anon Key di atas, pilih provider "Supabase Edge Function", lalu Simpan.</li>
+        </ol>
+      </div>`;
+    $('#provider', s).addEventListener('change', (e) => {
+      $('#edgecfg', s).style.display = e.target.value === 'edge' ? '' : 'none';
+      $('#directcfg', s).style.display = e.target.value === 'direct' ? '' : 'none';
+    });
+    const readCfg = () => ({
+      provider: $('#provider', s).value,
+      edgeUrl: $('#edgeUrl', s).value.trim(),
+      edgeAnon: $('#edgeAnon', s).value.trim(),
+      apiKey: $('#apiKey', s).value.trim(),
+      model: $('#model', s).value,
+    });
+    $('#savecfg', s).addEventListener('click', () => {
+      window.KPAI.setConfig(readCfg());
+      $('#cfgmsg', s).textContent = '✅ Tersimpan.';
+      render();
+    });
+    $('#testcfg', s).addEventListener('click', async () => {
+      window.KPAI.setConfig(readCfg());
+      const msg = $('#cfgmsg', s);
+      if (!window.KPAI.isEnabled()) { msg.textContent = '⚠️ Lengkapi konfigurasi dulu.'; return; }
+      msg.textContent = '⏳ Menguji…';
+      try {
+        const t = await window.KPAI.callClaude({ messages: [{ role: 'user', content: 'Balas satu kata: OK' }], max_tokens: 16 });
+        msg.textContent = '✅ Berhasil. Respons: ' + t.slice(0, 40);
+      } catch (e) { msg.textContent = '❌ Gagal: ' + e.message; }
+    });
+  }
 
   // ════════════════════════════════════════════════════════════════════════
   // HELPERS: esc, hash, QR, print

@@ -67,10 +67,16 @@ Matriks Risiko) secara otomatis — sesuai regulasi — dengan **validasi anggar
   (Hibah / HLD, Reg. 22S6FR8A)** — berbasis data DIPA KPU Jabar TA 2026 (Rev 8,
   pagu Rp 25.427.437.000). Sumber anggaran menentukan dasar hukum, akun belanja,
   aturan validasi SBM/SHBJ, dan dokumen tambahan (mis. SP2HL/SPHL & pengadaan).
-- 🤖 Fitur: AI Requirement Analyzer · Knowledge Base Regulasi · RAB Generator +
-  AI Budget Validator (kepatuhan SBM, deteksi duplikasi, simulasi efisiensi) ·
-  AI Review Assistant (Compliance/Quality/Risk) · Workflow Approval (6 jenjang) ·
-  TTE (hash SHA-256 + QR verifikasi) · Dashboard Monitoring.
+- 🤖 Fitur: AI Requirement Analyzer · Knowledge Base Regulasi · **Bagan Akun
+  Standar (BAS)** · RAB Generator + AI Budget Validator (kepatuhan SBM, deteksi
+  duplikasi, simulasi efisiensi) · AI Review Assistant (Compliance/Quality/Risk) ·
+  Workflow Approval (6 jenjang) · TTE (hash SHA-256 + QR verifikasi) · Dashboard.
+- 📄 **Template dokumen nyata KPU Jabar**: Nota Dinas (format `PP.05-ND/32`),
+  KAK/RAB Pengadaan (pola SAE PISAN), KAK Swakelola Tipe I & Kontrak Swakelola.
+- 🧠 **Mode AI (Claude)** opsional: AI Copilot (kalimat → formulir) & penulisan
+  narasi dokumen bertenaga Claude, lewat **Supabase Edge Function**
+  (`perencanaan-ai`, kunci di server) atau kunci langsung. Tanpa kunci, aplikasi
+  tetap berjalan memakai generator template.
 
 Detail lengkap: lihat `public/perencanaan-kpu/README.md`.
 
