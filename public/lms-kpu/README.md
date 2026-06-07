@@ -43,13 +43,18 @@ lms-kpu/
 ├── ai.js               # AI Assistant: offline (RAG) + live Claude
 ├── sync.js             # ekspor/impor JSON + konektor headless Frappe LMS
 ├── app.js              # engine + UI (10 tab)
-├── manifest.json       # PWA installable
+├── manifest.json       # PWA installable (+ icons maskable & screenshots)
 ├── service-worker.js   # cache app-shell (offline-first)
-├── icons/              # ikon adaptif
+├── icons/              # ikon adaptif (icon.svg, maskable.svg → PNG 192/512)
+├── screenshots/        # screenshot store PWA + generate.mjs & build.sh
 ├── ARCHITECTURE.md     # blueprint platform (pemetaan ke Policy Brief)
 ├── DEPLOY.md           # panduan deployment & integrasi (AI, Frappe, SSO, RAG)
 └── README.md
 ```
+
+**Aset PWA** (ikon maskable + 6 screenshot untuk install banner yang lebih kaya) dibangun
+dari sumber SVG via `rsvg-convert`. Regenerasi: `cd screenshots && ./build.sh`
+(perlu `librsvg2-bin` + Node).
 
 Edge Function AI: `supabase/functions/lms-ai/index.ts` (relay Claude, kunci di server).
 Panduan produksi (Frappe LMS headless, SSO, RAG, infra): **[`DEPLOY.md`](./DEPLOY.md)**.
