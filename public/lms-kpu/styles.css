@@ -1,0 +1,177 @@
+/* LMS Kepemiluan — Tiered Facilitation Model (KPU) · styles.css */
+:root{
+  --bg:#f1f5f9; --panel:#ffffff; --ink:#0f172a; --muted:#64748b;
+  --line:#e2e8f0; --brand:#1d4ed8; --brand2:#047857; --radius:14px;
+  --shadow:0 1px 3px rgba(15,23,42,.08),0 8px 24px rgba(15,23,42,.06);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5;-webkit-text-size-adjust:100%}
+.small{font-size:.82rem}
+.muted{color:var(--muted)}
+.c{text-align:center}.r{text-align:right}
+h4.sec{margin:1.2rem 0 .4rem;color:#334155}
+
+/* Topbar */
+.topbar{display:flex;align-items:center;gap:.75rem;padding:.7rem 1rem;background:linear-gradient(100deg,var(--brand),#3b82f6);color:#fff;position:sticky;top:0;z-index:20}
+.topbar .logo{font-size:1.6rem}
+.topbar h1{font-size:1.05rem;margin:0;font-weight:700}
+.topbar .sub{font-size:.72rem;opacity:.92}
+.topbar .spacer{flex:1}
+
+.wrap{max-width:1000px;margin:0 auto;padding:1rem;min-height:60vh}
+.appfoot{max-width:1000px;margin:1rem auto 2rem;padding:0 1rem;display:flex;flex-direction:column;gap:.2rem;color:var(--muted);font-size:.74rem}
+
+/* Tabs */
+.tabs{display:flex;gap:.4rem;margin-bottom:1rem;flex-wrap:wrap}
+.tabs button{border:1px solid var(--line);background:#fff;padding:.55rem .8rem;border-radius:999px;font-weight:600;color:var(--muted);cursor:pointer;font-size:.84rem}
+.tabs button.on{background:var(--brand);color:#fff;border-color:var(--brand)}
+
+/* Panels & cards */
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:1.1rem;margin-bottom:1rem;box-shadow:var(--shadow)}
+.panel h3{margin:.1rem 0 .6rem}.panel h4{margin:.1rem 0 .6rem}
+.hero h2{margin:.2rem 0}
+.flexrow{display:flex;align-items:center;gap:.6rem;justify-content:space-between;flex-wrap:wrap}
+.callout{background:#f8fafc;border-left:4px solid var(--brand);border-radius:8px;padding:.6rem .9rem;margin-top:.7rem;font-size:.86rem}
+.ok-banner{background:#f0fdf4;border-color:#bbf7d0;text-align:center;font-weight:600}
+.ai-copilot{background:linear-gradient(120deg,#eef2ff,#f0fdfa);border-color:#c7d2fe}
+
+.cards4{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;margin-bottom:1rem}
+.stat{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:.9rem;text-align:center;box-shadow:var(--shadow)}
+.stat-n{font-size:1.7rem;font-weight:800;color:var(--brand)}
+.stat-l{font-size:.74rem;color:var(--muted)}
+
+/* Bars */
+.bar-row{display:grid;grid-template-columns:1.4fr 2fr auto;gap:.6rem;align-items:center;margin:.45rem 0;font-size:.84rem}
+.bar-lbl{color:#334155}
+.bar-track{height:12px;background:#eef2f7;border-radius:999px;overflow:hidden}
+.bar-fill{height:100%;border-radius:999px;transition:width .3s}
+.bar-val{font-weight:700;white-space:nowrap}
+
+/* Buttons */
+.btn{border:1px solid var(--line);background:#fff;color:var(--ink);padding:.55rem .9rem;border-radius:10px;font-weight:600;cursor:pointer;font-size:.86rem}
+.btn:hover{background:#f8fafc}
+.btn.primary{background:var(--brand);color:#fff;border-color:var(--brand)}
+.btn.primary:hover{filter:brightness(1.05)}
+.btn.big{width:100%;padding:.85rem;font-size:1rem;margin-top:.7rem}
+.btn.sm{padding:.32rem .6rem;font-size:.78rem;border-radius:8px}
+.btn.del{background:#fee2e2;color:#b91c1c;border-color:#fecaca}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.rab-actions{display:flex;gap:.5rem;margin-top:.6rem;flex-wrap:wrap}
+
+/* Pills */
+.pill{display:inline-block;padding:.15rem .55rem;border-radius:999px;font-size:.7rem;font-weight:700}
+.pill.req{background:#dcfce7;color:#15803d}
+.pill.opt{background:#e2e8f0;color:#475569}
+.pill.err{background:#fee2e2;color:#b91c1c}
+
+/* Inputs */
+label{display:flex;flex-direction:column;font-size:.82rem;font-weight:600;gap:.3rem;color:#334155}
+label.full{grid-column:1/-1}
+input,select,textarea{font:inherit;font-weight:500;padding:.5rem .6rem;border:1px solid var(--line);border-radius:9px;background:#fff;width:100%}
+textarea{min-height:70px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:2px solid #bfdbfe;border-color:var(--brand)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+.bullet{margin:.3rem 0;padding-left:1.1rem}.bullet li{margin:.25rem 0;font-size:.86rem}
+
+/* Tables */
+.doc-table{width:100%;border-collapse:collapse;font-size:.84rem;margin:.4rem 0}
+.doc-table th,.doc-table td{border:1px solid var(--line);padding:.45rem .55rem;text-align:left;vertical-align:top}
+.doc-table thead th{background:#f1f5f9;font-size:.78rem}
+.komp-table select{padding:.3rem;width:64px}
+
+.ringkas{margin-top:.6rem;font-size:.9rem;background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:.6rem .9rem}
+.ringkas:empty{display:none}
+.checklist{list-style:none;padding:0;margin:0;font-size:.88rem}
+.checklist li{padding:.35rem 0;border-bottom:1px dashed var(--line)}
+.checklist li.fail{color:#b45309}
+
+/* ── Onboarding tier cards ── */
+.tier-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.9rem;margin-top:.4rem}
+.tier-card{text-align:left;background:#fff;border:1px solid var(--line);border-top:5px solid var(--tc);border-radius:var(--radius);padding:1rem;cursor:pointer;transition:.15s;box-shadow:var(--shadow)}
+.tier-card:hover{transform:translateY(-3px);border-color:var(--tc)}
+.tier-card h3{margin:.4rem 0 .2rem;font-size:1rem}
+.tier-badge{display:inline-block;background:var(--tc);color:#fff;font-weight:700;font-size:.72rem;padding:.15rem .6rem;border-radius:999px}
+.tier-fokus{font-weight:600;color:var(--tc);font-size:.84rem;margin-bottom:.3rem}
+
+/* ── Journey / Alur ── */
+.stepbar{display:flex;gap:.3rem;overflow-x:auto;padding-bottom:.4rem;margin-bottom:1rem}
+.step{display:flex;align-items:center;gap:.4rem;white-space:nowrap;font-size:.76rem;color:var(--muted);background:#fff;border:1px solid var(--line);border-radius:999px;padding:.4rem .7rem;cursor:pointer}
+.step span{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:#e2e8f0;font-weight:700;font-size:.72rem}
+.step.on{color:var(--brand);border-color:var(--brand)}
+.step.on span{background:var(--brand);color:#fff}
+.step.done{color:var(--brand2);border-color:#bbf7d0}
+.step.done span{background:var(--brand2);color:#fff}
+
+.stage-head{display:flex;align-items:center;gap:.7rem}
+.stage-no{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;color:#fff;font-weight:800;flex-shrink:0}
+.modul{border:1px solid var(--line);border-radius:12px;padding:.8rem;margin-top:.7rem;background:#fbfdff}
+.modul-head{font-size:.95rem}
+.komp-tags{display:flex;flex-wrap:wrap;gap:.3rem;margin:.4rem 0}
+.lesson-list{list-style:none;padding:0;margin:.4rem 0 0}
+.lesson{margin:.3rem 0}
+.lesson-btn{display:flex;align-items:center;gap:.6rem;width:100%;text-align:left;background:#fff;border:1px solid var(--line);border-radius:10px;padding:.55rem .7rem;cursor:pointer;font:inherit}
+.lesson-btn:hover{border-color:var(--brand);background:#f8fbff}
+.lesson.ldone .lesson-btn{background:#f0fdf4;border-color:#bbf7d0}
+.lesson-btn .li{font-size:1.1rem;flex-shrink:0}
+.lesson-btn .ltext{flex:1;font-weight:500;font-size:.86rem}
+.lesson-btn .lstate{color:var(--brand2);font-weight:800}
+.kuis-row{display:flex;align-items:center;justify-content:space-between;gap:.6rem;flex-wrap:wrap;margin-top:.7rem;padding-top:.6rem;border-top:1px dashed var(--line);font-size:.86rem}
+.kuis-row span{display:flex;align-items:center;gap:.5rem}
+
+/* ── Kompetensi radar ── */
+.radar-wrap{display:flex;justify-content:center;margin:.5rem 0}
+.radar{width:min(340px,100%);height:auto}
+.rax{font-size:13px}
+.legend{display:flex;gap:1.2rem;justify-content:center;font-size:.8rem;color:var(--muted)}
+.legend .sw{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:.3rem;vertical-align:middle}
+
+/* ── Bank kasus ── */
+.kasus-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem}
+.kasus{margin:0}
+.kasus h4{font-size:.95rem}
+
+/* ── Fasilitator ── */
+.facil-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem}
+.facil{margin:0}.facil.dim{opacity:.72}
+.facil-head{display:flex;gap:.6rem;align-items:center;margin-bottom:.3rem}
+.facil-ic{font-size:1.6rem}
+
+/* ── Sertifikat ── */
+.cert{border:3px solid var(--cc);border-radius:14px;padding:1.6rem 1.4rem;text-align:center;background:linear-gradient(180deg,#fff,#f8fbff)}
+.cert-top{font-weight:800;letter-spacing:.05em;color:var(--cc)}
+.cert-sub{font-size:.78rem;color:var(--muted);margin-bottom:.8rem}
+.cert-title{font-size:1.3rem;font-weight:800;letter-spacing:.08em;margin:.6rem 0}
+.cert-body{font-size:.86rem;color:#334155;margin:.3rem 0}
+.cert-nama{font-size:1.5rem;font-weight:800;color:var(--ink);border-bottom:2px dotted var(--cc);display:inline-block;padding:0 1rem .2rem;margin:.3rem 0}
+.cert-tier{font-size:1.05rem;font-weight:700;color:var(--cc);margin:.3rem 0 .8rem}
+.cert-stat{display:flex;gap:1.2rem;justify-content:center;flex-wrap:wrap;font-size:.84rem;margin:.6rem 0}
+.cert-foot{display:flex;justify-content:space-between;align-items:center;margin-top:1.2rem;font-size:.84rem}
+.cert-seal{border:2px solid var(--cc);color:var(--cc);font-weight:800;border-radius:8px;padding:.3rem .7rem;font-size:.78rem}
+.cert-note{margin-top:1rem;font-size:.72rem;color:var(--muted);letter-spacing:.04em}
+
+/* ── Modal ── */
+.modal-back{position:fixed;inset:0;background:rgba(15,23,42,.55);display:flex;align-items:flex-start;justify-content:center;padding:1.2rem;z-index:50;overflow:auto}
+.modal{background:#fff;border-radius:var(--radius);max-width:560px;width:100%;margin:auto;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.modal-body{padding:1.2rem}
+.lesson-body{margin-top:.6rem;font-size:.9rem;background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:.8rem;line-height:1.6}
+.modal-actions{display:flex;gap:.5rem;justify-content:flex-end;padding:.8rem 1.2rem;border-top:1px solid var(--line);flex-wrap:wrap}
+.qsoal{margin:.6rem 0;padding:.6rem;border:1px solid var(--line);border-radius:10px}
+.qtext{font-weight:600;font-size:.9rem;margin-bottom:.4rem}
+.qopt{display:flex;flex-direction:row;align-items:center;gap:.5rem;font-weight:500;padding:.25rem 0;cursor:pointer}
+.qopt input{width:auto}
+
+/* Print */
+@media print{
+  .topbar,.tabs,.appfoot,.rab-actions,.checklist,.panel:not(.printpage){display:none!important}
+  .printpage{border:none;box-shadow:none;margin:0;padding:0}
+  body{background:#fff}
+}
+
+/* Responsive */
+@media (max-width:760px){
+  .cards4{grid-template-columns:1fr 1fr}
+  .tier-grid,.kasus-grid,.facil-grid{grid-template-columns:1fr}
+  .bar-row{grid-template-columns:1fr;gap:.15rem}
+  .grid2{grid-template-columns:1fr}
+}

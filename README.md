@@ -80,6 +80,28 @@ Matriks Risiko) secara otomatis — sesuai regulasi — dengan **validasi anggar
 
 Detail lengkap: lihat `public/perencanaan-kpu/README.md`.
 
+## 🎓 Sub-aplikasi: LMS Kepemiluan — *Tiered Facilitation Model* (KPU)
+
+**Learning Management System berjenjang** (PWA, vanilla JS, offline-first) untuk
+**pengembangan kompetensi Komisioner KPU**, mengoperasionalkan *Policy Brief*
+**"Tiered Facilitation Model"**. Kerangka fitur LMS terinspirasi
+[Frappe LMS](https://github.com/frappe/lms).
+
+- 📂 Lokasi: `public/lms-kpu/` → akses di `…/lms-kpu/`
+  ([demo](https://yunikepuspita-sudo.github.io/ReNamer-Pro/lms-kpu/)).
+- 🪜 **Berjenjang (3 tier)** — modul **Tahap 2 dipersonalisasi** per jenjang:
+  **KPU RI** (strategis & visioner) · **Provinsi** (operasional regional) ·
+  **Kabupaten/Kota** (operasional lapangan).
+- 🔄 **Alur 7 tahap**: Orientasi & Self-Assessment → Penguatan Kompetensi sesuai
+  Jenjang → Peer Learning → Etika & Integritas → Pembelajaran Adaptif → Manajemen
+  Pengetahuan → Refleksi Akhir & Peer Review.
+- 🎯 Fitur: **peta kompetensi** (radar awal vs akhir) · **Bank Kasus** kepemiluan
+  (memori institusional, dapat dikontribusi) · direktori **Fasilitator** (*critical
+  partner*) · **evaluasi berbasis dampak** · kuis (ambang 70%) · **sertifikat** cetak/PDF.
+- 📐 Arsitektur & pemetaan ke Policy Brief: lihat `public/lms-kpu/ARCHITECTURE.md`.
+
+Detail lengkap: lihat `public/lms-kpu/README.md`.
+
 ## 🛠️ Teknologi
 
 - **React 18** + **TypeScript**
