@@ -19,5 +19,6 @@ __pycache__/
 # Script Python pribadi (scraper/upload) - jangan di repo aplikasi
 *.py
 
-# Graphify generated knowledge graph (regenerate with: graphify update .)
-graphify-out/
+# Graphify: commit the knowledge graph, but not container-specific runtime paths
+graphify-out/.graphify_python
+graphify-out/.graphify_root
