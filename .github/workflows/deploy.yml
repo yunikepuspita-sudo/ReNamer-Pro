@@ -7,6 +7,7 @@ on:
       - main
       - claude/admiring-maxwell-a1Zz3
       - claude/smart-attendance-event-pwa-CTVBC
+      - claude/hnp-4.2-proposal-ppt-fc9EJ
   # Memungkinkan menjalankan workflow secara manual dari tab Actions.
   workflow_dispatch:
 

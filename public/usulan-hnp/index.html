@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="slides-format" content="viewport">
+  <title>Usulan HNP 4,28 M — Penguatan Aplikasi & Knowledge Management KPU Jabar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <style type="text/tailwindcss">
+    @theme {
+      --color-bg: #0a1020;
+      --color-bg-deep: #060b16;
+      --color-surface: #162033;
+      --color-text: #eef2ff;
+      --color-text-secondary: #cbd5e1;
+      --color-text-muted: #94a3b8;
+      --color-accent-1: #60a5fa;
+      --color-accent-2: #22c55e;
+      --color-accent-3: #f59e0b;
+      --color-glass-bg: rgba(255,255,255,0.06);
+      --color-glass-border: rgba(255,255,255,0.12);
+      --color-vignette: rgba(0,0,0,0.45);
+      --font-display: 'Playfair Display', serif;
+      --font-body: 'Inter', sans-serif;
+    }
+  </style>
+  <style>
+    :root { --color-bg: #0a1020; --color-text: #eef2ff; --glow-color-rgb: 96,165,250; }
+    *{box-sizing:border-box} html,body{margin:0;background:var(--color-bg)}
+    body{font-family:var(--font-body);color:var(--color-text);overflow:hidden;height:100vh;width:100vw}
+    .deck{width:100vw;height:100vh;position:relative}
+    .slide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(.96);transition:opacity .6s ease,transform .6s ease;pointer-events:none;overflow:hidden;background:var(--color-bg)}
+    .slide.active{opacity:1;transform:scale(1);pointer-events:auto}
+    .slide>.content{position:relative;z-index:2;width:100%;max-width:1180px;padding:clamp(1.25rem,3.5vw,3rem);max-height:100vh;overflow:auto}
+    .nav-controls{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:14px;z-index:100;background:rgba(255,255,255,.08);backdrop-filter:blur(10px);padding:10px 18px;border-radius:999px;border:1px solid rgba(255,255,255,.14)}
+    .nav-btn{width:38px;height:38px;border:none;border-radius:50%;background:rgba(255,255,255,.08);color:#fff;cursor:pointer}
+    .slide-dots{display:flex;gap:8px;flex-wrap:wrap;max-width:380px}.dot{width:10px;height:10px;border-radius:999px;background:rgba(255,255,255,.2);cursor:pointer}.dot.active{background:#60a5fa;transform:scale(1.2)}
+    .slide-counter{font-size:.8rem;color:#cbd5e1;min-width:54px;text-align:center}.reveal{opacity:0;transform:translateY(18px)}
+    .gradient-mesh{position:absolute;inset:0;z-index:0;overflow:hidden}.blob{position:absolute;border-radius:50%;filter:blur(80px);animation:float 14s ease-in-out infinite}.blob:nth-child(2){animation-duration:18s}.blob:nth-child(3){animation-duration:22s}
+    @keyframes float{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(30px,-28px) scale(1.08)}}
+    .slide::before{content:'';position:absolute;inset:0;z-index:1;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");opacity:.03}
+    .slide::after{content:'';position:absolute;inset:0;z-index:1;background:radial-gradient(ellipse at center,transparent 48%,rgba(0,0,0,.45) 100%)}
+    .card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(10px);border-radius:20px;padding:20px;box-shadow:0 10px 30px rgba(0,0,0,.18)}
+    .bar-track{height:14px;background:rgba(255,255,255,.08);border-radius:999px;overflow:hidden}.bar-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,#60a5fa,#22c55e);width:0}
+    .kpi{font-size:clamp(1.8rem,3.6vw,3rem);font-weight:800;line-height:1}
+    .small{font-size:.9rem;line-height:1.35;color:#cbd5e1}
+    .xsmall{font-size:.78rem;line-height:1.3;color:#94a3b8}
+    .hero{font-size:92px;animation:float 4s ease-in-out infinite}
+    .section-label{letter-spacing:.18em;text-transform:uppercase;color:#94a3b8;font-size:.8rem}
+    .applink{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:600;color:#7dd3fc;text-decoration:none;border:1px solid rgba(125,211,252,.3);background:rgba(96,165,250,.08);padding:4px 10px;border-radius:999px;margin-top:10px}
+    .applink:hover{background:rgba(96,165,250,.2)}
+    .pill{display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.04em;padding:3px 9px;border-radius:999px;text-transform:uppercase}
+    .badge-new{background:rgba(34,197,94,.18);color:#86efac;border:1px solid rgba(34,197,94,.4)}
+    .ico{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12)}
+    .book-spine{width:64px;min-width:64px;border-radius:6px;box-shadow:0 8px 22px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;text-align:center;padding:8px;font-weight:700;font-size:.62rem;line-height:1.15}
+    a{color:#7dd3fc}
+  </style>
+</head>
+<body>
+<div class="deck">
+
+  <!-- SLIDE 1 — COVER -->
+  <div class="slide active" data-slide="1">
+    <div class="gradient-mesh">
+      <div class="blob" style="width:440px;height:440px;top:-120px;right:-80px;background:#60a5fa;opacity:.16"></div>
+      <div class="blob" style="width:320px;height:320px;bottom:-80px;left:-40px;background:#22c55e;opacity:.13"></div>
+      <div class="blob" style="width:240px;height:240px;top:38%;left:22%;background:#f59e0b;opacity:.12"></div>
+    </div>
+    <canvas class="particle-canvas" style="position:absolute;inset:0;z-index:1"></canvas>
+    <div class="content text-center">
+      <div class="hero reveal">📊</div>
+      <div class="section-label reveal">KPU Provinsi Jawa Barat · Paparan Usulan · TA 2026</div>
+      <h1 class="font-display text-[clamp(2.2rem,5vw,4.6rem)] font-black bg-linear-to-r from-accent-1 via-accent-2 to-accent-3 bg-clip-text text-transparent tracking-tight mb-4 reveal">Optimalisasi HNP 4,28 M</h1>
+      <p class="text-[clamp(1rem,1.8vw,1.3rem)] text-text-secondary max-w-3xl mx-auto reveal">Penguatan layanan, tata kelola, dan transformasi digital <b>back office</b> melalui ekosistem <b>7 aplikasi KPU Jabar</b> dan produk <b>knowledge management</b> berupa buku kelembagaan.</p>
+      <div class="flex flex-wrap gap-3 justify-center mt-7 reveal">
+        <span class="pill" style="background:rgba(245,158,11,.18);color:#fcd34d;border:1px solid rgba(245,158,11,.4)">Rp 4.280.717.000</span>
+        <span class="pill" style="background:rgba(96,165,250,.18);color:#93c5fd;border:1px solid rgba(96,165,250,.4)">7 Kelompok Kegiatan</span>
+        <span class="pill" style="background:rgba(34,197,94,.18);color:#86efac;border:1px solid rgba(34,197,94,.4)">7 Aplikasi Digital</span>
+        <span class="pill" style="background:rgba(167,139,250,.18);color:#c4b5fd;border:1px solid rgba(167,139,250,.4)">2 Buku Kelembagaan</span>
+      </div>
+      <p class="xsmall mt-6 reveal">Dimohonkan persetujuan prinsip & percepatan eksekusi oleh KPA · yunike.puspita@gmail.com · 0896-1706-1983</p>
+    </div>
+  </div>
+
+  <!-- SLIDE 2 — INTI USULAN -->
+  <div class="slide" data-slide="2">
+    <div class="gradient-mesh"><div class="blob" style="width:320px;height:320px;top:-80px;right:-80px;background:#60a5fa;opacity:.10"></div><div class="blob" style="width:240px;height:240px;bottom:-50px;left:-30px;background:#22c55e;opacity:.08"></div></div>
+    <div class="content">
+      <div class="section-label reveal">Inti usulan</div>
+      <h2 class="font-display text-5xl mb-8 reveal">Mengapa perlu disetujui sekarang</h2>
+      <div class="grid grid-cols-3 gap-6 mt-6">
+        <div class="card reveal"><div class="kpi" data-count="4280717" data-prefix="Rp " data-suffix=" ribu"></div><p class="mt-3">Total kebutuhan kegiatan 7–13 setara <b>Rp4.280.717.000</b> untuk HNP TA 2026.</p></div>
+        <div class="card reveal"><div class="kpi" data-count="7"></div><p class="mt-3">Kelompok kegiatan menopang layanan publik, operasional kantor, <b>transformasi digital</b>, dan <b>knowledge management</b>.</p></div>
+        <div class="card reveal"><div class="kpi" data-count="9" data-suffix=" produk"></div><p class="mt-3"><b>7 aplikasi</b> back office + <b>2 buku</b> kelembagaan sudah berwujud prototipe & naskah — bukan sekadar rencana.</p></div>
+      </div>
+      <p class="small mt-8 reveal">Yang kami mohonkan bukan kegiatan baru, melainkan persetujuan atas kebutuhan riil yang sudah <b>terpetakan, terukur, dan ber-output nyata</b>.</p>
+    </div>
+  </div>
+
+  <!-- SLIDE 3 — KOMPOSISI -->
+  <div class="slide" data-slide="3">
+    <div class="gradient-mesh"><div class="blob" style="width:360px;height:360px;top:-100px;right:-60px;background:#60a5fa;opacity:.08"></div><div class="blob" style="width:260px;height:260px;bottom:-60px;left:-50px;background:#f59e0b;opacity:.08"></div></div>
+    <div class="content">
+      <div class="section-label reveal">Komposisi anggaran</div>
+      <h2 class="font-display text-4xl mb-6 reveal">Porsi terbesar pada penguatan kelembagaan</h2>
+      <div class="grid grid-cols-2 gap-8 items-center">
+        <div class="reveal">
+          <div class="space-y-4">
+            <div><div class="flex justify-between mb-1.5 text-sm"><span>Keg 13 – Knowledge Management</span><span>Rp1,706 M</span></div><div class="bar-track"><div class="bar-fill" data-width="39.9"></div></div></div>
+            <div><div class="flex justify-between mb-1.5 text-sm"><span>Keg 7 – Sosdiklih 27 kab/kota</span><span>Rp828,09 Jt</span></div><div class="bar-track"><div class="bar-fill" data-width="19.3"></div></div></div>
+            <div><div class="flex justify-between mb-1.5 text-sm"><span>Keg 10 – Pemeliharaan kendaraan</span><span>Rp641,19 Jt</span></div><div class="bar-track"><div class="bar-fill" data-width="15"></div></div></div>
+            <div><div class="flex justify-between mb-1.5 text-sm"><span>Keg 12 – Integrasi sistem informasi</span><span>Rp500 Jt</span></div><div class="bar-track"><div class="bar-fill" data-width="11.7"></div></div></div>
+            <div><div class="flex justify-between mb-1.5 text-sm"><span>Keg 9 – Rakor divisi</span><span>Rp400 Jt</span></div><div class="bar-track"><div class="bar-fill" data-width="9.3"></div></div></div>
+            <div><div class="flex justify-between mb-1.5 text-sm"><span>Keg 8 + 11</span><span>Rp205,46 Jt</span></div><div class="bar-track"><div class="bar-fill" data-width="4.8"></div></div></div>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="card reveal"><h3 class="text-lg font-semibold mb-1">Frontline</h3><p class="small">Sosdiklih berkelanjutan & FGD menjaga pendidikan pemilih di 27 kab/kota.</p></div>
+          <div class="card reveal"><h3 class="text-lg font-semibold mb-1">Back office</h3><p class="small">Kendaraan dinas & jasa profesi menjamin mobilitas, koordinasi, dan fasilitasi.</p></div>
+          <div class="card reveal"><h3 class="text-lg font-semibold mb-1">Digital</h3><p class="small">Sistem informasi mempercepat surat, arsip, SPPD, kehadiran, dashboard & server.</p></div>
+          <div class="card reveal"><h3 class="text-lg font-semibold mb-1">Memori institusi</h3><p class="small">Knowledge management merekam pembelajaran agar tak hilang pasca tahapan.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 4 — NILAI STRATEGIS -->
+  <div class="slide" data-slide="4">
+    <div class="gradient-mesh"><div class="blob" style="width:320px;height:320px;top:-70px;right:-70px;background:#22c55e;opacity:.10"></div><div class="blob" style="width:220px;height:220px;bottom:-40px;left:-20px;background:#60a5fa;opacity:.08"></div></div>
+    <div class="content">
+      <div class="section-label reveal">Nilai strategis</div>
+      <h2 class="font-display text-4xl mb-6 reveal">Manfaat yang langsung dirasakan organisasi</h2>
+      <div class="grid grid-cols-2 gap-5">
+        <div class="card reveal"><h3 class="text-xl font-semibold mb-2">1. Kesinambungan layanan demokrasi</h3><p class="small">Sosdiklih 27 kab/kota Rp828,09 jt & FGD provinsi Rp120,26 jt menjaga pendidikan pemilih berjalan di luar tahapan besar — eksistensi KPU tetap terlihat & terukur.</p></div>
+        <div class="card reveal"><h3 class="text-xl font-semibold mb-2">2. Menutup kebutuhan operasional nyata</h3><p class="small">Pemeliharaan kendaraan dinas Rp641,19 jt & jasa profesi Rp85,2 jt mendukung mobilitas pimpinan, koordinasi lapangan, serta fasilitasi kegiatan.</p></div>
+        <div class="card reveal"><h3 class="text-xl font-semibold mb-2">3. Mengurangi inefisiensi manual</h3><p class="small">Integrasi sistem informasi Rp500 jt membangun e-Surat, e-Arsip, e-SPPD, dashboard, inventaris QR & server — administrasi lebih cepat, terdokumentasi, mudah diawasi.</p></div>
+        <div class="card reveal"><h3 class="text-xl font-semibold mb-2">4. Menyelamatkan pengetahuan kelembagaan</h3><p class="small">Knowledge management Rp1,706 M mengamankan dokumentasi, repositori, digitalisasi arsip, forum praktik baik, multimedia, hingga <b>buku & film pembelajaran</b>.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 5 — URGENSI BACK OFFICE -->
+  <div class="slide" data-slide="5">
+    <div class="gradient-mesh"><div class="blob" style="width:360px;height:360px;top:-90px;right:-80px;background:#ef4444;opacity:.10"></div><div class="blob" style="width:280px;height:280px;bottom:-60px;left:-30px;background:#f59e0b;opacity:.08"></div></div>
+    <canvas class="particle-canvas-ambient" style="position:absolute;inset:0;z-index:1"></canvas>
+    <div class="content">
+      <div class="section-label reveal" style="color:#fca5a5">Urgensi back office</div>
+      <h2 class="font-display text-4xl mb-6 reveal">Tanpa digitalisasi, back office jadi titik lemah tata kelola</h2>
+      <div class="grid grid-cols-3 gap-4">
+        <div class="card reveal"><div class="text-2xl mb-2">🐌</div><h3 class="font-semibold mb-1">Proses manual & lambat</h3><p class="xsmall">KAK, RAB, SPPD, notulen & surat disusun manual — berhari-hari, tak konsisten antar unit.</p></div>
+        <div class="card reveal"><div class="text-2xl mb-2">⚠️</div><h3 class="font-semibold mb-1">Risiko temuan BPK/DKPP</h3><p class="xsmall">Anggaran berpotensi tak sesuai SBM, duplikasi sulit terdeteksi, jejak audit lemah.</p></div>
+        <div class="card reveal"><div class="text-2xl mb-2">🗄️</div><h3 class="font-semibold mb-1">Arsip rentan & sulit dicari</h3><p class="xsmall">Arsip fisik rusak/hilang; temu kembali manual berjam-jam saat audit & sengketa.</p></div>
+        <div class="card reveal"><div class="text-2xl mb-2">📵</div><h3 class="font-semibold mb-1">Monitoring tak real-time</h3><p class="xsmall">Rekap serapan & kehadiran manual — pimpinan tak punya data tepat waktu.</p></div>
+        <div class="card reveal"><div class="text-2xl mb-2">🧠</div><h3 class="font-semibold mb-1">Memori institusi hilang</h3><p class="xsmall">Pengetahuan lenyap antar-periode komisioner; pelajaran 2024 berisiko terlupakan.</p></div>
+        <div class="card reveal"><div class="text-2xl mb-2">❤️‍🩹</div><h3 class="font-semibold mb-1">SDM rentan burnout</h3><p class="xsmall">Beban lembur tahapan tinggi; kesehatan & kesejahteraan pegawai tak terpantau.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 6 — EKOSISTEM 7 APLIKASI -->
+  <div class="slide" data-slide="6">
+    <div class="gradient-mesh"><div class="blob" style="width:380px;height:380px;top:-100px;right:-80px;background:#60a5fa;opacity:.12"></div><div class="blob" style="width:280px;height:280px;bottom:-60px;left:-50px;background:#22c55e;opacity:.10"></div></div>
+    <div class="content">
+      <div class="section-label reveal">Solusi · Kegiatan 12</div>
+      <h2 class="font-display text-4xl mb-2 reveal">Ekosistem 7 Aplikasi Back Office KPU Jabar</h2>
+      <p class="small mb-5 reveal">Seluruhnya sudah berwujud prototipe/PWA siap demo — tinggal dikuatkan & diintegrasikan.</p>
+      <div class="grid grid-cols-4 gap-3.5">
+        <div class="card reveal" style="padding:16px"><div class="ico mb-2" style="color:#c4b5fd">🧾</div><h3 class="font-bold">RANCAGÉ</h3><p class="xsmall mt-1">Perencanaan & RAB cerdas (e-Surat/ND/KAK).</p><a class="applink" href="https://yunikepuspita-sudo.github.io/ReNamer-Pro/perencanaan-kpu/" target="_blank">▶ Demo</a></div>
+        <div class="card reveal" style="padding:16px"><div class="flex items-center justify-between"><div class="ico mb-2" style="color:#93c5fd">🗄️</div><span class="pill badge-new">Baru</span></div><h3 class="font-bold">SIARIP KPU</h3><p class="xsmall mt-1">Arsip digital & retensi (e-Arsip).</p><a class="applink" href="#" onclick="return false">▶ Prototipe /siarip/</a></div>
+        <div class="card reveal" style="padding:16px"><div class="ico mb-2" style="color:#5eead4">🚗</div><h3 class="font-bold">SIPANDU</h3><p class="xsmall mt-1">Perjalanan dinas terpadu (e-SPPD).</p><a class="applink" href="https://yunikepuspita-sudo.github.io/sisfo-sppd-kpu-jabar/" target="_blank">▶ Demo</a></div>
+        <div class="card reveal" style="padding:16px"><div class="ico mb-2" style="color:#fcd34d">📇</div><h3 class="font-bold">SAE PISAN</h3><p class="xsmall mt-1">Kehadiran kegiatan QR (e-Presensi).</p><a class="applink" href="https://yunikepuspita-sudo.github.io/sae-pisan/" target="_blank">▶ Demo</a></div>
+        <div class="card reveal" style="padding:16px"><div class="ico mb-2" style="color:#93c5fd">🗳️</div><h3 class="font-bold">SIPLENO</h3><p class="xsmall mt-1">Rapat pleno digital (e-Pleno).</p><a class="applink" href="https://yunikepuspita-sudo.github.io/rapat-pleno-kpu/" target="_blank">▶ Demo</a></div>
+        <div class="card reveal" style="padding:16px"><div class="ico mb-2" style="color:#86efac">📚</div><h3 class="font-bold">PUSAKA</h3><p class="xsmall mt-1">Perpustakaan digital & literasi.</p><a class="applink" href="https://pustaka.yunikepuspita.com" target="_blank">▶ Demo</a></div>
+        <div class="card reveal" style="padding:16px"><div class="ico mb-2" style="color:#fca5a5">🩺</div><h3 class="font-bold">SEHAT</h3><p class="xsmall mt-1">Kesehatan & kesejahteraan pegawai.</p><a class="applink" href="#" onclick="return false">▶ Prototipe pilot</a></div>
+        <div class="card reveal" style="padding:16px;background:rgba(96,165,250,.10)"><div class="ico mb-2">🔗</div><h3 class="font-bold">Terintegrasi</h3><p class="xsmall mt-1">Selaras SPBE, SRIKANDI, SAKTI & TTE BSrE.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 7 — SIARIP SPOTLIGHT (new app) -->
+  <div class="slide" data-slide="7">
+    <div class="gradient-mesh"><div class="blob" style="width:400px;height:400px;top:-100px;right:-90px;background:#60a5fa;opacity:.13"></div><div class="blob" style="width:260px;height:260px;bottom:-60px;left:-40px;background:#22c55e;opacity:.09"></div></div>
+    <canvas class="particle-canvas" style="position:absolute;inset:0;z-index:1"></canvas>
+    <div class="content">
+      <div class="flex items-center gap-3 reveal"><span class="section-label">Aplikasi baru · e-Arsip (RAB 12b)</span><span class="pill badge-new">Baru</span></div>
+      <h2 class="font-display text-4xl mb-1 reveal">SIARIP KPU — Sistem Informasi Arsip Digital & Retensi</h2>
+      <p class="small mb-5 reveal">Dari tumpukan arsip fisik ke <b>Records Center digital</b> — kelola arsip sejak tercipta hingga disusutkan, patuh JRA & PKPU 17/2023.</p>
+      <div class="grid grid-cols-4 gap-4 mb-5">
+        <div class="card reveal text-center" style="padding:16px"><div class="kpi" data-count="74" data-suffix="%"></div><p class="xsmall mt-1">Progress digitalisasi</p></div>
+        <div class="card reveal text-center" style="padding:16px"><div class="kpi" style="font-size:1.9rem">&lt; 5 dtk</div><p class="xsmall mt-1">Temu kembali arsip</p></div>
+        <div class="card reveal text-center" style="padding:16px"><div class="kpi" data-count="8" data-suffix=" modul"></div><p class="xsmall mt-1">PWA + offline</p></div>
+        <div class="card reveal text-center" style="padding:16px"><div class="kpi" style="font-size:1.9rem">AES-256</div><p class="xsmall mt-1">Arsip terjaga + RBAC</p></div>
+      </div>
+      <div class="grid grid-cols-3 gap-4">
+        <div class="card reveal" style="padding:16px"><h3 class="font-semibold mb-1">Digitalisasi terstandar</h3><p class="xsmall">Scan + OCR + auto-metadata → PDF/A terindeks, bukan tumpukan kertas.</p></div>
+        <div class="card reveal" style="padding:16px"><h3 class="font-semibold mb-1">AI klasifikasi & retensi</h3><p class="xsmall">Memilah kode (Kep. KPU 57/2022) & hitung nasib akhir: Aktif/Inaktif/Permanen/Musnah.</p></div>
+        <div class="card reveal" style="padding:16px"><h3 class="font-semibold mb-1">Dashboard berjenjang</h3><p class="xsmall">IKKD & % digitalisasi nasional → provinsi → 27 satker; siap integrasi SRIKANDI.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 8 — PENGUATAN BACK OFFICE (metrics) -->
+  <div class="slide" data-slide="8">
+    <div class="gradient-mesh"><div class="blob" style="width:340px;height:340px;top:-80px;right:-70px;background:#22c55e;opacity:.10"></div><div class="blob" style="width:240px;height:240px;bottom:-50px;left:-30px;background:#60a5fa;opacity:.08"></div></div>
+    <div class="content">
+      <div class="section-label reveal">Penguatan back office</div>
+      <h2 class="font-display text-4xl mb-2 reveal">Dari berhari-hari menjadi hitungan menit</h2>
+      <p class="small mb-5 reveal">Empat aplikasi administrasi memangkas waktu & risiko, dengan jejak audit yang kuat.</p>
+      <div class="grid grid-cols-2 gap-5">
+        <div class="card reveal"><div class="flex justify-between items-baseline"><h3 class="font-bold">🧾 RANCAGÉ</h3><span class="xsmall">Kepatuhan SBM</span></div><div class="bar-track mt-2"><div class="bar-fill" data-width="98"></div></div><p class="xsmall mt-2">Satu form → ND, KAK, TOR, RAB; validasi SBM & deteksi duplikasi; persetujuan elektronik 6 jenjang + TTE.</p></div>
+        <div class="card reveal"><div class="flex justify-between items-baseline"><h3 class="font-bold">🚗 SIPANDU</h3><span class="xsmall">Serapan terpantau</span></div><div class="bar-track mt-2"><div class="bar-fill" data-width="61"></div></div><p class="xsmall mt-2">e-SPPD end-to-end, SBM otomatis, dashboard pagu–realisasi real-time, audit trail tak-terhapus, siap SAKTI.</p></div>
+        <div class="card reveal"><div class="flex justify-between items-baseline"><h3 class="font-bold">📇 SAE PISAN</h3><span class="xsmall">Kehadiran live</span></div><div class="bar-track mt-2"><div class="bar-fill" data-width="85"></div></div><p class="xsmall mt-2">Check-in QR &lt; 3 detik, anti titip-absen, rekap otomatis CSV/Excel/PDF — perkuat Sosdiklih & Rakor.</p></div>
+        <div class="card reveal"><div class="flex justify-between items-baseline"><h3 class="font-bold">🗳️ SIPLENO</h3><span class="xsmall">BA otomatis</span></div><div class="bar-track mt-2"><div class="bar-fill" data-width="100"></div></div><p class="xsmall mt-2">Undangan → arsip: presensi QR, kuorum & voting, notulensi AI, Berita Acara otomatis + TTE BSrE.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 9 — PUSAKA & SEHAT -->
+  <div class="slide" data-slide="9">
+    <div class="gradient-mesh"><div class="blob" style="width:340px;height:340px;top:-80px;right:-70px;background:#22c55e;opacity:.10"></div><div class="blob" style="width:240px;height:240px;bottom:-50px;left:-30px;background:#f59e0b;opacity:.08"></div></div>
+    <div class="content">
+      <div class="section-label reveal">Memori & SDM</div>
+      <h2 class="font-display text-4xl mb-6 reveal">Menjaga pengetahuan & merawat manusianya</h2>
+      <div class="grid grid-cols-2 gap-6">
+        <div class="card reveal">
+          <div class="flex items-center gap-3 mb-2"><div class="ico" style="color:#86efac">📚</div><h3 class="text-2xl font-semibold">PUSAKA</h3></div>
+          <p class="small mb-3">Perpustakaan digital literasi demokrasi & pemilu — kanal resmi knowledge management (Keg 13d/13c). Multi-platform (Web/Android/iOS), update OTA, dilengkapi <b>Pustaka AI</b>.</p>
+          <p class="xsmall">Menjadi rak digital tempat <b>buku-buku kelembagaan</b> & arsip kepemiluan dipublikasikan dan dibaca lintas satker.</p>
+          <a class="applink" href="https://pustaka.yunikepuspita.com" target="_blank">▶ pustaka.yunikepuspita.com</a>
+        </div>
+        <div class="card reveal">
+          <div class="flex items-center gap-3 mb-2"><div class="ico" style="color:#fca5a5">🩺</div><h3 class="text-2xl font-semibold">SEHAT</h3></div>
+          <p class="small mb-3">Ekosistem Health, Analytics & Telemedicine untuk pegawai — skrining (PHQ-9/GAD-7/WHO-5), <b>deteksi dini burnout</b> saat tahapan, & analitik organisasi 100% anonim.</p>
+          <p class="xsmall">Privacy-by-design (AES-256, RBAC+SSO, selaras UU PDP). Mendukung kesinambungan operasional & ketahanan SDM.</p>
+          <a class="applink" href="#" onclick="return false">▶ Prototipe PWA — pilot unit terpilih</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 10 — OUTPUT KM: 2 BUKU -->
+  <div class="slide" data-slide="10">
+    <div class="gradient-mesh"><div class="blob" style="width:380px;height:380px;top:-100px;right:-80px;background:#a78bfa;opacity:.12"></div><div class="blob" style="width:260px;height:260px;bottom:-60px;left:-40px;background:#60a5fa;opacity:.09"></div></div>
+    <div class="content">
+      <div class="section-label reveal" style="color:#c4b5fd">Knowledge Management · Kegiatan 13</div>
+      <h2 class="font-display text-4xl mb-2 reveal">Output nyata: dari pengalaman menjadi pengetahuan</h2>
+      <p class="small mb-6 reveal">Knowledge management bukan abstraksi. Ia menghasilkan <b>produk yang dapat diperiksa</b> — dua buku kelembagaan yang lahir dari pembelajaran organisasi, dipublikasikan terbuka.</p>
+      <div class="grid grid-cols-2 gap-6">
+        <div class="card reveal flex gap-4">
+          <div class="book-spine" style="background:linear-gradient(160deg,#1d4ed8,#0f766e);color:#e0f2fe">AKAR BARU DI BUMI PASUNDAN</div>
+          <div><h3 class="text-lg font-bold leading-tight">Akar Baru di Bumi Pasundan</h3><p class="xsmall mt-1">Catatan Aktualisasi <b>147 CPNS</b> · Latsar Angkatan XIII–XVI · 2026. Memori kaderisasi & inovasi pelayanan KPU se-Jabar.</p></div>
+        </div>
+        <div class="card reveal flex gap-4">
+          <div class="book-spine" style="background:linear-gradient(160deg,#7c3aed,#be123c);color:#fae8ff">ETIKA, INTEGRITAS & TATA KELOLA</div>
+          <div><h3 class="text-lg font-bold leading-tight">Etika, Integritas & Tata Kelola Penyelenggara Pemilu</h3><p class="xsmall mt-1">Manual Mitigasi Risiko Etik <b>menuju Pemilu 2029</b>, berbasis Putusan DKPP terhadap KPU Jabar 2024.</p></div>
+        </div>
+      </div>
+      <p class="xsmall mt-6 reveal">Keduanya tayang di <a href="https://yunikepuspita.com/karya" target="_blank">yunikepuspita.com/karya</a> dan tersedia di rak digital <b>PUSAKA</b>.</p>
+    </div>
+  </div>
+
+  <!-- SLIDE 11 — BUKU I -->
+  <div class="slide" data-slide="11">
+    <div class="gradient-mesh"><div class="blob" style="width:360px;height:360px;top:-90px;right:-70px;background:#3b82f6;opacity:.12"></div><div class="blob" style="width:240px;height:240px;bottom:-50px;left:-30px;background:#14b8a6;opacity:.08"></div></div>
+    <div class="content">
+      <div class="section-label reveal">Buku I · Knowledge Management</div>
+      <h2 class="font-display text-4xl mb-2 reveal">Akar Baru di Bumi Pasundan</h2>
+      <p class="small mb-5 reveal">Catatan Aktualisasi 147 CPNS — Latsar Angkatan XIII–XVI (2026). Penerbit: KPU Provinsi Jawa Barat.</p>
+      <div class="grid grid-cols-3 gap-4 mb-4">
+        <div class="card reveal text-center" style="padding:16px"><div class="kpi" data-count="147"></div><p class="xsmall mt-1">Profil CPNS terdokumentasi</p></div>
+        <div class="card reveal text-center" style="padding:16px"><div class="kpi" data-count="4" data-suffix=" angkatan"></div><p class="xsmall mt-1">Latsar XIII–XVI</p></div>
+        <div class="card reveal text-center" style="padding:16px"><div class="kpi" style="font-size:1.9rem">Terkurasi</div><p class="xsmall mt-1">Grounded STTPL LAN & Tabel Induk</p></div>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="card reveal" style="padding:16px"><h3 class="font-semibold mb-1">Klaster tematik inovasi</h3><p class="xsmall">Komunikasi Publik & Pendidikan Pemilih, Tata Kelola Administrasi Digital, dll — memetakan aktualisasi nyata (mis. SEMUT, SKIPE, SALAM, SAKARA).</p></div>
+        <div class="card reveal" style="padding:16px"><h3 class="font-semibold mb-1">Nilai kelembagaan</h3><p class="xsmall">Merawat memori kaderisasi: hanya menulis yang dapat diperiksa. Menjadi basis pembelajaran lintas-periode & inspirasi replikasi inovasi antar satker.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 12 — BUKU II -->
+  <div class="slide" data-slide="12">
+    <div class="gradient-mesh"><div class="blob" style="width:360px;height:360px;top:-90px;right:-70px;background:#a78bfa;opacity:.12"></div><div class="blob" style="width:240px;height:240px;bottom:-50px;left:-30px;background:#f43f5e;opacity:.08"></div></div>
+    <div class="content">
+      <div class="section-label reveal" style="color:#c4b5fd">Buku II · Knowledge Management</div>
+      <h2 class="font-display text-3xl md:text-4xl mb-2 reveal">Etika, Integritas & Tata Kelola Penyelenggara Pemilu</h2>
+      <p class="small mb-5 reveal">Manual Mitigasi Risiko Etik Pemilu Serentak 2029 — berbasis Putusan DKPP terhadap KPU Jabar 2024. Tim SDM & Litbang KPU Jabar · Kata Pengantar Ketua KPU RI.</p>
+      <div class="grid grid-cols-3 gap-4 mb-4">
+        <div class="card reveal text-center" style="padding:16px"><div class="kpi" data-count="3" data-suffix=" model"></div><p class="xsmall mt-1">ET-EGM · IRM-EB · LER-EM</p></div>
+        <div class="card reveal text-center" style="padding:16px"><div class="kpi" data-count="12"></div><p class="xsmall mt-1">Rekomendasi + roadmap 5 tahun</p></div>
+        <div class="card reveal text-center" style="padding:16px"><div class="kpi" data-count="7" data-suffix=" bab"></div><p class="xsmall mt-1">Analisis berbasis bukti DKPP</p></div>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="card reveal" style="padding:16px"><h3 class="font-semibold mb-1">Mengoreksi "organizational forgetting"</h3><p class="xsmall">Mengubah putusan etik yang biasanya disembunyikan menjadi <b>dokumen pembelajaran</b> yang diwariskan ke siklus berikutnya.</p></div>
+        <div class="card reveal" style="padding:16px"><h3 class="font-semibold mb-1">SDM sebagai front-line ethics</h3><p class="xsmall">Etika sebagai <b>infrastruktur</b>, bukan dekorasi — dapat diadopsi seluruh KPU Provinsi menuju Pemilu 2029.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 13 — DISEMINASI & KARYA -->
+  <div class="slide" data-slide="13">
+    <div class="gradient-mesh"><div class="blob" style="width:340px;height:340px;top:-80px;right:-70px;background:#22c55e;opacity:.10"></div><div class="blob" style="width:240px;height:240px;bottom:-50px;left:-30px;background:#60a5fa;opacity:.08"></div></div>
+    <div class="content">
+      <div class="section-label reveal">Diseminasi & karya</div>
+      <h2 class="font-display text-4xl mb-3 reveal">Pengetahuan yang dipublikasikan, bukan diendapkan</h2>
+      <p class="small mb-6 reveal">Aplikasi dan buku saling memperkuat: aplikasi <b>menghasilkan & menyimpan</b> pengetahuan, buku <b>memaknai & mewariskan</b>-nya, PUSAKA menjadi <b>etalase</b> diseminasi publik.</p>
+      <div class="grid grid-cols-3 gap-4">
+        <div class="card reveal"><h3 class="font-semibold mb-1">🖥️ Produksi</h3><p class="xsmall">RANCAGÉ, SIPANDU, SIPLENO & SIARIP menghasilkan dokumen & arsip terstandar yang dapat diperiksa.</p></div>
+        <div class="card reveal"><h3 class="font-semibold mb-1">📖 Pemaknaan</h3><p class="xsmall">Buku kelembagaan mengangkat data & pengalaman menjadi pelajaran organisasi yang terstruktur.</p></div>
+        <div class="card reveal"><h3 class="font-semibold mb-1">🌐 Diseminasi</h3><p class="xsmall">Dipublikasikan di <a href="https://yunikepuspita.com/karya" target="_blank">yunikepuspita.com/karya</a> & dibaca via PUSAKA lintas satker.</p></div>
+      </div>
+      <div class="card reveal mt-5 text-center" style="background:rgba(96,165,250,.10)"><p class="small">Portofolio lengkap aplikasi & karya: <a href="https://yunikepuspita.com/karya" target="_blank"><b>yunikepuspita.com/karya</b></a></p></div>
+    </div>
+  </div>
+
+  <!-- SLIDE 14 — ARGUMENTASI -->
+  <div class="slide" data-slide="14">
+    <div class="gradient-mesh"><div class="blob" style="width:360px;height:360px;top:-90px;right:-80px;background:#f59e0b;opacity:.10"></div><div class="blob" style="width:280px;height:280px;bottom:-60px;left:-30px;background:#60a5fa;opacity:.08"></div></div>
+    <canvas class="particle-canvas-ambient" style="position:absolute;inset:0;z-index:1"></canvas>
+    <div class="content">
+      <div class="section-label reveal">Argumentasi persetujuan</div>
+      <h2 class="font-display text-4xl mb-6 reveal">Kenapa dapat segera dieksekusi oleh KPA</h2>
+      <div class="grid grid-cols-3 gap-4">
+        <div class="card reveal"><div class="text-2xl mb-2">✅</div><h3 class="font-semibold mb-1">Kebutuhan sudah terinci</h3><p class="xsmall">RAB memuat volume, satuan, frekuensi & harga satuan sampai grand total Rp4.280.717.000.</p></div>
+        <div class="card reveal"><div class="text-2xl mb-2">✅</div><h3 class="font-semibold mb-1">Output sudah berwujud</h3><p class="xsmall">7 aplikasi prototipe siap demo & 2 buku siap terbit — bukti kebutuhan nyata, bukan rencana di atas kertas.</p></div>
+        <div class="card reveal"><div class="text-2xl mb-2">✅</div><h3 class="font-semibold mb-1">KPA punya ruang kendali</h3><p class="xsmall">KPA memimpin prioritisasi, pengemasan tahapan & pengendalian output yang siap dijalankan.</p></div>
+        <div class="card reveal"><div class="text-2xl mb-2">⚠️</div><h3 class="font-semibold mb-1">Bukan menunggu sempurna</h3><p class="xsmall">Menunda = layanan terhenti, sarpras menurun, momentum digital & dokumentasi terlewat.</p></div>
+        <div class="card reveal"><div class="text-2xl mb-2">📌</div><h3 class="font-semibold mb-1">Bisa dimulai bertahap</h3><p class="xsmall">Persetujuan prinsip: layanan → operasional → digital → knowledge management.</p></div>
+        <div class="card reveal"><div class="text-2xl mb-2">🛡️</div><h3 class="font-semibold mb-1">Tetap dalam pengendalian</h3><p class="xsmall">TOR final, verifikasi kebutuhan, penyesuaian paket & monitoring output per kegiatan.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 15 — SKEMA KEPUTUSAN -->
+  <div class="slide" data-slide="15">
+    <div class="gradient-mesh"><div class="blob" style="width:360px;height:360px;top:-90px;right:-80px;background:#22c55e;opacity:.10"></div><div class="blob" style="width:260px;height:260px;bottom:-60px;left:-50px;background:#60a5fa;opacity:.08"></div></div>
+    <div class="content">
+      <div class="section-label reveal">Skema keputusan</div>
+      <h2 class="font-display text-4xl mb-6 reveal">Usulan keputusan pimpinan hari ini</h2>
+      <div class="grid grid-cols-2 gap-8">
+        <div class="card reveal">
+          <h3 class="text-xl font-semibold mb-3">Yang dimohonkan disetujui</h3>
+          <ul class="space-y-2.5 text-[0.95rem]">
+            <li>① Persetujuan <b>prinsip</b> atas usulan HNP kegiatan 7–13 sebesar Rp4.280.717.000.</li>
+            <li>② Persetujuan <b>percepatan</b> pelaksanaan atas item yang siap eksekusi oleh KPA.</li>
+            <li>③ Persetujuan <b>pengendalian bertahap</b> berdasarkan prioritas layanan, operasional & digitalisasi.</li>
+            <li>④ Persetujuan <b>monitoring</b> berkala agar realisasi tetap akuntabel & terukur.</li>
+          </ul>
+        </div>
+        <div class="card reveal">
+          <h3 class="text-xl font-semibold mb-3">Urutan prioritas eksekusi</h3>
+          <ol class="space-y-2.5 text-[0.95rem] list-decimal pl-5">
+            <li>Kegiatan 7–9 — layanan pendidikan pemilih & koordinasi (SAE PISAN).</li>
+            <li>Kegiatan 10–11 — dukungan operasional (kendaraan & jasa profesi).</li>
+            <li>Kegiatan 12 — administrasi digital: RANCAGÉ, SIPANDU, SIPLENO, <b>SIARIP</b> & dashboard.</li>
+            <li>Kegiatan 13 — memori institusi & diseminasi: PUSAKA + <b>buku kelembagaan</b>.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 16 — CLOSING -->
+  <div class="slide" data-slide="16">
+    <div class="gradient-mesh"><div class="blob" style="width:420px;height:420px;top:-100px;right:-100px;background:#60a5fa;opacity:.15"></div><div class="blob" style="width:300px;height:300px;bottom:-70px;left:-40px;background:#22c55e;opacity:.12"></div><div class="blob" style="width:220px;height:220px;top:40%;left:18%;background:#f59e0b;opacity:.10"></div></div>
+    <canvas class="particle-canvas" style="position:absolute;inset:0;z-index:1"></canvas>
+    <div class="content text-center">
+      <div class="section-label reveal">Closing statement</div>
+      <h2 class="font-display text-[clamp(1.9rem,3.6vw,3.4rem)] mb-5 reveal">Yang kita minta bukan sekadar anggaran, tetapi izin menjaga kinerja kelembagaan tetap hidup</h2>
+      <p class="text-lg md:text-xl max-w-3xl mx-auto text-text-secondary reveal">Dengan persetujuan pimpinan hari ini, KPA dapat segera mengeksekusi kebutuhan yang nyata, terukur, dan berdampak langsung — <b>aplikasi yang melayani</b> dan <b>buku yang mewariskan pengetahuan</b> — bagi layanan, tata kelola, dan penguatan institusi KPU Jawa Barat.</p>
+      <p class="xsmall mt-7 reveal">Portofolio & demo: <a href="https://yunikepuspita.com/karya" target="_blank">yunikepuspita.com/karya</a> · yunike.puspita@gmail.com · 0896-1706-1983</p>
+    </div>
+  </div>
+
+</div>
+<div class="nav-controls"><button class="nav-btn" onclick="changeSlide(-1)">&#8249;</button><div class="slide-dots" id="dots"></div><button class="nav-btn" onclick="changeSlide(1)">&#8250;</button><span class="slide-counter" id="counter">1 / 16</span></div>
+<script>
+let current=1;const total=document.querySelectorAll('.slide').length;const dots=document.getElementById('dots');const counter=document.getElementById('counter');for(let i=1;i<=total;i++){const d=document.createElement('div');d.className='dot'+(i===1?' active':'');d.onclick=()=>goToSlide(i);dots.appendChild(d)}
+function goToSlide(n){document.querySelector('.slide.active')?.classList.remove('active');const next=document.querySelector(`.slide[data-slide="${n}"]`);if(next){next.classList.add('active');animateSlide(next)}current=n;updateNav()}
+function changeSlide(dir){let n=current+dir;if(n<1)n=total;if(n>total)n=1;goToSlide(n)}
+function updateNav(){document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i+1===current));counter.textContent=`${current} / ${total}`}
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();changeSlide(1)} if(e.key==='ArrowLeft'){e.preventDefault();changeSlide(-1)}})
+function animateSlide(slide){slide.querySelectorAll('.reveal').forEach((el,i)=>{el.style.transition='none';el.style.opacity='0';el.style.transform='translateY(18px)';el.offsetHeight;const delay=i*.06;el.style.transition=`opacity .35s ease ${delay}s, transform .35s ease ${delay}s`;el.style.opacity='1';el.style.transform='translateY(0)'});animateSlideEffects(slide)}
+function animateSlideEffects(slide){slide.querySelectorAll('[data-count]:not(.counted)').forEach(el=>{el.classList.add('counted');const target=parseInt(el.dataset.count);const suffix=el.dataset.suffix||'';const prefix=el.dataset.prefix||'';let cur=0;const step=target/40;const t=setInterval(()=>{cur+=step;if(cur>=target){cur=target;clearInterval(t)} el.textContent=prefix+Math.round(cur).toLocaleString('id-ID')+suffix},30)});slide.querySelectorAll('.bar-fill:not(.done)').forEach((b,i)=>{b.classList.add('done');b.style.transition=`width .7s ease ${i*.08}s`;b.style.width=b.dataset.width+'%'})}
+let touchStartX=0;document.addEventListener('touchstart',e=>touchStartX=e.touches[0].clientX);document.addEventListener('touchend',e=>{const diff=touchStartX-e.changedTouches[0].clientX;if(Math.abs(diff)>50)changeSlide(diff>0?1:-1)})
+window.initParticles=function(canvas,options){if(!canvas)return;const ctx=canvas.getContext('2d');canvas.width=canvas.offsetWidth;canvas.height=canvas.offsetHeight;const interactive=options.interactive!==false;const count=options.count||25;let mx=-1000,my=-1000;const parts=Array.from({length:count},()=>({x:Math.random()*canvas.width,y:Math.random()*canvas.height,vx:(Math.random()-.5)*.35,vy:(Math.random()-.5)*.35,size:Math.random()*2+.7,alpha:Math.random()*.35+.08}));if(interactive){canvas.addEventListener('mousemove',e=>{const r=canvas.getBoundingClientRect();mx=e.clientX-r.left;my=e.clientY-r.top});canvas.addEventListener('mouseleave',()=>{mx=-1000;my=-1000})}(function a(){ctx.clearRect(0,0,canvas.width,canvas.height);parts.forEach(p=>{if(interactive){const dx=p.x-mx,dy=p.y-my,dist=Math.sqrt(dx*dx+dy*dy);if(dist<120&&dist>0){const f=(120-dist)/120;p.vx+=(dx/dist)*f*.08;p.vy+=(dy/dist)*f*.08}}p.vx*=.98;p.vy*=.98;p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=canvas.width;if(p.x>canvas.width)p.x=0;if(p.y<0)p.y=canvas.height;if(p.y>canvas.height)p.y=0;ctx.beginPath();ctx.arc(p.x,p.y,p.size,0,Math.PI*2);ctx.fillStyle=`rgba(96,165,250,${p.alpha})`;ctx.fill()});requestAnimationFrame(a)})()}
+document.querySelectorAll('.particle-canvas').forEach(c=>window.initParticles(c,{interactive:true,count:40}));document.querySelectorAll('.particle-canvas-ambient').forEach(c=>window.initParticles(c,{interactive:false,count:16}));animateSlide(document.querySelector('.slide.active'));
+</script>
+</body>
+</html>
