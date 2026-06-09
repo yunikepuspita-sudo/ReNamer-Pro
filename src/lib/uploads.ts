@@ -80,6 +80,24 @@ export async function deleteUpload(id: string): Promise<void> {
   db.close()
 }
 
+/** Perbarui metadata satu unggahan (mis. hasil rename AI). */
+export async function updateUpload(
+  id: string,
+  patch: Partial<Pick<UploadRecord, 'title' | 'author' | 'filename'>>,
+): Promise<UploadRecord | undefined> {
+  const db = await openDB()
+  const store = db.transaction(STORE, 'readwrite').objectStore(STORE)
+  const rec = await request<UploadRecord | undefined>(store.get(id))
+  if (!rec) {
+    db.close()
+    return undefined
+  }
+  const next = { ...rec, ...patch }
+  await request(store.put(next))
+  db.close()
+  return next
+}
+
 /** Gradien sampul deterministik dari id, agar ebook unggahan tetap punya sampul. */
 export function uploadCover(id: string): [string, string] {
   const palettes: [string, string][] = [

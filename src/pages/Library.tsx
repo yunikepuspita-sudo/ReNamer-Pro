@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { useCatalog } from '../context/CatalogContext'
 import { useApp } from '../context/AppContext'
 import BookCover from '../components/BookCover'
-import { addUpload, deleteUpload, listUploads, uploadCover, type UploadRecord } from '../lib/uploads'
+import { addUpload, deleteUpload, listUploads, updateUpload, uploadCover, type UploadRecord } from '../lib/uploads'
 import { suggestFileName } from '../lib/aiRename'
 import { aiEnabled, aiErrorMessage } from '../lib/pustakaAi'
 import type { Book, ContentType } from '../types'
@@ -28,6 +28,7 @@ export default function Library() {
   const [aiBusy, setAiBusy] = useState(false)
   const [aiMsg, setAiMsg] = useState('')
   const [suggestedName, setSuggestedName] = useState('')
+  const [renamingId, setRenamingId] = useState<string | null>(null)
   const fileRef = useRef<HTMLInputElement>(null)
 
   async function handleSuggest() {
@@ -97,6 +98,33 @@ export default function Library() {
     if (!confirm('Hapus ebook ini dari perangkat Anda?')) return
     await deleteUpload(id)
     refresh()
+  }
+
+  async function handleRenameExisting(u: UploadRecord) {
+    setRenamingId(u.id)
+    try {
+      const res = await suggestFileName(u.blob)
+      if (res.error || !res.data) {
+        alert(
+          res.error === 'no_text'
+            ? res.message ?? 'Gagal membaca PDF (mungkin hasil scan).'
+            : aiErrorMessage(res.error!),
+        )
+        return
+      }
+      const { title, author, filename } = res.data
+      if (!confirm(`Ganti nama berkas menjadi:\n\n${filename}.pdf\n\n(Judul/Penulis ikut diperbarui)`)) {
+        return
+      }
+      await updateUpload(u.id, {
+        filename,
+        title: title || u.title,
+        author: author || u.author,
+      })
+      refresh()
+    } finally {
+      setRenamingId(null)
+    }
   }
 
   return (
@@ -198,6 +226,16 @@ export default function Library() {
                     <span className="muted">PDF · {formatSize(u.size)}</span>
                     <div className="library__item-actions">
                       <Link to={`/baca/${u.id}`} className="btn btn--ghost btn--sm">Baca</Link>
+                      {aiEnabled && (
+                        <button
+                          className="btn btn--ghost btn--sm"
+                          onClick={() => handleRenameExisting(u)}
+                          disabled={renamingId === u.id}
+                          title="Beri nama ulang dengan AI (Tahun_Penulis_Judul)"
+                        >
+                          {renamingId === u.id ? '✨…' : '✨ Rename'}
+                        </button>
+                      )}
                       <button className="btn btn--ghost btn--sm" onClick={() => handleDelete(u.id)}>Hapus</button>
                     </div>
                   </div>
