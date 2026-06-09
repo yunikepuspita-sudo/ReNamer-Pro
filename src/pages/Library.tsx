@@ -4,6 +4,8 @@ import { useCatalog } from '../context/CatalogContext'
 import { useApp } from '../context/AppContext'
 import BookCover from '../components/BookCover'
 import { addUpload, deleteUpload, listUploads, uploadCover, type UploadRecord } from '../lib/uploads'
+import { suggestFileName } from '../lib/aiRename'
+import { aiEnabled, aiErrorMessage } from '../lib/pustakaAi'
 import type { Book, ContentType } from '../types'
 
 function formatSize(bytes: number): string {
@@ -23,7 +25,36 @@ export default function Library() {
   const [type, setType] = useState<ContentType>('buku')
   const [busy, setBusy] = useState(false)
   const [err, setErr] = useState('')
+  const [aiBusy, setAiBusy] = useState(false)
+  const [aiMsg, setAiMsg] = useState('')
+  const [suggestedName, setSuggestedName] = useState('')
   const fileRef = useRef<HTMLInputElement>(null)
+
+  async function handleSuggest() {
+    setErr('')
+    setAiMsg('')
+    setSuggestedName('')
+    const file = fileRef.current?.files?.[0]
+    if (!file) {
+      setErr('Pilih file PDF terlebih dahulu.')
+      return
+    }
+    try {
+      setAiBusy(true)
+      const res = await suggestFileName(file)
+      if (res.error || !res.data) {
+        setAiMsg(res.error === 'no_text' ? res.message ?? 'Gagal membaca PDF.' : aiErrorMessage(res.error!))
+        return
+      }
+      const { year, author, title, filename } = res.data
+      if (title) setTitle(title)
+      if (author) setAuthor(author)
+      setSuggestedName(filename)
+      setAiMsg(`Saran nama: ${filename}.pdf${year ? '' : ' · tahun tidak terdeteksi'}`)
+    } finally {
+      setAiBusy(false)
+    }
+  }
 
   function refresh() {
     listUploads().then(setUploads)
@@ -46,10 +77,12 @@ export default function Library() {
     }
     try {
       setBusy(true)
-      await addUpload(file, { title, author, type })
+      await addUpload(file, { title, author, type, filename: suggestedName })
       setTitle('')
       setAuthor('')
       setType('buku')
+      setSuggestedName('')
+      setAiMsg('')
       if (fileRef.current) fileRef.current.value = ''
       setOpen(false)
       refresh()
@@ -87,7 +120,15 @@ export default function Library() {
           <div className="upload-form__grid">
             <label>
               File PDF
-              <input ref={fileRef} type="file" accept="application/pdf,.pdf" />
+              <input
+                ref={fileRef}
+                type="file"
+                accept="application/pdf,.pdf"
+                onChange={() => {
+                  setSuggestedName('')
+                  setAiMsg('')
+                }}
+              />
             </label>
             <label>
               Judul
@@ -109,6 +150,23 @@ export default function Library() {
               </select>
             </label>
           </div>
+          {aiEnabled && (
+            <div className="upload-form__ai">
+              <button
+                className="btn btn--ghost btn--sm"
+                type="button"
+                onClick={handleSuggest}
+                disabled={aiBusy || busy}
+              >
+                {aiBusy ? '✨ Membaca PDF…' : '✨ Sarankan nama (AI)'}
+              </button>
+              <span className="muted">
+                AI membaca halaman awal PDF lalu mengisi Judul/Penulis &amp; menyusun nama berkas{' '}
+                <code>Tahun_Penulis_Judul</code>.
+              </span>
+            </div>
+          )}
+          {aiMsg && <p className="upload-form__ai-msg">{aiMsg}</p>}
           {err && <p className="upload-form__err">{err}</p>}
           <div className="upload-form__actions">
             <button className="btn btn--primary" type="submit" disabled={busy}>
@@ -134,6 +192,9 @@ export default function Library() {
                   </Link>
                   <div className="library__item-body">
                     <h3>{u.title}</h3>
+                    {u.filename && u.filename !== u.title && (
+                      <code className="library__filename" title={u.filename}>{u.filename}</code>
+                    )}
                     <span className="muted">PDF · {formatSize(u.size)}</span>
                     <div className="library__item-actions">
                       <Link to={`/baca/${u.id}`} className="btn btn--ghost btn--sm">Baca</Link>

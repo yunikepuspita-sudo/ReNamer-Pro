@@ -109,6 +109,17 @@ export function askBook(book: Book, message = '') {
   })
 }
 
+export interface RenameMeta {
+  year: string
+  author: string
+  title: string
+}
+
+/** Ekstrak metadata (tahun, penulis, judul) dari teks awal sebuah PDF. */
+export function suggestRename(text: string) {
+  return callAi<RenameMeta>({ mode: 'rename', text: text.slice(0, 6000) })
+}
+
 /** Pesan ramah untuk tiap jenis error AI. */
 export function aiErrorMessage(error: AiError): string {
   switch (error) {

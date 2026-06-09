@@ -1,10 +1,11 @@
 // Edge Function: pustaka-ai
 // Knowledge Hub AI untuk E-Pustaka Pemilu — memanggil Claude (Anthropic).
 //
-// Menangani tiga mode:
+// Menangani empat mode:
 //   • chat   — Asisten Pustaka (tanya-jawab + rekomendasi dari katalog)
 //   • search — Pencarian cerdas (mengembalikan daftar id buku relevan)
 //   • book   — Tanya-Jawab / ringkasan untuk satu buku
+//   • rename — Ekstrak metadata (tahun, penulis, judul) dari teks PDF untuk penamaan berkas
 //
 // SECRET yang diperlukan (Supabase Dashboard → Edge Functions → Manage secrets):
 //   ANTHROPIC_API_KEY = sk-ant-...
@@ -59,6 +60,7 @@ Deno.serve(async (req) => {
     const client = new Anthropic({ apiKey })
 
     if (mode === 'book') return await handleBook(client, body.book as BookLite | undefined, message)
+    if (mode === 'rename') return await handleRename(client, String(body.text ?? ''))
     if (!message.trim()) return json({ error: 'message wajib diisi' }, 400)
     if (mode === 'search') return await handleSearch(client, message, renderCatalog(books))
 
@@ -180,6 +182,53 @@ async function handleBook(client: Anthropic, book: BookLite | undefined, message
     messages: [{ role: 'user', content: ask }],
   })
   return json({ reply: textOf(resp) })
+}
+
+// ── Mode: rename (Ekstrak metadata untuk penamaan berkas) ────────────────────
+async function handleRename(client: Anthropic, text: string) {
+  const sample = text.trim().slice(0, 6000)
+  if (!sample) return json({ error: 'teks PDF kosong' }, 400)
+
+  const schema = {
+    type: 'object',
+    additionalProperties: false,
+    properties: {
+      year: { type: 'string' },
+      author: { type: 'string' },
+      title: { type: 'string' },
+    },
+    required: ['year', 'author', 'title'],
+  }
+
+  const system =
+    `Kamu pengkatalog perpustakaan. Dari cuplikan teks halaman-halaman awal sebuah dokumen PDF, ` +
+    `ekstrak metadata untuk penamaan berkas. Kembalikan JSON dengan field berikut:\n` +
+    `- "year": tahun terbit 4 digit (mis. "2024"). Bila tidak ditemukan, isi "".\n` +
+    `- "author": nama penulis/lembaga penerbit utama. Untuk perorangan gunakan nama belakang saja ` +
+    `(mis. "Sutanto"); untuk lembaga gunakan akronim/nama ringkas (mis. "KPU"). Bila tidak ada, isi "".\n` +
+    `- "title": judul dokumen yang ringkas dan jelas (maksimal ~8 kata), tanpa anak judul yang panjang.\n` +
+    `Gunakan Bahasa Indonesia. JANGAN mengarang; bila ragu, kosongkan field tersebut.`
+
+  const resp = await client.messages.create({
+    model: MODEL,
+    max_tokens: 300,
+    thinking: { type: 'disabled' },
+    output_config: { effort: 'low', format: { type: 'json_schema', schema } },
+    system,
+    messages: [{ role: 'user', content: sample }],
+  })
+
+  let parsed: { year?: unknown; author?: unknown; title?: unknown } = {}
+  try {
+    parsed = JSON.parse(textOf(resp))
+  } catch {
+    parsed = {}
+  }
+  return json({
+    year: String(parsed.year ?? '').trim(),
+    author: String(parsed.author ?? '').trim(),
+    title: String(parsed.title ?? '').trim(),
+  })
 }
 
 // ── Util ─────────────────────────────────────────────────────────────────────
