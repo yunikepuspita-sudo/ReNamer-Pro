@@ -45,7 +45,7 @@ export default defineConfig({
         navigateFallbackDenylist: [/event-attendance/, /siarip/, /perencanaan-kpu/, /\.pdf($|\?)/, /supabase\.co/],
         // PWA mandiri (absensi, SIARIP, perencanaan) punya service worker sendiri;
         // jangan ikut di-precache oleh workbox E-Pustaka agar tidak tumpang tindih.
-        globIgnores: ['**/event-attendance/**', '**/siarip/**', '**/perencanaan-kpu/**'],
+        globIgnores: ['**/event-attendance/**', '**/siarip/**', '**/siarip-kpu/**', '**/perencanaan-kpu/**'],
       },
     }),
   ],
