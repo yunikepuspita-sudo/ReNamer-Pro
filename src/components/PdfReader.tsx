@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Document, Page } from 'react-pdf'
 import '../lib/pdf'
+import { usePageShare } from './SharePageWhatsApp'
 import type { ReaderTheme } from '../types'
 
 const THEMES: { key: ReaderTheme; label: string; swatch: string }[] = [
@@ -33,6 +34,7 @@ export default function PdfReader({
   const [error, setError] = useState<string | null>(null)
   const wrapRef = useRef<HTMLDivElement>(null)
   const [width, setWidth] = useState(800)
+  const { href: shareHref } = usePageShare(title)
 
   // react-pdf menerima URL string maupun Blob/File secara langsung; referensi distabilkan.
   const file = useMemo(() => source, [source])
@@ -64,6 +66,16 @@ export default function PdfReader({
           {locked && <span className="pdf-preview-badge">CUPLIKAN</span>}
         </span>
         <div className="reader__topbar-right">
+          <a
+            className="reader__icon"
+            href={shareHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Bagikan via WhatsApp"
+            aria-label="Bagikan via WhatsApp"
+          >
+            📲
+          </a>
           <div className="theme-swatches">
             {THEMES.map((t) => (
               <button

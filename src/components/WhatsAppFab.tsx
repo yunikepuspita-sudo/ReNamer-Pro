@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { waChatLink, waChannelLink, hasChannel, WA_CHANNEL_NAME } from '../lib/whatsapp'
+import { usePageShare } from './SharePageWhatsApp'
 
 /** Ikon resmi WhatsApp (inline SVG, tanpa aset gambar eksternal). */
 function WaIcon({ size = 28 }: { size?: number }) {
@@ -17,6 +18,7 @@ function WaIcon({ size = 28 }: { size?: number }) {
 export default function WhatsAppFab() {
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
+  const { href: shareHref, pageTitle } = usePageShare()
 
   // Tutup menu saat klik di luar atau tekan Escape.
   useEffect(() => {
@@ -70,6 +72,20 @@ export default function WhatsAppFab() {
               </span>
             </a>
           )}
+          <a
+            className="wa-fab__item"
+            href={shareHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            role="menuitem"
+            onClick={() => setOpen(false)}
+          >
+            <span className="wa-fab__item-icon">📲</span>
+            <span>
+              <strong>Bagikan Halaman Ini</strong>
+              <small>Kirim tautan {pageTitle} ke chat WhatsApp</small>
+            </span>
+          </a>
         </div>
       )}
 

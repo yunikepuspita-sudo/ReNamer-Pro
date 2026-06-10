@@ -61,9 +61,24 @@ export function waChannelLink(): string {
   return WA_CHANNEL_URL
 }
 
-/** Bentuk URL detail buku yang bisa dibagikan (HashRouter → pakai #). */
+/** Bentuk URL halaman situs yang bisa dibagikan (HashRouter → pakai #). */
+export function pageUrl(path: string): string {
+  const clean = path.startsWith('/') ? path : `/${path}`
+  return `${SITE_URL.replace(/\/$/, '')}/#${clean}`
+}
+
+/** Bentuk URL detail buku yang bisa dibagikan. */
 export function bookUrl(bookId: string): string {
-  return `${SITE_URL.replace(/\/$/, '')}/#/buku/${bookId}`
+  return pageUrl(`/buku/${bookId}`)
+}
+
+/** Teks ajakan berbagi sebuah halaman situs ke chat WhatsApp. */
+export function sharePageText(opts: { title: string; path: string }): string {
+  return (
+    `🔗 *${opts.title}* — E-Pustaka Pemilu\n` +
+    `Perpustakaan digital bertema demokrasi & pemilu.\n` +
+    `${pageUrl(opts.path)}`
+  )
 }
 
 /** Teks ajakan berbagi sebuah judul ke WhatsApp. */

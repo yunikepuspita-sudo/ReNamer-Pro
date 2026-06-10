@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useApp } from '../context/AppContext'
+import { usePageShare } from '../components/SharePageWhatsApp'
 import type { Book, ReaderTheme } from '../types'
 
 const THEMES: { key: ReaderTheme; label: string; swatch: string }[] = [
@@ -25,6 +26,7 @@ function loadPrefs(): { theme: ReaderTheme; fontSize: number } {
 export default function TextReader({ book }: { book: Book }) {
   const navigate = useNavigate()
   const { inLibrary, premium, progress, setProgress } = useApp()
+  const { href: shareHref } = usePageShare(book.title)
 
   const prefs = loadPrefs()
   const [theme, setTheme] = useState<ReaderTheme>(prefs.theme)
@@ -72,6 +74,16 @@ export default function TextReader({ book }: { book: Book }) {
         </button>
         <span className="reader__booktitle">{book.title}</span>
         <div className="reader__topbar-right">
+          <a
+            className="reader__icon"
+            href={shareHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Bagikan via WhatsApp"
+            aria-label="Bagikan via WhatsApp"
+          >
+            📲
+          </a>
           <button className="reader__icon" onClick={() => setTocOpen(true)} title="Daftar Isi">☰</button>
           <button
             className={`reader__icon ${bookmarks.includes(chapterIndex) ? 'is-active' : ''}`}
