@@ -17,6 +17,16 @@ gaya tutur reflektif ala Kang Jalal—percakapan, bukan ceramah.
 
 ## Daftar naskah
 
-| Tanggal | Judul | Berkas |
-|---------|-------|--------|
-| 2026-06-10 | Menyortir 50 Paper Sebelum Anda Membacanya | [`menyortir-50-paper-sebelum-membaca.md`](./menyortir-50-paper-sebelum-membaca.md) |
+| Tanggal | Judul | Naskah (MD) | Halaman publish (HTML) |
+|---------|-------|-------------|------------------------|
+| 2026-06-10 | Menyortir 50 Paper Sebelum Anda Membacanya | [`menyortir-50-paper-sebelum-membaca.md`](./menyortir-50-paper-sebelum-membaca.md) | [`public/tip-menulis/…html`](../../public/tip-menulis/menyortir-50-paper-sebelum-membaca.html) |
+
+## Versi siap-publish (HTML)
+
+Halaman HTML mandiri (self-contained) untuk di-deploy lewat GitHub Pages ada di
+`public/tip-menulis/`. Setiap halaman:
+
+- Berdiri sendiri — CSS ditanam inline, **ilustrasi berupa SVG** (tanpa aset
+  gambar eksternal, mengikuti konvensi repo).
+- Responsif, menyertakan meta Open Graph, tipografi *Fraunces* + *Inter*.
+- Tayang di `…/tip-menulis/<slug>.html` setelah build/deploy.
