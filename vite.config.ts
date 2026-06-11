@@ -45,6 +45,28 @@ export default defineConfig({
         // Berkas PWA absensi punya service worker sendiri; jangan ikut di-precache
         // oleh workbox E-Pustaka agar tidak saling tumpang tindih.
         globIgnores: ['**/event-attendance/**'],
+        // Cache runtime: metadata katalog Supabase (REST) dipakai-lalu-perbarui
+        // agar app cepat dibuka & tetap menampilkan daftar terakhir saat offline.
+        // PDF & Storage TIDAK di-cache (lihat denylist) agar tidak boros.
+        runtimeCaching: [
+          {
+            urlPattern: /^https:\/\/[a-z0-9]+\.supabase\.co\/rest\/v1\/.*/i,
+            handler: 'StaleWhileRevalidate',
+            options: {
+              cacheName: 'epustaka-katalog',
+              expiration: { maxEntries: 60, maxAgeSeconds: 60 * 60 * 24 },
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
+          {
+            urlPattern: /^https:\/\/fonts\.(googleapis|gstatic)\.com\/.*/i,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'epustaka-fonts',
+              expiration: { maxEntries: 20, maxAgeSeconds: 60 * 60 * 24 * 365 },
+            },
+          },
+        ],
       },
     }),
   ],
