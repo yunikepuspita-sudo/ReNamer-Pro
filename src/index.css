@@ -278,6 +278,9 @@ a { color: inherit; text-decoration: none; }
 .auth__card h1 { margin: 0 0 6px; font-size: 24px; }
 .auth__field { display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600; color: var(--muted); margin-bottom: 14px; }
 .auth__field input { border: 1.5px solid var(--border); border-radius: 8px; padding: 11px 12px; font-size: 14px; font-weight: 400; color: var(--text); }
+.wa-code { font-size: 38px; font-weight: 800; letter-spacing: 10px; text-align: center; color: var(--brand); background: #eef2ff; border: 1.5px dashed var(--brand); border-radius: 12px; padding: 16px; margin: 8px 0 16px; }
+.wa-send-btn { background: #25d366; color: #fff; }
+.wa-send-btn:hover { background: #1ebe5b; }
 .auth__field input:focus { outline: none; border-color: var(--brand); }
 .auth__divider { display: flex; align-items: center; text-align: center; color: var(--muted); font-size: 13px; margin: 18px 0; }
 .auth__divider::before, .auth__divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }

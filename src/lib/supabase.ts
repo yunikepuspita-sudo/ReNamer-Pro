@@ -12,7 +12,18 @@ const url = import.meta.env.VITE_SUPABASE_URL as string | undefined
 const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined
 
 export const supabase: SupabaseClient | null =
-  url && anonKey ? createClient(url, anonKey) : null
+  url && anonKey
+    ? createClient(url, anonKey, {
+        auth: {
+          // Simpan sesi login di localStorage agar pengguna tetap masuk
+          // walau menutup/membuka kembali aplikasi, dan refresh token otomatis.
+          persistSession: true,
+          autoRefreshToken: true,
+          detectSessionInUrl: true,
+          storageKey: 'e-pustaka-auth',
+        },
+      })
+    : null
 
 export const isSupabaseEnabled = Boolean(supabase)
 
