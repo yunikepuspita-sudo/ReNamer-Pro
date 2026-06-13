@@ -2,6 +2,7 @@
   "name": "e-pustaka-pemilu",
   "private": true,
   "version": "1.0.0",
+  "license": "AGPL-3.0-or-later",
   "description": "E-Pustaka Pemilu - perpustakaan digital & bookstore bertema Pemilu, terinspirasi Gramedia Digital",
   "type": "module",
   "scripts": {
