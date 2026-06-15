@@ -80,6 +80,16 @@ Matriks Risiko) secara otomatis — sesuai regulasi — dengan **validasi anggar
 
 Detail lengkap: lihat `public/perencanaan-kpu/README.md`.
 
+## 📊 Arsitektur: SAE SURVEI
+
+Cetak biru platform survei digital **SAE SURVEI** (*Smart Analytics & Evaluation
+for Survey, Reputation, Value, Engagement, and Index*) — bagian dari ekosistem
+SAE (PISAN, RAPAT, NASKAH, PERENCANAAN). Mencakup arsitektur layanan (Survey Core,
+AI Engine, Analytics), modul (Survey Builder, Distribution, IKM/SKM Engine),
+AI Analytics, dashboard, multi-tenant, integrasi, dan paket produk.
+
+Detail lengkap: lihat `ARSITEKTUR-SAE-SURVEI.md`.
+
 ## 🛠️ Teknologi
 
 - **React 18** + **TypeScript**
