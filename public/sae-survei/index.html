@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>SAE SURVEI — Smart Analytics & Evaluation</title>
+  <meta name="description" content="Prototipe UI platform survei digital SAE SURVEI: IKM/SKM, survei pegawai & stakeholder, dashboard real-time, analitik AI, dan laporan otomatis." />
+  <meta name="theme-color" content="#0e7490" />
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="icon" href="./icons/icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="./icons/icon-192.png" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="logo">📊</div>
+    <div>
+      <h1>SAE SURVEI</h1>
+      <div class="sub">Smart Analytics &amp; Evaluation · Prototipe UI</div>
+    </div>
+    <div class="spacer"></div>
+    <span class="tenant" id="tenant">KPU Provinsi Jawa Barat</span>
+  </header>
+
+  <main class="wrap" id="app"><!-- diisi oleh skrip --></main>
+
+  <footer class="foot">
+    <span>Prototipe UI · data contoh, belum tersambung basis data.</span>
+    <span>Arsitektur lengkap: <code>ARSITEKTUR-SAE-SURVEI.md</code></span>
+  </footer>
+
+  <script src="./data.js"></script>
+  <script src="./app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('./service-worker.js').catch(function () {});
+      });
+    }
+  </script>
+</body>
+</html>
