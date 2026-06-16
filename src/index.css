@@ -261,6 +261,10 @@ a { color: inherit; text-decoration: none; }
 }
 .upload-form input:focus, .upload-form select:focus { outline: none; border-color: var(--brand); }
 .upload-form__err { color: #dc2626; font-size: 14px; margin: 12px 0 0; }
+.upload-form__ai { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 14px; }
+.upload-form__ai .muted { font-size: 12.5px; line-height: 1.4; }
+.upload-form__ai code, .library__filename { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; background: var(--bg, #f1f5f9); border-radius: 4px; padding: 1px 5px; }
+.upload-form__ai-msg { color: #059669; font-size: 13.5px; margin: 10px 0 0; }
 .upload-form__actions { display: flex; gap: 12px; margin-top: 16px; }
 .library__item {
   background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden;
@@ -268,7 +272,8 @@ a { color: inherit; text-decoration: none; }
 }
 .library__item:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
 .library__item-body { padding: 12px; }
-.library__item-body h3 { font-size: 14px; margin: 0 0 10px; line-height: 1.3; }
+.library__item-body h3 { font-size: 14px; margin: 0 0 6px; line-height: 1.3; }
+.library__filename { display: block; margin: 0 0 8px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 .synced-badge { margin-left: 12px; font-size: 12px; font-weight: 600; color: #059669; background: #ecfdf5; border: 1px solid #a7f3d0; padding: 3px 10px; border-radius: 20px; vertical-align: middle; }
 

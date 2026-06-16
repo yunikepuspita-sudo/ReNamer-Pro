@@ -5,6 +5,8 @@ export interface UploadRecord {
   title: string
   author: string
   type: ContentType
+  /** Nama berkas tersaran (konvensi Tahun_Penulis_Judul); default = nama asli. */
+  filename: string
   size: number
   createdAt: number
   blob: Blob
@@ -36,13 +38,14 @@ function request<T>(req: IDBRequest<T>): Promise<T> {
 
 export async function addUpload(
   file: File,
-  meta: { title: string; author: string; type: ContentType },
+  meta: { title: string; author: string; type: ContentType; filename?: string },
 ): Promise<UploadRecord> {
   const record: UploadRecord = {
     id: 'up-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 7),
     title: meta.title || file.name.replace(/\.pdf$/i, ''),
     author: meta.author || 'Tidak diketahui',
     type: meta.type,
+    filename: meta.filename?.trim() || file.name,
     size: file.size,
     createdAt: Date.now(),
     blob: file,
@@ -75,6 +78,24 @@ export async function deleteUpload(id: string): Promise<void> {
   const db = await openDB()
   await request(db.transaction(STORE, 'readwrite').objectStore(STORE).delete(id))
   db.close()
+}
+
+/** Perbarui metadata satu unggahan (mis. hasil rename AI). */
+export async function updateUpload(
+  id: string,
+  patch: Partial<Pick<UploadRecord, 'title' | 'author' | 'filename'>>,
+): Promise<UploadRecord | undefined> {
+  const db = await openDB()
+  const store = db.transaction(STORE, 'readwrite').objectStore(STORE)
+  const rec = await request<UploadRecord | undefined>(store.get(id))
+  if (!rec) {
+    db.close()
+    return undefined
+  }
+  const next = { ...rec, ...patch }
+  await request(store.put(next))
+  db.close()
+  return next
 }
 
 /** Gradien sampul deterministik dari id, agar ebook unggahan tetap punya sampul. */
